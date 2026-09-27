@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { TDSMobileAITProvider } from '@toss/tds-mobile-ait';
 import Layout from './components/common/Layout';
 import Home from './pages/Home';
+import Danji from './pages/Danji';
 
 export default function App() {
   return (
@@ -10,6 +11,7 @@ export default function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/danji" element={<Danji />} />
             {/* 이 아래로 페이지 추가 */}
           </Routes>
         </Layout>
