@@ -18,7 +18,7 @@ import sample4 from '../assets/danji/sample-4.jpg';
 import sample5 from '../assets/danji/sample-5.jpg';
 
 // Design fixtures only. Real records and API integration belong to separate tasks.
-const initialRecords = [sample1, sample4, sample3, sample5, sample2, sample3, sample1, sample4, sample5, sample2].map((image, id) => ({
+const initialRecords = [sample1, sample4, sample3, sample5, sample2, sample3, sample1, sample4, sample5, sample2, sample1, sample4, sample3, sample5, sample2].map((image, id) => ({
   id, image, date: '2026/09/23', note: '',
 }));
 type View = 'jar' | 'all' | 'detail' | 'editor' | 'decorate';
@@ -42,7 +42,10 @@ export default function Danji() {
   const [view, setView] = useState<View>('jar');
   const [sheet, setSheet] = useState<Sheet>('none');
   const [selected, setSelected] = useState<number | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const pageCount = Math.max(1, Math.ceil(previewRecords.length / 5));
+  const selectedRecord = previewRecords.find((item: typeof initialRecords[number]) => item.id === selected);
+  const selectedPosition = previewRecords.findIndex((item: typeof initialRecords[number]) => item.id === selected);
   useEffect(() => { localStorage.setItem('danji-preview-records', JSON.stringify(previewRecords)); }, [previewRecords]);
   useEffect(() => { localStorage.setItem('danji-preview-stickers', JSON.stringify(stickers)); }, [stickers]);
 
@@ -61,7 +64,16 @@ export default function Danji() {
     } else setPreviewRecords((items: typeof initialRecords) => items.map(item => item.id === selected ? { ...item, date: draftDate.replaceAll('-', '/'), note: draftNote, image: draftImage } : item));
     setView('detail');
   }
-  function createRecord() { setSelected(null); setDraftDate(new Date().toISOString().slice(0, 10)); setDraftNote(''); setDraftImage(null); setSheet('none'); setView('editor'); }
+  function createRecord() { setSelected(null); setDraftDate(new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10)); setDraftNote(''); setDraftImage(null); setSheet('none'); setView('editor'); }
+
+  function deleteRecord() {
+    if (selected === null) return;
+    setPreviewRecords((items: typeof initialRecords) => items.filter(item => item.id !== selected));
+    setSelected(null);
+    setConfirmDelete(false);
+    setView('jar');
+    setPage(0);
+  }
 
   function openDetail(index: number) {
     setSelected(index);
@@ -72,7 +84,7 @@ export default function Danji() {
   return <div className="danji-page">
     {import.meta.env.DEV && <div className="danji-device-status" aria-hidden="true"><span>9:41</span><i /><span>▂▅ ▰</span></div>}
     <header className="danji-header">
-      <button aria-label="뒤로" onClick={() => view === 'editor' ? setView('detail') : view === 'detail' || view === 'decorate' ? setView('jar') : window.history.back()}>‹</button>
+      <button aria-label="뒤로" onClick={() => view === 'editor' ? setView(selectedRecord ? 'detail' : 'jar') : view === 'detail' || view === 'decorate' ? setView('jar') : window.history.back()}>‹</button>
       <span className="danji-app-icon">⌂</span><strong>사계단지</strong><span className="danji-header-spacer" />
       <button aria-label="좋아요: 토스 앱 공통 버튼" title="토스 앱 공통 버튼">♥</button><span className="header-pair"><button aria-label="더보기" onClick={() => setHeaderMenu(!headerMenu)}>···</button><button aria-label="닫기" onClick={() => window.history.back()}>×</button></span>{headerMenu && <div className="danji-header-popover">토스 앱 공통 메뉴<br />브라우저 미리보기에서는 연결되지 않습니다.<button onClick={() => setHeaderMenu(false)}>닫기</button></div>}
     </header>
@@ -91,6 +103,7 @@ export default function Danji() {
         <img className="jar-lid-top" src={jarLidTop} alt="" />
       </div>
       <div className="danji-decoration-dots" aria-hidden="true">{Array.from({ length: 6 }, (_, index) => <span key={index} />)}</div>
+      {previewRecords.length === 0 && <p className="danji-jar-empty">아직 담긴 기록이 없어요.<br />첫 계절을 기록해보세요.</p>}
       {previewRecords.slice(page * 5, page * 5 + 5).map((record: typeof initialRecords[number], index: number) => <button key={record.id} className={`danji-polaroid position-${index}`} onClick={() => view === 'jar' && openDetail(record.id)} aria-label={`${record.date} 기록 상세보기`}>
         <img src={record.image} alt="가을 기록 예시" /><time>{record.date}</time>
       </button>)}
@@ -99,16 +112,17 @@ export default function Danji() {
     </section>}
 
     {view === 'all' && <section className="danji-gallery" aria-label="전체 기록 예시">
+      {previewRecords.length === 0 && <p className="danji-empty">아직 담긴 기록이 없어요.<br />첫 계절을 기록해보세요.</p>}
       {previewRecords.map((record: typeof initialRecords[number]) => <button key={record.id} className="danji-mini-card" onClick={() => openDetail(record.id)}>
         <img src={record.image} alt="가을 기록 예시" /><time>{record.date}</time>
       </button>)}
     </section>}
 
-    {view === 'detail' && selected !== null && <section className="danji-detail">
-      <article className="danji-large-card"><span className="danji-badge">{selected + 1}/{previewRecords.length}</span>
-        <img src={previewRecords[selected].image} alt="가을 기록 예시" /><time>{previewRecords[selected].date}</time>{previewRecords[selected].note && <p>{previewRecords[selected].note}</p>}
+    {view === 'detail' && selectedRecord && <section className="danji-detail">
+      <article className="danji-large-card"><span className="danji-badge">{selectedPosition + 1}/{previewRecords.length}</span>
+        <img src={selectedRecord.image} alt="가을 기록" /><time>{selectedRecord.date}</time>{selectedRecord.note && <p>{selectedRecord.note}</p>}
       </article>
-      <div className="danji-actions"><button onClick={() => setView('jar')}>뒤로</button><button className="primary" onClick={() => editRecord(selected)}>기록 수정하기</button></div>
+      <div className="danji-detail-controls"><button onClick={() => setConfirmDelete(true)}>기록 삭제</button><button onClick={() => editRecord(selectedRecord.id)}>수정하기</button></div>
     </section>}
     {view === 'all' && <div className="danji-actions gallery-actions"><button aria-label="단지 편집 메뉴" onClick={() => setSheet('options')}>☷</button><button className="primary" onClick={createRecord}>✎ &nbsp; 기록하기</button></div>}
 
@@ -126,6 +140,7 @@ export default function Danji() {
       <div className="danji-actions edit-actions"><button className="primary" disabled={!draftImage || !draftDate} onClick={saveRecord}>{selected === null ? '작성 완료' : '저장하기'}</button></div>
     </section>}
 
+    {confirmDelete && <div className="danji-confirm-backdrop" onClick={() => setConfirmDelete(false)}><div className="danji-confirm" role="alertdialog" aria-modal="true" aria-labelledby="danji-confirm-title" onClick={event => event.stopPropagation()}><strong id="danji-confirm-title">이 기록을 삭제할까요?</strong><p>삭제한 기록은 다시 복구할 수 없어요.</p><div><button onClick={() => setConfirmDelete(false)}>취소</button><button className="danger" onClick={deleteRecord}>삭제</button></div></div></div>}
     {sheet !== 'none' && <div className="danji-sheet-backdrop" onClick={() => setSheet('none')}>
       {sheet === 'options' ? <div className="danji-sheet danji-option-sheet" onClick={(event) => event.stopPropagation()}>
         <button className="danji-sheet-handle" aria-label="닫기" onClick={() => setSheet('none')} />
