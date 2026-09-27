@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <main className="relative w-full h-dvh bg-[#E7C380] overflow-hidden">
       {/* 풍경 */}
-      <div className="absolute top-0 left-0 w-full h-[55%] bg-[url('/assets/bg-sunset.png')] bg-contain bg-no-repeat bg-center" />
+      <div className="absolute top-0 left-0 w-full h-[50%] bg-[url('/assets/bg-sunset.png')] bg-contain bg-no-repeat bg-center " />
       {/* 전체 뼈대 */}
       <div className="absolute inset-0 w-full h-full pointer-events-none bg-[url('/assets/frame-base.png')] bg-[length:100%_auto] bg-top bg-no-repeat" />
 
