@@ -9,7 +9,7 @@ export default function App() {
       <BrowserRouter>
         <Layout>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             {/* 이 아래로 페이지 추가 */}
           </Routes>
         </Layout>
