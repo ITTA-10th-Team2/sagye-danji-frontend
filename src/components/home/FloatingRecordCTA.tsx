@@ -1,18 +1,18 @@
 import { useState } from 'react';
-import { BottomSheet, Post, Button } from '@toss/tds-mobile';
+import { BottomSheet } from '@toss/tds-mobile';
 
 export default function FloatingRecordCTA() {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
-  const handleCameraClick = () => {
-    console.log('카메라로 촬영 로직 실행');
-    setIsBottomSheetOpen(false);
-  };
+  //   const handleCameraClick = () => {
+  //     console.log('카메라로 촬영 로직 실행');
+  //     setIsBottomSheetOpen(false);
+  //   };
 
-  const handleGalleryClick = () => {
-    console.log('앨범에서 선택 로직 실행');
-    setIsBottomSheetOpen(false);
-  };
+  //   const handleGalleryClick = () => {
+  //     console.log('앨범에서 선택 로직 실행');
+  //     setIsBottomSheetOpen(false);
+  //   };
 
   return (
     <>
