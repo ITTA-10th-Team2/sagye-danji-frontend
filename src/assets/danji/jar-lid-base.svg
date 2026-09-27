@@ -1,6 +1,6 @@
 <svg width="262" height="79" viewBox="0 0 262 79" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g filter="url(#filter0_d_468_12635)">
-<path d="M251.827 37.9492H251.809C250.763 49.5793 196.975 58.9502 130.773 58.9502C65.42 58.9502 12.1634 49.391 9.80127 37.9492H9.71826V0H251.827V37.9492Z" fill="#FF972B"/>
+<path d="M9.71826 24.9H251.827V37.9492H251.809C250.763 49.5793 196.975 58.9502 130.773 58.9502C65.42 58.9502 12.1634 49.391 9.80127 37.9492H9.71826V24.9Z" fill="#FF972B"/>
 </g>
 <defs>
 <filter id="filter0_d_468_12635" x="2.95639e-05" y="0" width="261.545" height="78.3867" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
