@@ -18,7 +18,7 @@ import sample4 from '../assets/danji/sample-4.jpg';
 import sample5 from '../assets/danji/sample-5.jpg';
 
 // Design fixtures only. Real records and API integration belong to separate tasks.
-const initialRecords = [sample1, sample4, sample3, sample5, sample2, sample3, sample1, sample4, sample5, sample2, sample1, sample4, sample3, sample5, sample2].map((image, id) => ({
+const initialRecords = [sample1, sample4, sample3, sample5, sample2, sample3, sample1, sample4, sample5, sample2].map((image, id) => ({
   id, image, date: '2026/09/23', note: '',
 }));
 type View = 'jar' | 'all' | 'detail' | 'editor' | 'decorate';
