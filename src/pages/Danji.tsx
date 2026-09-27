@@ -112,7 +112,19 @@ export default function Danji() {
     </section>}
     {view === 'all' && <div className="danji-actions gallery-actions"><button aria-label="단지 편집 메뉴" onClick={() => setSheet('options')}>☷</button><button className="primary" onClick={createRecord}>✎ &nbsp; 기록하기</button></div>}
 
-    {view === 'editor' && <section className="danji-editor"><h1>{selected === null ? '기록하기' : '기록 수정하기'}</h1><label>날짜<input type="date" value={draftDate} onChange={e => setDraftDate(e.target.value)} /></label><label className="photo-upload">사진 {selected === null ? '선택' : '변경'}<input type="file" accept="image/*" onChange={e => { const file = e.target.files?.[0]; if (file) { const reader = new FileReader(); reader.onload = () => setDraftImage(String(reader.result)); reader.readAsDataURL(file); } }} /></label>{draftImage && <img className="editor-image" src={draftImage} alt="선택한 사진" />}<textarea value={draftNote} onChange={e => setDraftNote(e.target.value)} placeholder="기록을 입력하세요" /><div className="danji-actions"><button onClick={() => setView(selected === null ? 'jar' : 'detail')}>취소</button><button className="primary" disabled={!draftImage || !draftDate} onClick={saveRecord}>저장하기</button></div></section>}
+    {view === 'editor' && <section className="danji-editor" aria-label={selected === null ? '기록하기' : '기록 수정하기'}>
+      <div className="danji-edit-card">
+        <label className="danji-edit-photo">
+          {draftImage ? <img src={draftImage} alt="선택한 기록 사진" /> : <span>사진을 선택해주세요</span>}
+          <span className="danji-edit-photo-action">{draftImage ? '사진 변경' : '사진 선택'}</span>
+          <input type="file" accept="image/*" onChange={e => { const file = e.target.files?.[0]; if (file) { const reader = new FileReader(); reader.onload = () => setDraftImage(String(reader.result)); reader.readAsDataURL(file); } }} />
+        </label>
+        <label className="danji-edit-date">날짜 <input type="date" value={draftDate} onChange={e => setDraftDate(e.target.value)} /></label>
+        <textarea maxLength={500} value={draftNote} onChange={e => setDraftNote(e.target.value)} placeholder="오늘의 계절을 기록해보세요." aria-label="기록 내용" />
+        <small>{draftNote.length}/500</small>
+      </div>
+      <div className="danji-actions edit-actions"><button className="primary" disabled={!draftImage || !draftDate} onClick={saveRecord}>{selected === null ? '작성 완료' : '저장하기'}</button></div>
+    </section>}
 
     {sheet !== 'none' && <div className="danji-sheet-backdrop" onClick={() => setSheet('none')}>
       {sheet === 'options' ? <div className="danji-sheet danji-option-sheet" onClick={(event) => event.stopPropagation()}>
