@@ -6,3 +6,30 @@
 .danji-detail{height:calc(100dvh - 133px);min-height:560px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:95px}.danji-large-card{width:min(294px,82vw);padding:12px;background:white;border-radius:18px;box-shadow:0 0 4px #78573e30;position:relative}.danji-large-card img,.danji-large-card p{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;background:#f7f7f5}.danji-large-card p{display:grid;place-items:center;text-align:center;white-space:pre-wrap;padding:24px;line-height:1.5;font-size:17px}.danji-large-card time{display:block;text-align:center;color:#666;font-size:15px;padding:14px 0 0}.danji-badge{position:absolute;top:24px;left:28px;padding:4px 8px;border-radius:14px;background:#ffd158;font-size:13px;font-weight:bold;z-index:1}.danji-detail-text{max-width:294px;text-align:center;margin:20px auto 0;white-space:pre-wrap;color:#4e5968}
 .danji-editor{padding:26px 20px 120px;height:calc(100dvh - 133px);overflow:auto}.danji-editor h1{font-size:22px;margin:0 0 22px}.danji-editor label{display:flex;align-items:center;justify-content:space-between;font-size:15px;margin-bottom:16px}.danji-editor input[type=date]{border:1px solid #e5e8eb;padding:10px;border-radius:10px}.danji-photo-input{width:150px;height:150px;border-radius:12px;background:#f7f7f5;display:grid;place-items:center;text-align:center;color:#6b7684;cursor:pointer}.danji-photo-input img{width:100%;height:100%;object-fit:cover;border-radius:12px}.danji-remove-photo{background:none;color:#6b7684;font-size:13px;margin:8px 0}.danji-editor textarea{width:100%;height:170px;margin-top:18px;padding:16px;border:1px solid #e5e8eb;border-radius:12px;resize:none;user-select:text}.danji-editor small{display:block;text-align:right;color:#8b95a1}.danji-editor .danji-actions{position:fixed;max-width:390px;margin:auto}
 @media(max-height:700px){.danji-jar{transform:translateX(-50%) scale(.83)}.danji-dots{bottom:105px}}
+
+/* Figma's 375 × 812 autumn scene: each illustration remains a separate asset. */
+.danji-scene{width:375px;max-width:100%;height:calc(100dvh - 133px);min-height:679px;margin:auto;overflow:hidden}
+.danji-art{position:absolute;pointer-events:none;max-width:none}
+.danji-art.ground{width:375px;height:288px;left:0;top:391px}
+.danji-art.shadow-a{width:338px;height:107px;left:12px;top:447px}
+.danji-art.shadow-b{width:323px;height:111px;left:35px;top:443px}
+.danji-art.leaf-top{width:152px;height:121px;left:-14px;top:-13px;object-fit:contain}
+.danji-art.leaf-right{width:75px;height:69px;right:-3px;top:165px;opacity:.65;filter:blur(2px)}
+.danji-art.leaf-left{width:125px;height:115px;left:-47px;top:228px;opacity:.5;filter:blur(3px)}
+.danji-jar{position:absolute;left:0;top:0;width:375px;height:679px;transform:none;filter:none;pointer-events:none}
+.danji-jar img{position:absolute;max-width:none}
+.danji-jar .jar-back{width:335px;height:371px;left:20px;top:149px}
+.danji-jar .jar-inner{width:313px;height:348px;left:31px;top:161px}
+.danji-jar .jar-glow{width:313px;height:315px;left:31px;top:194px}
+.danji-jar .jar-lid-base{width:262px;height:79px;left:56px;top:98px;z-index:2}
+.danji-jar .jar-lid-top{width:243px;height:50px;left:66px;top:82px;z-index:3}
+.danji-scene .danji-polaroid{z-index:4;width:98px;height:118px;padding:4px;background:#fff;border-radius:6px;box-shadow:0 0 4px #78573e30}
+.danji-scene .danji-polaroid img,.danji-scene .danji-polaroid>span:first-child{width:90px;height:90px}
+.danji-scene .danji-polaroid.position-0{left:58px;top:198px;transform:rotate(-3deg)}
+.danji-scene .danji-polaroid.position-1{left:217px;right:auto;top:206px;transform:rotate(-11deg)}
+.danji-scene .danji-polaroid.position-2{left:138px;top:262px;transform:none;z-index:5}
+.danji-scene .danji-polaroid.position-3{left:56px;top:342px;bottom:auto;transform:rotate(-5deg)}
+.danji-scene .danji-polaroid.position-4{left:235px;right:auto;top:324px;bottom:auto;transform:rotate(18deg)}
+.danji-scene .danji-dots{bottom:126px}
+.danji-scene .danji-actions{bottom:46px}
+@media(max-height:700px){.danji-scene .danji-jar{transform:none}.danji-scene .danji-dots{bottom:126px}}

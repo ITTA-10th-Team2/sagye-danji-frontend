@@ -1,5 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
 import './Danji.css';
+import ground from '../assets/danji/ground.svg';
+import shadowA from '../assets/danji/shadow-a.svg';
+import shadowB from '../assets/danji/shadow-b.svg';
+import jarBack from '../assets/danji/jar-back.svg';
+import jarInner from '../assets/danji/jar-inner.svg';
+import jarGlow from '../assets/danji/jar-glow.svg';
+import jarLidBase from '../assets/danji/jar-lid-base.svg';
+import jarLidTop from '../assets/danji/jar-lid-top.svg';
+import leavesTop from '../assets/danji/leaves-top.png';
+import leafRight from '../assets/danji/leaf-right.png';
+import leafLeft from '../assets/danji/leaf-left.png';
+import sample1 from '../assets/danji/sample-1.jpg';
+import sample2 from '../assets/danji/sample-2.jpg';
+import sample3 from '../assets/danji/sample-3.jpg';
+import sample4 from '../assets/danji/sample-4.jpg';
+import sample5 from '../assets/danji/sample-5.jpg';
 
 type RecordItem = { id: string; date: string; image?: string; text: string; season: string };
 const STORAGE_KEY = 'sagye-danji-records-v1';
@@ -7,6 +23,7 @@ const SEASONS = ['봄', '여름', '가을', '겨울'];
 const seasonForMonth = (month: number) => SEASONS[Math.floor((month % 12) / 3) === 0 ? 3 : Math.floor((month % 12) / 3) - 1];
 const currentSeason = () => seasonForMonth(new Date().getMonth() + 1);
 const dateLabel = (date: string) => date.replaceAll('-', '/');
+const samplePhotos = [sample1, sample4, sample3, sample5, sample2];
 
 function loadRecords(): RecordItem[] {
   try {
@@ -128,19 +145,27 @@ export default function Danji() {
         </section>
       ) : (
         <section className="danji-scene">
-          <div className="danji-season-picker" aria-label="계절 선택">
-            {SEASONS.map((name) => <button key={name} className={season === name ? 'active' : ''} onClick={() => setSeason(name)}>{name}</button>)}
-          </div>
+          <img className="danji-art ground" src={ground} alt="" />
+          <img className="danji-art shadow-a" src={shadowA} alt="" />
+          <img className="danji-art shadow-b" src={shadowB} alt="" />
+          <img className="danji-art leaf-top" src={leavesTop} alt="" />
+          <img className="danji-art leaf-right" src={leafRight} alt="" />
+          <img className="danji-art leaf-left" src={leafLeft} alt="" />
           <div className="danji-jar" aria-label={`${season} 단지`}>
-            <div className="danji-jar-lid" /><div className="danji-jar-body">
-              {seasonRecords.slice(0, 5).map((item, index) => <button key={item.id} className={`danji-polaroid position-${index}`} onClick={() => arranging ? undefined : setSelectedId(item.id)}>
-                {item.image ? <img src={item.image} alt="" /> : <span>{item.text}</span>}
-                <time>{dateLabel(item.date)}</time>
-                {arranging && <span className="danji-order"><span onClick={(event) => { event.stopPropagation(); moveRecord(item.id, -1); }}>↑</span><span onClick={(event) => { event.stopPropagation(); moveRecord(item.id, 1); }}>↓</span></span>}
-              </button>)}
-              {!seasonRecords.length && <p className="danji-jar-empty">{season}의 기억을<br />단지에 담아보세요</p>}
-            </div>
+            <img className="jar-back" src={jarBack} alt="" />
+            <img className="jar-inner" src={jarInner} alt="" />
+            <img className="jar-glow" src={jarGlow} alt="" />
+            <img className="jar-lid-base" src={jarLidBase} alt="" />
+            <img className="jar-lid-top" src={jarLidTop} alt="" />
           </div>
+          {(seasonRecords.length ? seasonRecords.slice(0, 5) : samplePhotos).map((entry, index) => {
+            const item = typeof entry === 'string' ? null : entry;
+            return <button key={item?.id ?? index} className={`danji-polaroid position-${index}`} onClick={() => item && !arranging ? setSelectedId(item.id) : !item ? beginNew() : undefined} aria-label={item ? `${dateLabel(item.date)} 기록 보기` : '예시 사진, 기록하기'}>
+              {item ? (item.image ? <img src={item.image} alt="" /> : <span>{item.text}</span>) : <img src={entry as string} alt="" />}
+              <time>{item ? dateLabel(item.date) : '2026/09/23'}</time>
+              {item && arranging && <span className="danji-order"><span onClick={(event) => { event.stopPropagation(); moveRecord(item.id, -1); }}>↑</span><span onClick={(event) => { event.stopPropagation(); moveRecord(item.id, 1); }}>↓</span></span>}
+            </button>;
+          })}
           <div className="danji-dots"><span className="active" /><span /></div>
           <div className="danji-actions"><button aria-label="단지 꾸미기" onClick={() => setArranging(!arranging)}>{arranging ? '완료' : '☷'}</button><button className="primary" onClick={beginNew}>✎ &nbsp; 기록하기</button></div>
         </section>
