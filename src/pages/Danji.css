@@ -100,9 +100,9 @@
 
 /* The illustration follows the viewport height while retaining its 375px art coordinates. */
 .danji-page{width:min(100vw,375px);height:100dvh;min-height:700px;aspect-ratio:auto}
-.danji-header{height:103px;padding-top:56px}
+.danji-header{height:94px;padding-top:50px}
 .danji-tabs{height:39px}
-.danji-scene,.danji-gallery,.danji-detail,.danji-editor{top:142px;height:calc(100% - 142px)}
+.danji-scene,.danji-gallery,.danji-detail,.danji-editor{top:133px;height:calc(100% - 133px)}
 .danji-art.leaf-right{right:10%;top:3%;opacity:1;filter:none}
 .danji-art.leaf-left{opacity:.42}
 .danji-jar-empty{z-index:5;top:44%;padding:0 50px;font-weight:600}
