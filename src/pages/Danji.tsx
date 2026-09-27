@@ -70,6 +70,7 @@ export default function Danji() {
   }
 
   return <div className="danji-page">
+    {import.meta.env.DEV && <div className="danji-device-status" aria-hidden="true"><span>9:41</span><i /><span>▂▅ ▰</span></div>}
     <header className="danji-header">
       <button aria-label="뒤로" onClick={() => view === 'editor' ? setView('detail') : view === 'detail' || view === 'decorate' ? setView('jar') : window.history.back()}>‹</button>
       <span className="danji-app-icon">⌂</span><strong>사계단지</strong><span className="danji-header-spacer" />
@@ -89,11 +90,12 @@ export default function Danji() {
         <img className="jar-glow" src={jarGlow} alt="" /><img className="jar-lid-base" src={jarLidBase} alt="" />
         <img className="jar-lid-top" src={jarLidTop} alt="" />
       </div>
+      <div className="danji-decoration-dots" aria-hidden="true">{Array.from({ length: 6 }, (_, index) => <span key={index} />)}</div>
       {previewRecords.slice(page * 5, page * 5 + 5).map((record: typeof initialRecords[number], index: number) => <button key={record.id} className={`danji-polaroid position-${index}`} onClick={() => view === 'jar' && openDetail(record.id)} aria-label={`${record.date} 기록 상세보기`}>
         <img src={record.image} alt="가을 기록 예시" /><time>{record.date}</time>
       </button>)}
       <div className="danji-stickers">{stickers.map(item => <button key={item.id} style={{ left: `${item.x}%`, top: `${item.y}%` }} onClick={() => view === 'decorate' && setStickers(items => items.filter(sticker => sticker.id !== item.id))}>{item.icon}</button>)}{view === 'decorate' && <div className="sticker-target" onClick={e => { const rect = e.currentTarget.getBoundingClientRect(); setStickers(items => [...items, { id: Date.now(), icon: stickerIcon, x: (e.clientX - rect.left) / rect.width * 100, y: (e.clientY - rect.top) / rect.height * 100 }]); }} />}</div>
-      {view === 'jar' ? <><div className="danji-dots">{Array.from({ length: pageCount }, (_, index) => <button key={index} aria-label={`${index + 1}번째 단지`} className={page === index ? 'active' : ''} onClick={() => setPage(index)} />)}</div><div className="danji-actions"><button aria-label="단지 편집 메뉴" onClick={() => setSheet('options')}>☷</button><button className="primary" onClick={createRecord}>✎ &nbsp; 기록하기</button></div></> : <div className="decorate-controls"><p>단지를 눌러 스티커를 붙이세요. 스티커를 누르면 제거됩니다.</p>{['🍁', '✨', '🌰', '🍂'].map(icon => <button key={icon} className={stickerIcon === icon ? 'active' : ''} onClick={() => setStickerIcon(icon)}>{icon}</button>)}<button className="done" onClick={() => setView('jar')}>꾸미기 완료</button></div>}
+      {view === 'jar' ? <><div className="danji-dots">{Array.from({ length: pageCount }, (_, index) => <button key={index} aria-label={`${index + 1}번째 단지`} className={page === index ? 'active' : ''} onClick={() => setPage(index)} />)}</div><div className="danji-actions"><button className="danji-settings-button" aria-label="단지 편집 메뉴" onClick={() => setSheet('options')}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="8" cy="18" r="2"/></svg></button><button className="primary" onClick={createRecord}><span className="danji-pencil" aria-hidden="true">✎</span> 기록하기</button></div></> : <div className="decorate-controls"><p>단지를 눌러 스티커를 붙이세요. 스티커를 누르면 제거됩니다.</p>{['🍁', '✨', '🌰', '🍂'].map(icon => <button key={icon} className={stickerIcon === icon ? 'active' : ''} onClick={() => setStickerIcon(icon)}>{icon}</button>)}<button className="done" onClick={() => setView('jar')}>꾸미기 완료</button></div>}
     </section>}
 
     {view === 'all' && <section className="danji-gallery" aria-label="전체 기록 예시">
@@ -124,5 +126,6 @@ export default function Danji() {
         <button className="danji-sheet-primary" disabled={selected === null} onClick={() => selected !== null && editRecord(selected)}>기록 수정하기</button>
       </div>}
     </div>}
+    {import.meta.env.DEV && <div className="danji-device-indicator" aria-hidden="true" />}
   </div>;
 }
