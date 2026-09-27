@@ -115,3 +115,29 @@
 .danji-confirm div{display:flex;gap:8px}.danji-confirm button{flex:1;padding:12px;border-radius:10px;background:#f2f4f6;font-weight:600}
 .danji-confirm button.danger{background:#e5484d;color:white}
 @media(max-height:700px){.danji-page{min-height:0}.danji-scene,.danji-gallery,.danji-detail,.danji-editor{top:133px;height:calc(100% - 133px)}.danji-header{height:94px;padding-top:50px}}
+
+/* Art coordinates scale with the screen width, so a tall viewport adds room below the jar. */
+.danji-scene{container-type:inline-size}
+.danji-art.ground{top:104.27cqw}
+.danji-art.shadow-a{top:119.2cqw}
+.danji-art.shadow-b{top:118.13cqw}
+.danji-art.leaf-top{top:-3.47cqw}
+.danji-art.leaf-right{top:7.47cqw}
+.danji-art.leaf-left{top:60.8cqw}
+.danji-jar .jar-back{top:39.73cqw}
+.danji-jar .jar-inner{top:42.93cqw}
+.danji-jar .jar-glow{top:51.73cqw}
+.danji-jar .jar-lid-base{top:22.13cqw}
+.danji-jar .jar-lid-top{top:21.87cqw}
+.danji-scene .danji-polaroid.position-0{top:52.8cqw}
+.danji-scene .danji-polaroid.position-1{top:54.93cqw}
+.danji-scene .danji-polaroid.position-2{top:69.87cqw}
+.danji-scene .danji-polaroid.position-3{top:91.2cqw}
+.danji-scene .danji-polaroid.position-4{top:86.4cqw}
+.danji-decoration-dots span:nth-child(1){top:60.27cqw}
+.danji-decoration-dots span:nth-child(2){top:104.8cqw}
+.danji-decoration-dots span:nth-child(3){top:93.87cqw}
+.danji-decoration-dots span:nth-child(4){top:117.33cqw}
+.danji-decoration-dots span:nth-child(5){top:52.8cqw}
+.danji-decoration-dots span:nth-child(6){top:68.53cqw}
+.danji-jar-empty{top:84cqw}
