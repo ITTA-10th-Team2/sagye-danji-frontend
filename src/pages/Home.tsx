@@ -18,7 +18,7 @@ export default function Home() {
         </section>
 
         {/* 단지 리스트 & 테이블 */}
-        <section className="relative mt-auto flex flex-col items-center w-full pb-[24vh]">
+        <section className="relative mt-auto flex flex-col items-center w-full pb-[20vh]">
           <div className="w-full px-6 relative z-20">
             <SeasonJarList />
           </div>

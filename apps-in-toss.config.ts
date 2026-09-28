@@ -5,6 +5,15 @@ export default defineConfig({
   brand: {
     primaryColor: '#3182F6', // 화면에 노출될 앱의 기본 색상
   },
-  permissions: [],
+  permissions: [
+    {
+      name: 'camera',
+      access: 'access',
+    },
+    {
+      name: 'photos',
+      access: 'read',
+    },
+  ],
   webBundleDir: 'dist',
 });

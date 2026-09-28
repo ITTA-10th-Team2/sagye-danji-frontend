@@ -1,18 +1,18 @@
 export default function RecommendationCard() {
   return (
     <div className="mx-auto flex flex-col items-start w-[80%] p-5 bg-white/30 backdrop-opacity-50 border border-white/40 rounded-[12px] shadow-sm">
-      {/* 1. 아이콘 영역 */}
+      {/* 아이콘 영역 */}
       <div className="flex items-center justify-center w-12 h-12 mb-3 bg-[#07194C]/5 rounded-[16px] shadow-sm">
         <img src="/assets/icons/sun.svg" className="w-[70%]" />
       </div>
 
-      {/* 2. 서브 타이틀 */}
+      {/* 서브 타이틀 */}
       <span className="mb-1 text-[13px] font-medium text-[#03122880]">오늘의 추천 콘텐츠</span>
 
-      {/* 3. 메인 타이틀 */}
+      {/* 메인 타이틀 */}
       <h2 className="mb-3 text-[28px] font-bold text-[#191F28]">지금이 제철인 밤</h2>
 
-      {/* 4. 본문 설명 */}
+      {/* 본문 설명 */}
       <p className="text-[17px] font-medium text-[#03122880] leading-snug">
         여유롭게 보늬밤을
         <br />

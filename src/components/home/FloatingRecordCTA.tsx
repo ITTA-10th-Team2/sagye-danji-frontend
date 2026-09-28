@@ -1,18 +1,123 @@
 import { useState } from 'react';
 import { BottomSheet } from '@toss/tds-mobile';
+import { Device, getPermission, openPermissionDialog } from '@apps-in-toss/web-framework';
 
 export default function FloatingRecordCTA() {
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
+  const [isPermissionSheetOpen, setIsPermissionSheetOpen] = useState<boolean>(false);
+  const [permissionTarget, setPermissionTarget] = useState<'camera' | 'album'>('album');
 
-  //   const handleCameraClick = () => {
-  //     console.log('카메라로 촬영 로직 실행');
-  //     setIsBottomSheetOpen(false);
-  //   };
+  // 앨범 선택 시
+  const handleGalleryClick = () => {
+    setPermissionTarget('album');
+    setIsBottomSheetOpen(false);
+    setTimeout(() => {
+      setIsPermissionSheetOpen(true);
+    }, 200);
+  };
 
-  //   const handleGalleryClick = () => {
-  //     console.log('앨범에서 선택 로직 실행');
-  //     setIsBottomSheetOpen(false);
-  //   };
+  // 카메라 선택 시
+  const handleCameraClick = () => {
+    setPermissionTarget('camera');
+    setIsBottomSheetOpen(false);
+    setTimeout(() => setIsPermissionSheetOpen(true), 200);
+  };
+
+  // 권한 허용 시트 내용
+  const permissionContent = {
+    album: {
+      title: '사진 접근 권한이 필요해요',
+      desc: '사계단지에 기록할 사진을 선택하기 위해\n사진 접근 권한이 필요해요.',
+      icon: '/assets/icons/gallery.svg',
+      collect: '기기 내 사진',
+    },
+    camera: {
+      title: '카메라 접근 권한이 필요해요',
+      desc: '사계단지에 기록할 순간을 직접 촬영하기 위해\n카메라 사용 권한이 필요해요.',
+      icon: '/assets/icons/camera.svg',
+      collect: '카메라로 촬영한 사진',
+    },
+  };
+
+  const content = permissionContent[permissionTarget];
+
+  // '계속하기' 버튼 클릭 시
+  const handleContinueClick = async () => {
+    try {
+      // 갤러리 권한일 시
+      if (permissionTarget === 'album') {
+        let status = await getPermission({ name: 'photos', access: 'read' });
+
+        // 권한 팝업 열기
+        if (status !== 'allowed') {
+          status = await openPermissionDialog({ name: 'photos', access: 'read' });
+        }
+
+        if (status === 'denied') {
+          console.log('갤러리 접근 권한을 거부했어요.');
+          setIsPermissionSheetOpen(false);
+          return;
+        }
+
+        if (status === 'allowed') {
+          setIsPermissionSheetOpen(false);
+
+          // 사진 선택
+          const items = await Device.getAlbumItems({
+            types: ['PHOTO'],
+            maxCount: 10,
+            base64: true,
+          });
+
+          if (items.length === 0) {
+            console.log('사진 선택이 취소되었어요.');
+            return;
+          }
+
+          // 수정 예정 - 기록 화면 만들면 사진 넘기기
+          items.forEach((item) => {
+            console.log('앨범에서 가져온 사진:', item.type, item.id);
+          });
+        }
+      } else if (permissionTarget === 'camera') {
+        // 카메라 권한일 시
+        let status = await getPermission({ name: 'camera', access: 'access' });
+
+        // 권한 팝업 열기
+        if (status !== 'allowed') {
+          status = await openPermissionDialog({ name: 'camera', access: 'access' });
+        }
+
+        if (status === 'denied') {
+          console.log('카메라 접근 권한을 거부했어요.');
+          setIsPermissionSheetOpen(false);
+          return;
+        }
+
+        if (status === 'allowed') {
+          setIsPermissionSheetOpen(false);
+
+          // 촬영하기
+          try {
+            const response = await Device.openCamera({ base64: true });
+
+            if (!response || !response.dataUri) {
+              console.log('사진 촬영이 취소되었어요.');
+              return;
+            }
+
+            // 수정 예정 - 기록 화면 만들면 사진 넘기기
+            const imageUri = 'data:image/jpeg;base64,' + response.dataUri;
+            console.log('촬영한 사진:', imageUri);
+          } catch (error) {
+            console.error('카메라 실행 및 촬영 오류:', error);
+          }
+        }
+      }
+    } catch (error: any) {
+      console.error('권한 요청 또는 실행 중 오류:', error.message || error);
+    }
+  };
 
   return (
     <>
@@ -26,15 +131,13 @@ export default function FloatingRecordCTA() {
         {/* 기록하기 버튼 */}
         <button
           className="px-3.5 py-2 text-[13px] font-semibold text-white rounded-xl! bg-gradient-to-r from-[#FFB84C] to-[#FFA31A] shadow-[0_2px_8px_rgba(255,163,26,0.3)] active:scale-95 transition-transform"
-          onClick={() => {
-            setIsBottomSheetOpen(true);
-          }}
+          onClick={() => setIsBottomSheetOpen(true)}
         >
           기록하기
         </button>
       </div>
 
-      {/* 바텀시트 */}
+      {/* 사진 추가 바텀시트 */}
       <BottomSheet
         open={isBottomSheetOpen}
         onClose={() => setIsBottomSheetOpen(false)}
@@ -43,13 +146,13 @@ export default function FloatingRecordCTA() {
           <div className="flex w-full gap-3 px-6 pb-6">
             <button
               className="flex-1 py-4 text-[17px] font-semibold text-[#4E5968] bg-[#F2F4F6] rounded-2xl! active:scale-95 transition-transform"
-              onClick={() => setIsBottomSheetOpen(false)}
+              onClick={handleCameraClick}
             >
               카메라로 촬영
             </button>
             <button
               className="flex-1 py-4 text-[17px] font-semibold text-white bg-[#ffb331] rounded-2xl! active:scale-95 transition-transform"
-              onClick={() => setIsBottomSheetOpen(false)}
+              onClick={handleGalleryClick}
             >
               앨범에서 선택
             </button>
@@ -58,6 +161,65 @@ export default function FloatingRecordCTA() {
       >
         <div className="px-6 pb-3">
           <p className="text-[15px] font-medium text-gray-500">등록일 기준으로 맞는 계절에 자동 저장돼요.</p>
+        </div>
+      </BottomSheet>
+
+      {/* 권한 설정 바텀시트 */}
+      <BottomSheet
+        open={isPermissionSheetOpen}
+        onClose={() => setIsPermissionSheetOpen(false)}
+        header={<BottomSheet.Header>{content.title}</BottomSheet.Header>}
+        cta={
+          <div className="flex w-full gap-3 px-6 pb-6">
+            <button
+              className="flex-1 py-4 text-[17px] font-semibold text-[#4E5968] bg-[#F2F4F6] rounded-2xl! active:scale-95 transition-transform"
+              onClick={() => setIsPermissionSheetOpen(false)}
+            >
+              뒤로
+            </button>
+            <button
+              className="flex-1 py-4 text-[17px] font-semibold text-white bg-[#ffb331] rounded-2xl! active:scale-95 transition-transform"
+              onClick={handleContinueClick}
+            >
+              계속하기
+            </button>
+          </div>
+        }
+      >
+        <div className="px-6 pb-6">
+          <p className="text-[15px] font-medium text-gray-500 whitespace-pre-line">{content.desc}</p>
+        </div>
+
+        <div className="px-6 pb-8">
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center gap-4">
+              <img src={content.icon} alt="수집 항목" />
+              <div className="flex flex-col mt-0.5">
+                <span className="text-[16px] font-bold text-[#191F28]">수집 항목</span>
+                <span className="text-[13px] text-gray-500 font-medium">{content.collect}</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <img src="/assets/icons/document.svg" alt="이용 목적" />
+              <div className="flex flex-col mt-0.5">
+                <span className="text-[16px] font-bold text-[#191F28]">이용 목적</span>
+                <span className="text-[13px] text-gray-500 font-medium">사계단지에 기록할 사진 촬영 및 업로드</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <img src="/assets/icons/lock.svg" alt="보관 기간" />
+              <div className="flex flex-col mt-0.5">
+                <span className="text-[16px] font-bold text-[#191F28]">보관 기간</span>
+                <span className="text-[13px] text-gray-500 font-medium">
+                  선택한 사진만 사용되며,
+                  <br />
+                  별도로 저장하지 않아요.
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </BottomSheet>
     </>
