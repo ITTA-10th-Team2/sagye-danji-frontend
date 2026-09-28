@@ -47,33 +47,31 @@ export default function Write() {
   const isLastStep = currentIndex === DUMMY_PHOTOS.length - 1;
 
   return (
-    <main className="flex flex-col h-dvh px-5 pt-4 pb-6 bg-white overflow-hidden">
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <ListHeader
-          title={
-            <ListHeader.TitleParagraph typography="t4" fontWeight="bold">
-              {currentWord} 번째 사진의 <br />
-              이야기를 작성해주세요.
-            </ListHeader.TitleParagraph>
-          }
-          description={
-            <ListHeader.DescriptionParagraph fontWeight="regular">
-              {currentIndex + 1}/{DUMMY_PHOTOS.length}
-            </ListHeader.DescriptionParagraph>
-          }
-          rightAlignment="center"
-        />
-      </div>
+    <div className="flex flex-col h-dvh bg-white overflow-hidden">
+      <ListHeader
+        title={
+          <ListHeader.TitleParagraph typography="t4" fontWeight="bold">
+            {currentWord} 번째 사진의 <br />
+            이야기를 작성해주세요.
+          </ListHeader.TitleParagraph>
+        }
+        description={
+          <ListHeader.DescriptionParagraph fontWeight="regular">
+            {currentIndex + 1}/{DUMMY_PHOTOS.length}
+          </ListHeader.DescriptionParagraph>
+        }
+      />
+      <main className="flex flex-col px-5 pt-4 pb-6">
+        <section>
+          <UploadedPhoto imageUrl={DUMMY_PHOTOS[currentIndex]} />
+        </section>
 
-      <section>
-        <UploadedPhoto imageUrl={DUMMY_PHOTOS[currentIndex]} />
-      </section>
+        <section>
+          <WriteInput key={`input-${currentIndex}`} onTextChange={handleTextChange} initialValue={currentText} />
+        </section>
 
-      <section>
-        <WriteInput key={`input-${currentIndex}`} onTextChange={handleTextChange} initialValue={currentText} />
-      </section>
-
-      <WriteBottomCTA onBackClick={handleBack} onNextClick={handleNext} isLastStep={isLastStep} />
-    </main>
+        <WriteBottomCTA onBackClick={handleBack} onNextClick={handleNext} isLastStep={isLastStep} />
+      </main>
+    </div>
   );
 }
