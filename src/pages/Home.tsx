@@ -30,7 +30,7 @@ export default function Home() {
       </div>
 
       {/* CTA 버튼 */}
-      <div className="absolute bottom-0 left-0 w-full px-5 pb-safe mb-6 z-30">
+      <div className="absolute bottom-0 left-0 w-full px-5 pb-safe mb-6 z-10">
         <FloatingRecordCTA />
       </div>
     </main>

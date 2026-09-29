@@ -16,12 +16,14 @@
     "@tailwindcss/vite": "^4.3.3",
     "@toss/tds-mobile": "^2.5.1",
     "@toss/tds-mobile-ait": "^2.5.1",
+    "lottie-react": "^3.1.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.18.4",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
+    "@apps-in-toss/devtools": "^3.5.0",
     "@eslint/js": "^10.0.1",
     "@types/node": "^24.13.3",
     "@types/react": "^18.3.1",
@@ -34,7 +36,6 @@
     "prettier": "^3.9.9",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.69.0",
-    "vite": "^8.3.0",
-    "@apps-in-toss/devtools": "^3.5.0"
+    "vite": "^8.3.0"
   }
 }

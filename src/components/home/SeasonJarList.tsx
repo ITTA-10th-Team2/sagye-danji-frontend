@@ -1,6 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { createPortal } from 'react-dom';
 import SeasonJar from './SeasonJar';
 import { Modal } from '@toss/tds-mobile';
+import { Lottie } from 'lottie-react';
+import jarOpenAnimation from '../../../public/assets/lottie/jar-open.json';
 
 type SeasonType = '봄' | '여름' | '가을' | '겨울';
 
@@ -19,11 +23,14 @@ const JAR_DATA: JarData[] = [
 ];
 
 export default function SeasonJarList() {
+  const navigate = useNavigate();
+
   const [isSeasonModalOpen, setIsSeasonModalOpen] = useState<boolean>(false);
+  const [isAnimationPlaying, setIsAnimationPlaying] = useState<boolean>(false);
 
   const handleJarClick = (season: SeasonType) => {
-    console.log(`${season} 단지 클릭됨 / 추후 애니메이션 적용`);
     if (season !== '가을') setIsSeasonModalOpen(true);
+    else setIsAnimationPlaying(true);
   };
 
   return (
@@ -57,6 +64,25 @@ export default function SeasonJarList() {
           </button>
         </Modal.Content>
       </Modal>
+
+      {isAnimationPlaying &&
+        createPortal(
+          <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60">
+            <div className="w-full scale-350 origin-bottom">
+              <Lottie
+                src={jarOpenAnimation}
+                loop={false}
+                autoplay={true}
+                subscriptions={{
+                  complete: () => {
+                    navigate('/');
+                  },
+                }}
+              />
+            </div>
+          </div>,
+          document.body,
+        )}
     </>
   );
 }
