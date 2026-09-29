@@ -68,3 +68,11 @@
 .danji-edit-photo-action input{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;opacity:0!important;cursor:pointer!important}
 .danji-edit-back{position:relative}
 .danji-flip-front{position:absolute;right:9px;top:9px;background:#fff!important;border-radius:18px;padding:6px 11px;color:#4e5968;z-index:2;font-size:12px!important;box-shadow:0 1px 5px #0002}
+
+/* Extend the autumn canvas through the bottom safe area on tall screens. */
+.danji-page{height:max(100vh,100dvh)!important;min-height:max(100vh,100dvh)!important;background:#f7dfb2!important}
+.danji-scene{height:calc(100% - 138px)!important;background:linear-gradient(180deg,#fffaf4 0%,#fff6eb 62%,#f5ddb1 100%)!important}
+.danji-art.leaf-top{top:1%!important;left:-3%!important;width:43%!important}
+.danji-art.leaf-left{left:-10%!important;top:32%!important;width:19%!important;opacity:.38!important;filter:blur(4px)!important}
+.danji-art.leaf-right{right:5%!important;top:11%!important;width:14%!important;opacity:.58!important;filter:blur(5px)!important}
+body:has(.danji-page),#root:has(.danji-page),#root:has(.danji-page)>div,#root:has(.danji-page) main{min-height:max(100vh,100dvh)!important;background:#f7dfb2!important}
