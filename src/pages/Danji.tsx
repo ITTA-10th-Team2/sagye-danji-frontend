@@ -39,7 +39,7 @@ export default function Danji() {
   const [toast, setToast] = useState('');
   const [saveDone, setSaveDone] = useState(false);
   const [stickers, setStickers] = useState<{ id: number; icon: string; x: number; y: number }[]>(() => {
-    try { return JSON.parse(localStorage.getItem('danji-preview-stickers') || '[]'); }
+    try { return JSON.parse(localStorage.getItem('danji-preview-stickers-v2') || '[]'); }
     catch { return []; }
   });
   const [stickerIcon, setStickerIcon] = useState('🍁');
@@ -52,7 +52,7 @@ export default function Danji() {
   const selectedRecord = previewRecords.find(item => item.id === selected);
 
   useEffect(() => { localStorage.setItem('danji-preview-records', JSON.stringify(previewRecords)); }, [previewRecords]);
-  useEffect(() => { localStorage.setItem('danji-preview-stickers', JSON.stringify(stickers)); }, [stickers]);
+  useEffect(() => { localStorage.setItem('danji-preview-stickers-v2', JSON.stringify(stickers)); }, [stickers]);
   useEffect(() => {
     if (!toast) return;
     const timer = window.setTimeout(() => setToast(''), 2200);
