@@ -17,6 +17,20 @@ import sample2 from '../assets/danji/sample-2.jpg';
 import sample3 from '../assets/danji/sample-3.jpg';
 import sample4 from '../assets/danji/sample-4.jpg';
 import sample5 from '../assets/danji/sample-5.jpg';
+import sticker1 from '../assets/danji/stickers/1.png';
+import sticker2 from '../assets/danji/stickers/2.png';
+import sticker3 from '../assets/danji/stickers/3.png';
+import sticker4 from '../assets/danji/stickers/4.png';
+import sticker5 from '../assets/danji/stickers/5.png';
+import sticker6 from '../assets/danji/stickers/6.png';
+import sticker7 from '../assets/danji/stickers/7.png';
+
+const stickerOptions = [
+  { image: sticker1, label: '클로버' }, { image: sticker2, label: '비눗방울' },
+  { image: sticker3, label: '별똥별' }, { image: sticker4, label: '파란 꽃' },
+  { image: sticker5, label: '불꽃' }, { image: sticker6, label: '카메라' },
+  { image: sticker7, label: '분홍 꽃' },
+];
 
 const initialRecords = [sample1, sample4, sample3, sample5, sample2, sample3, sample1, sample4, sample5, sample2].map((image, id) => ({ id, image, date: '2026/09/23', note: '' }));
 type RecordItem = typeof initialRecords[number];
@@ -38,11 +52,11 @@ export default function Danji() {
   const [deleteIds, setDeleteIds] = useState<number[]>([]);
   const [toast, setToast] = useState('');
   const [saveDone, setSaveDone] = useState(false);
-  const [stickers, setStickers] = useState<{ id: number; icon: string; x: number; y: number }[]>(() => {
-    try { return JSON.parse(localStorage.getItem('danji-preview-stickers-v2') || '[]'); }
+  const [stickers, setStickers] = useState<{ id: number; option: number; x: number; y: number }[]>(() => {
+    try { return JSON.parse(localStorage.getItem('danji-preview-stickers-v3') || '[]'); }
     catch { return []; }
   });
-  const [stickerIcon, setStickerIcon] = useState('🍁');
+  const [stickerOption, setStickerOption] = useState(0);
   const [headerMenu, setHeaderMenu] = useState(false);
   const [view, setView] = useState<View>('jar');
   const [sheet, setSheet] = useState<Sheet>('none');
@@ -52,7 +66,7 @@ export default function Danji() {
   const selectedRecord = previewRecords.find(item => item.id === selected);
 
   useEffect(() => { localStorage.setItem('danji-preview-records', JSON.stringify(previewRecords)); }, [previewRecords]);
-  useEffect(() => { localStorage.setItem('danji-preview-stickers-v2', JSON.stringify(stickers)); }, [stickers]);
+  useEffect(() => { localStorage.setItem('danji-preview-stickers-v3', JSON.stringify(stickers)); }, [stickers]);
   useEffect(() => {
     if (!toast) return;
     const timer = window.setTimeout(() => setToast(''), 2200);
@@ -144,8 +158,8 @@ export default function Danji() {
       <img className="danji-art leaf-top" src={leavesTop} alt="" /><img className="danji-art leaf-right" src={leafRight} alt="" /><img className="danji-art leaf-left" src={leafLeft} alt="" />
       {previewRecords.length === 0 && <p className="danji-jar-empty">아직 담긴 기록이 없어요.<br />첫 계절을 기록해보세요.</p>}
       {previewRecords.slice(page * 5, page * 5 + 5).map((record, index) => <button key={record.id} className={`danji-polaroid position-${index}`} onClick={() => view === 'jar' && openDetail(record.id)}><img src={record.image} alt="가을 기록" /><time>{record.date}</time></button>)}
-      <div className="danji-stickers">{stickers.map(item => <button key={item.id} style={{ left: `${item.x}%`, top: `${item.y}%` }} onClick={() => view === 'decorate' && setStickers(items => items.filter(sticker => sticker.id !== item.id))}>{item.icon}</button>)}{view === 'decorate' && <div className="sticker-target" onClick={e => { const rect = e.currentTarget.getBoundingClientRect(); setStickers(items => [...items, { id: Date.now(), icon: stickerIcon, x: (e.clientX - rect.left) / rect.width * 100, y: (e.clientY - rect.top) / rect.height * 100 }]); }} />}</div>
-      {view === 'jar' ? <><div className="danji-dots">{Array.from({ length: pageCount }, (_, index) => <button key={index} className={page === index ? 'active' : ''} onClick={() => setPage(index)} />)}</div><div className="danji-actions"><button className="danji-settings-button" aria-label="단지 편집 메뉴" onClick={() => setSheet('options')}>☷</button><button className="primary" onClick={createRecord}>✎ &nbsp; 기록하기</button></div></> : <div className="decorate-controls"><p>단지를 눌러 스티커를 붙이세요.</p>{['🍁', '✨', '🌰', '🍂'].map(icon => <button key={icon} className={stickerIcon === icon ? 'active' : ''} onClick={() => setStickerIcon(icon)}>{icon}</button>)}<button className="done" onClick={() => setView('jar')}>꾸미기 완료</button></div>}
+      <div className="danji-stickers">{stickers.map(item => <button key={item.id} style={{ left: `${item.x}%`, top: `${item.y}%` }} aria-label={`${stickerOptions[item.option]?.label ?? '스티커'}${view === 'decorate' ? ' 제거' : ''}`} onClick={() => view === 'decorate' && setStickers(items => items.filter(sticker => sticker.id !== item.id))}><img src={stickerOptions[item.option]?.image} alt="" /></button>)}{view === 'decorate' && <div className="sticker-target" onClick={e => { const rect = e.currentTarget.getBoundingClientRect(); setStickers(items => [...items, { id: Date.now(), option: stickerOption, x: (e.clientX - rect.left) / rect.width * 100, y: (e.clientY - rect.top) / rect.height * 100 }]); }} />}</div>
+      {view === 'jar' ? <><div className="danji-dots">{Array.from({ length: pageCount }, (_, index) => <button key={index} className={page === index ? 'active' : ''} onClick={() => setPage(index)} />)}</div><div className="danji-actions"><button className="danji-settings-button" aria-label="단지 편집 메뉴" onClick={() => setSheet('options')}>☷</button><button className="primary" onClick={createRecord}>✎ &nbsp; 기록하기</button></div></> : <div className="decorate-controls"><p>단지를 눌러 스티커를 붙이세요.</p><div className="sticker-palette">{stickerOptions.map((option, index) => <button key={option.label} aria-label={`${option.label} 선택`} className={stickerOption === index ? 'active' : ''} onClick={() => setStickerOption(index)}><img src={option.image} alt="" /></button>)}</div><button className="done" onClick={() => setView('jar')}>꾸미기 완료</button></div>}
     </section>}
 
     {view === 'all' && <section className="danji-gallery" aria-label="전체 기록">
