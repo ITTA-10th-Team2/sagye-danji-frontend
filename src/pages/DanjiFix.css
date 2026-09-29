@@ -50,3 +50,21 @@
 /* Save completion modal */
 .danji-save-backdrop{position:absolute;inset:0;background:#0004;z-index:50;display:flex;align-items:flex-end}.danji-save-modal{width:100%;background:#fff;border-radius:22px 22px 0 0;padding:34px 24px calc(26px + env(safe-area-inset-bottom));text-align:center}.danji-save-modal strong{display:block;font-size:18px;margin-bottom:8px}.danji-save-modal p{font-size:13px;color:#8b95a1;margin-bottom:22px}.danji-save-jar{font-size:62px;margin:12px 0 20px}.danji-save-modal button{display:block;width:100%;height:48px;border-radius:12px;font-weight:700}.danji-save-modal .go-jar{background:#f4b943;color:#fff;margin-bottom:8px}.danji-save-modal .go-home{background:#f4f5f6;color:#6b7684}
 @media(max-width:390px){.danji-gallery{padding-left:20px!important;padding-right:20px!important}.danji-detail{padding-left:34px!important;padding-right:34px!important}}
+
+/* Autumn artwork and card placement from the supplied Figma frames. */
+.danji-scene{background:linear-gradient(180deg,#fffaf4 0%,#fff5e9 72%,#f7dfb2 100%)!important}
+.danji-art.leaf-top{width:42%!important;left:-4%!important;top:1%!important;z-index:9!important;object-fit:contain!important}
+.danji-art.leaf-left{width:17%!important;left:10%!important;top:10%!important;z-index:8!important;opacity:.9!important;filter:blur(1px)!important}
+.danji-art.leaf-right{width:14%!important;right:5%!important;top:9%!important;z-index:8!important;opacity:.65!important;filter:blur(4px)!important}
+.danji-art.ground{width:100%!important;left:0!important}
+.danji-decoration-dots{display:none!important}
+.danji-detail,.danji-editor{background:#fff8f0!important}
+.danji-detail{padding-top:106px!important}
+.danji-large-card{display:block!important;flex:0 0 auto!important;text-align:initial!important;border:0!important;color:inherit!important;cursor:pointer!important}
+.danji-large-card img,.danji-card-back{width:100%!important;aspect-ratio:1!important;border-radius:10px!important}
+.danji-card-back{display:grid;place-items:center;padding:24px;background:#faf8f4;color:#4e5968;text-align:center;white-space:pre-wrap;line-height:1.6}
+.danji-edit-photo-action{left:auto!important;right:10px!important;bottom:10px!important;transform:none!important;width:auto!important;height:auto!important;padding:7px 12px!important;border-radius:20px!important;background:#fff!important;font-size:13px!important;color:#4e5968!important;box-shadow:0 2px 8px #0002!important;display:block!important;cursor:pointer!important}
+.danji-edit-photo-action::after{content:none!important}
+.danji-edit-photo-action input{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;opacity:0!important;cursor:pointer!important}
+.danji-edit-back{position:relative}
+.danji-flip-front{position:absolute;right:9px;top:9px;background:#fff!important;border-radius:18px;padding:6px 11px;color:#4e5968;z-index:2;font-size:12px!important;box-shadow:0 1px 5px #0002}
