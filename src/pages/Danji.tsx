@@ -33,6 +33,7 @@ export default function Danji() {
   const [draftNote, setDraftNote] = useState('');
   const [draftImage, setDraftImage] = useState<string | null>(null);
   const [editBack, setEditBack] = useState(false);
+  const [detailBack, setDetailBack] = useState(false);
   const [deleteMode, setDeleteMode] = useState(false);
   const [deleteIds, setDeleteIds] = useState<number[]>([]);
   const [toast, setToast] = useState('');
@@ -66,6 +67,7 @@ export default function Danji() {
     setDraftNote(record.note);
     setDraftImage(record.image);
     setEditBack(false);
+    setDetailBack(false);
     setSheet('none');
     setView('editor');
   }
@@ -116,6 +118,7 @@ export default function Danji() {
       return;
     }
     setSelected(id);
+    setDetailBack(false);
     setView('detail');
     setSheet('none');
   }
@@ -139,7 +142,6 @@ export default function Danji() {
       <img className="danji-art ground" src={ground} alt="" /><img className="danji-art shadow-a" src={shadowA} alt="" /><img className="danji-art shadow-b" src={shadowB} alt="" />
       <div className="danji-jar" aria-hidden="true"><img className="jar-back" src={jarBack} alt="" /><img className="jar-inner" src={jarInner} alt="" /><img className="jar-glow" src={jarGlow} alt="" /><img className="jar-lid-base" src={jarLidBase} alt="" /><img className="jar-lid-top" src={jarLidTop} alt="" /></div>
       <img className="danji-art leaf-top" src={leavesTop} alt="" /><img className="danji-art leaf-right" src={leafRight} alt="" /><img className="danji-art leaf-left" src={leafLeft} alt="" />
-      <div className="danji-decoration-dots" aria-hidden="true">{Array.from({ length: 6 }, (_, index) => <span key={index} />)}</div>
       {previewRecords.length === 0 && <p className="danji-jar-empty">아직 담긴 기록이 없어요.<br />첫 계절을 기록해보세요.</p>}
       {previewRecords.slice(page * 5, page * 5 + 5).map((record, index) => <button key={record.id} className={`danji-polaroid position-${index}`} onClick={() => view === 'jar' && openDetail(record.id)}><img src={record.image} alt="가을 기록" /><time>{record.date}</time></button>)}
       <div className="danji-stickers">{stickers.map(item => <button key={item.id} style={{ left: `${item.x}%`, top: `${item.y}%` }} onClick={() => view === 'decorate' && setStickers(items => items.filter(sticker => sticker.id !== item.id))}>{item.icon}</button>)}{view === 'decorate' && <div className="sticker-target" onClick={e => { const rect = e.currentTarget.getBoundingClientRect(); setStickers(items => [...items, { id: Date.now(), icon: stickerIcon, x: (e.clientX - rect.left) / rect.width * 100, y: (e.clientY - rect.top) / rect.height * 100 }]); }} />}</div>
@@ -156,7 +158,10 @@ export default function Danji() {
     {view === 'all' && deleteMode && <div className="danji-delete-toolbar"><button className="cancel" onClick={() => { setDeleteMode(false); setDeleteIds([]); }}>취소</button><button className="delete" disabled={deleteIds.length === 0} onClick={deleteSelectedRecords}>삭제하기</button></div>}
 
     {view === 'detail' && selectedRecord && <section className="danji-detail">
-      <article className="danji-large-card"><img src={selectedRecord.image} alt="가을 기록" /><time>{selectedRecord.date}</time></article>
+      <button className="danji-large-card" onClick={() => setDetailBack(value => !value)} aria-label={detailBack ? '카드 앞면 보기' : '카드 뒷면 보기'}>
+        {detailBack ? <div className="danji-card-back">{selectedRecord.note || '오늘의 계절을 기록해보세요.'}</div> : <img src={selectedRecord.image} alt="가을 기록" />}
+        <time>{selectedRecord.date}</time>
+      </button>
       <div className="danji-detail-controls"><button onClick={() => setView('jar')}>뒤로</button><button onClick={() => editRecord(selectedRecord.id)}>수정하기</button></div>
     </section>}
 
@@ -164,11 +169,10 @@ export default function Danji() {
       {selected !== null && <div className="danji-edit-status">수정중</div>}
       <p className="danji-edit-help">카드를 눌러 뒷면을 확인해보세요.</p>
       <div className="danji-edit-card">
-        {!editBack ? <label className="danji-edit-photo" onClick={e => { if ((e.target as HTMLElement).tagName !== 'INPUT') setEditBack(true); }}>
+        {!editBack ? <div className="danji-edit-photo" onClick={() => setEditBack(true)} role="button" tabIndex={0} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setEditBack(true); } }} aria-label="카드 뒷면 보기">
           {draftImage ? <img src={draftImage} alt="선택한 기록 사진" /> : <span>사진을 선택해주세요</span>}
-          <span className="danji-edit-photo-action">사진 변경</span>
-          <input type="file" accept="image/*" onClick={e => e.stopPropagation()} onChange={e => { const file = e.target.files?.[0]; if (file) { const reader = new FileReader(); reader.onload = () => setDraftImage(String(reader.result)); reader.readAsDataURL(file); } }} />
-        </label> : <div className="danji-edit-back" onClick={() => setEditBack(false)}><textarea maxLength={500} value={draftNote} onClick={e => e.stopPropagation()} onChange={e => setDraftNote(e.target.value)} placeholder="오늘의 계절을 기록해보세요." aria-label="기록 내용" /></div>}
+          <label className="danji-edit-photo-action" onClick={e => e.stopPropagation()} aria-label="사진 변경">사진 변경<input type="file" accept="image/*" onChange={e => { const file = e.target.files?.[0]; if (file) { const reader = new FileReader(); reader.onload = () => setDraftImage(String(reader.result)); reader.readAsDataURL(file); } }} /></label>
+        </div> : <div className="danji-edit-back"><button type="button" className="danji-flip-front" onClick={() => setEditBack(false)}>사진 보기</button><textarea maxLength={500} value={draftNote} onChange={e => setDraftNote(e.target.value)} placeholder="오늘의 계절을 기록해보세요." aria-label="기록 내용" /></div>}
         <label className="danji-edit-date">날짜 <input type="date" value={draftDate} onChange={e => setDraftDate(e.target.value)} /></label>
         <small>{draftNote.length}/500</small>
       </div>
