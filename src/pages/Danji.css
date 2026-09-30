@@ -1,143 +1,1200 @@
-.danji-page{position:relative;min-height:100dvh;width:100%;background:linear-gradient(#fff 0 16%,#fff6ee 34%,#ffe1b8 100%);color:#333d4b;font-family:Arial,'Apple SD Gothic Neo',sans-serif;overflow:hidden;padding-bottom:env(safe-area-inset-bottom)}
-.danji-page button{cursor:pointer;border:0;font:inherit}.danji-header{height:94px;padding:50px 12px 0;display:flex;align-items:center;background:#fff;gap:4px;white-space:nowrap}.danji-header button{width:35px;height:34px;background:#f8f9fa;border-radius:50%;font-size:24px;color:#687582}.danji-header button:first-child{background:transparent;color:#191f28;font-size:32px}.danji-header strong{font-size:15px;color:#191f28}.danji-app-icon{background:#438bff;color:white;border-radius:6px;width:18px;height:18px;font-size:14px;display:grid;place-items:center}.danji-header-spacer{flex:1}.danji-tabs{height:39px;display:flex;padding:0 28px;background:#fff;border-bottom:1px solid #e5e8eb}.danji-tabs button{flex:1;background:none;color:#8b95a1;font-size:15px;font-weight:600}.danji-tabs button.active{color:#333d4b;border-bottom:2px solid #333d4b}
-.danji-actions{position:absolute;bottom:calc(46px + env(safe-area-inset-bottom));left:20px;right:20px;display:flex;gap:8px;height:48px}.danji-actions button{background:#e5e8eb;border-radius:14px;color:#4e5968;font-weight:600;font-size:17px;flex:1}.danji-actions button:first-child:not(:last-child){flex:.45}.danji-actions button.primary{background:#ffb331;color:white;flex:1.6}.danji-actions button:disabled{opacity:.5;cursor:default}
-.danji-scene{height:calc(100dvh - 133px);min-height:560px;position:relative}.danji-season-picker{position:absolute;top:32px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:2}.danji-season-picker button{background:#ffffffb8;border-radius:14px;padding:6px 10px;font-size:13px;color:#6b5b49}.danji-season-picker button.active{background:#ffb331;color:#fff}.danji-jar{position:absolute;width:min(92vw,344px);height:430px;top:calc(50% - 215px);left:50%;transform:translateX(-50%);filter:drop-shadow(0 13px 7px #a86a3540)}.danji-jar-lid{position:absolute;z-index:2;top:0;left:14%;width:72%;height:70px;border-radius:50% / 35%;background:linear-gradient(#ffba62 0 40%,#ff9929 41% 100%);box-shadow:0 6px 0 #ef8d27}.danji-jar-body{position:absolute;inset:55px 0 0;border:12px solid #fb8c29;background:#88481f;border-radius:30% 30% 22% 22% / 18% 18% 30% 30%;box-shadow:inset 8px 6px 0 #b2692c;overflow:hidden}.danji-jar-empty{color:#fff8e5;text-align:center;line-height:1.7;position:absolute;top:45%;width:100%;font-size:17px}.danji-polaroid{position:absolute;width:100px;height:120px;padding:4px 4px 2px;background:white;border-radius:6px;box-shadow:0 2px 5px #2b130d44;display:flex;flex-direction:column;align-items:center}.danji-polaroid img,.danji-polaroid>span:first-child{width:92px;height:92px;object-fit:cover;border-radius:3px;background:#f7f7f5}.danji-polaroid>span:first-child{overflow:hidden;padding:8px;font-size:12px;line-height:1.3;color:#333d4b}.danji-polaroid time{font-size:12px;color:#666;line-height:20px}.danji-polaroid.position-0{top:35px;left:18px;transform:rotate(-5deg)}.danji-polaroid.position-1{top:36px;right:20px;transform:rotate(-12deg)}.danji-polaroid.position-2{top:102px;left:calc(50% - 50px);z-index:1}.danji-polaroid.position-3{bottom:37px;left:18px;transform:rotate(-5deg)}.danji-polaroid.position-4{bottom:39px;right:17px;transform:rotate(18deg)}.danji-order{position:absolute;top:2px;right:2px;background:#fff;display:flex;gap:5px;padding:3px;border-radius:5px}.danji-order span{padding:2px 4px}.danji-dots{position:absolute;bottom:121px;left:0;right:0;display:flex;justify-content:center;gap:12px}.danji-dots span{width:8px;height:8px;background:#bfc7ce;border-radius:10px}.danji-dots span.active{width:14px;background:#e48000}
-.danji-gallery{padding:52px 30px 125px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-content:start;min-height:calc(100dvh - 133px)}.danji-mini-card{background:white;border-radius:6px;padding:4px;min-width:0;display:flex;flex-direction:column}.danji-mini-card img,.danji-mini-text{width:100%;aspect-ratio:1;object-fit:cover;border-radius:3px;background:#f7f7f5}.danji-mini-text{font-size:12px;overflow:hidden;padding:5px}.danji-mini-card time{font-size:12px;line-height:20px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.danji-empty{grid-column:1/-1;text-align:center;line-height:1.7;color:#6b7684;margin-top:25vh}.gallery-actions{position:fixed;max-width:390px;margin:auto}
-.danji-detail{height:calc(100dvh - 133px);min-height:560px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:95px}.danji-large-card{width:min(294px,82vw);padding:12px;background:white;border-radius:18px;box-shadow:0 0 4px #78573e30;position:relative}.danji-large-card img,.danji-large-card p{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;background:#f7f7f5}.danji-large-card p{display:grid;place-items:center;text-align:center;white-space:pre-wrap;padding:24px;line-height:1.5;font-size:17px}.danji-large-card time{display:block;text-align:center;color:#666;font-size:15px;padding:14px 0 0}.danji-badge{position:absolute;top:24px;left:28px;padding:4px 8px;border-radius:14px;background:#ffd158;font-size:13px;font-weight:bold;z-index:1}.danji-detail-text{max-width:294px;text-align:center;margin:20px auto 0;white-space:pre-wrap;color:#4e5968}
-.danji-editor{padding:26px 20px 120px;height:calc(100dvh - 133px);overflow:auto}.danji-editor h1{font-size:22px;margin:0 0 22px}.danji-editor label{display:flex;align-items:center;justify-content:space-between;font-size:15px;margin-bottom:16px}.danji-editor input[type=date]{border:1px solid #e5e8eb;padding:10px;border-radius:10px}.danji-photo-input{width:150px;height:150px;border-radius:12px;background:#f7f7f5;display:grid;place-items:center;text-align:center;color:#6b7684;cursor:pointer}.danji-photo-input img{width:100%;height:100%;object-fit:cover;border-radius:12px}.danji-remove-photo{background:none;color:#6b7684;font-size:13px;margin:8px 0}.danji-editor textarea{width:100%;height:170px;margin-top:18px;padding:16px;border:1px solid #e5e8eb;border-radius:12px;resize:none;user-select:text}.danji-editor small{display:block;text-align:right;color:#8b95a1}.danji-editor .danji-actions{position:fixed;max-width:390px;margin:auto}
-@media(max-height:700px){.danji-jar{transform:translateX(-50%) scale(.83)}.danji-dots{bottom:105px}}
+/* Figma 375 × 812. All scenery coordinates scale together with the mobile canvas. */
+.danji-page {
+  --record-card-left: 10.933333cqw;
+  --record-card-top: 62.4cqw;
+  --record-card-width: 78.4cqw;
+  --record-card-height: 88cqw;
+  --record-card-padding: 3.2cqw;
+  --record-photo-size: 72cqw;
+  position: relative;
+  container-type: inline-size;
+  width: min(100vw, 430px, 46.1823dvh);
+  aspect-ratio: 375/812;
+  flex: none;
+  margin: auto;
+  overflow: hidden;
+  color: #333d4b;
+  font-family: Arial, 'Apple SD Gothic Neo', sans-serif;
+  background: linear-gradient(179.964deg, #fff 0%, #fedcb6 97.646%);
+}
+.danji-page * {
+  box-sizing: border-box;
+}
+.danji-page button {
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+}
+.danji-page button:disabled {
+  cursor: default;
+}
+.danji-page button:focus-visible {
+  outline: 2px solid #3278ff;
+  outline-offset: 2px;
+}
+.danji-header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  height: 25.067cqw;
+  padding: 13.333cqw 2.667cqw 0 0;
+  background: #fff;
+  white-space: nowrap;
+}
+.danji-header > button {
+  flex: none;
+  width: 11.733cqw;
+  height: 11.733cqw;
+  background: none;
+}
+.danji-header > button img {
+  display: block;
+  width: 6.4cqw;
+  height: 6.4cqw;
+  margin: auto;
+}
+.danji-title-pill {
+  display: flex;
+  align-items: center;
+  gap: 1.6cqw;
+  height: 9.067cqw;
+  padding: 0 2.667cqw 0 3.2cqw;
+  border-radius: 99px;
+  background: rgba(0, 23, 51, 0.02);
+}
+.danji-title-pill strong {
+  font-size: 4cqw;
+  font-weight: 600;
+  color: #191f28;
+}
+.danji-app-icon,
+.danji-home-icon {
+  width: 4.8cqw;
+  height: 4.8cqw;
+}
+.danji-header-spacer {
+  flex: 1;
+}
+.header-pair {
+  display: flex;
+  align-items: center;
+  height: 9.067cqw;
+  border-radius: 99px;
+  background: rgba(0, 23, 51, 0.02);
+}
+.header-pair button {
+  width: 11.733cqw;
+  height: 9.067cqw;
+  background: none;
+}
+.header-pair img {
+  display: block;
+  width: 5.333cqw;
+  height: 5.333cqw;
+  margin: auto;
+}
+.danji-header-popover {
+  position: absolute;
+  right: 10px;
+  top: 90px;
+  border-radius: 12px;
+  padding: 12px;
+  background: white;
+  box-shadow: 0 4px 16px #0002;
+  font-size: 12px;
+}
+.danji-header-popover button {
+  display: block;
+  padding: 8px;
+  background: none;
+}
+.danji-device-status {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 13.333cqw;
+  z-index: 11;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3.733cqw 0 5.6cqw;
+  pointer-events: none;
+}
+.danji-device-status img:first-child {
+  width: 14.4cqw;
+  height: 5.6cqw;
+}
+.danji-device-status img:last-child {
+  width: 17.867cqw;
+  height: 3.2cqw;
+}
+.danji-device-status i {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 48.8cqw;
+  height: 7.467cqw;
+  border-radius: 0 0 6.4cqw 6.4cqw;
+  background: #000;
+}
+.danji-device-indicator {
+  position: absolute;
+  bottom: 2.133cqw;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 35.733cqw;
+  height: 1.333cqw;
+  border-radius: 99px;
+  background: #111;
+  z-index: 12;
+  pointer-events: none;
+}
+.danji-tabs {
+  position: relative;
+  z-index: 9;
+  display: flex;
+  height: 10.133cqw;
+  padding: 0 5.333cqw;
+  background: #fff;
+  border-bottom: 1px solid rgba(0, 27, 55, 0.1);
+}
+.danji-tabs button {
+  flex: 1;
+  position: relative;
+  background: none;
+  font-size: 4cqw;
+  color: #6b7684;
+  font-weight: 600;
+}
+.danji-tabs button.active {
+  color: #333d4b;
+  font-weight: 700;
+}
+.danji-tabs button.active::after {
+  content: '';
+  position: absolute;
+  left: 2.133cqw;
+  right: 2.133cqw;
+  bottom: 0;
+  height: 2px;
+  background: #333d4b;
+  border-radius: 10px;
+}
+/* Exported static layers retain the clipping and blur of their Figma parents. */
+.danji-jar-background,
+.danji-gallery-background {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.danji-jar-background i,
+.danji-gallery-background i {
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+.jar-ground {
+  left: 0;
+  top: 139.733cqw;
+  width: 100cqw;
+  height: 76.8cqw;
+  background-image: url('../assets/danji/current/jar-ground.png');
+}
+.jar-shadow-a {
+  left: 3.2cqw;
+  top: 154.667cqw;
+  width: 90.133cqw;
+  height: 28.533cqw;
+  background-image: url('../assets/danji/current/jar-shadow-a.png');
+}
+.jar-shadow-b {
+  left: 8.267cqw;
+  top: 153.6cqw;
+  width: 86.133cqw;
+  height: 29.6cqw;
+  background-image: url('../assets/danji/current/jar-shadow-b.png');
+}
+.jar-blurred-left {
+  left: 0;
+  top: 94.667cqw;
+  width: 22.449cqw;
+  height: 33.932cqw;
+  background-image: url('../assets/danji/current/jar-blurred-left.png');
+}
+.jar-blurred-right {
+  left: 80.533cqw;
+  top: 76.533cqw;
+  width: 19.467cqw;
+  height: 21.552cqw;
+  background-image: url('../assets/danji/current/jar-blurred-right.png');
+}
+.gallery-glow-a {
+  left: 34.933cqw;
+  top: 39.733cqw;
+  width: 65.067cqw;
+  height: 94.667cqw;
+  background-image: url('../assets/danji/current/gallery-glow-a.png');
+}
+.gallery-glow-b {
+  left: 0;
+  top: 12.8cqw;
+  width: 72.533cqw;
+  height: 126.133cqw;
+  background-image: url('../assets/danji/current/gallery-glow-b.png');
+}
+.gallery-ground {
+  left: 0;
+  top: 142.4cqw;
+  width: 100cqw;
+  height: 74.133cqw;
+  background-image: url('../assets/danji/current/gallery-ground.png');
+}
+.danji-record-background {
+  position: absolute;
+  left: 0;
+  top: 25.067cqw;
+  width: 100%;
+  height: 191.467cqw;
+  /* Keep the native 375 × 718 artwork ratio in both record views. */
+  background: url('../assets/danji/current/detail-background.png') 0 0/100% auto no-repeat;
+  pointer-events: none;
+}
+.view-detail,
+.view-editPreview {
+  background: #fff7ef;
+}
+.danji-scene {
+  position: absolute;
+  left: 0;
+  top: 35.2cqw;
+  width: 100%;
+  height: 181.333cqw;
+}
+.danji-art,
+.danji-jar {
+  position: absolute;
+  pointer-events: none;
+}
+.danji-art.leaf-top {
+  left: 0;
+  top: 0;
+  width: 36.8cqw;
+  height: 29.067cqw;
+}
+.danji-art.leaf-right {
+  left: 68.8cqw;
+  top: 12.267cqw;
+  width: 11.733cqw;
+  height: 10.933cqw;
+}
+.danji-jar {
+  left: 5.334cqw;
+  top: 22.133cqw;
+  width: 89.334cqw;
+  height: 116.8cqw;
+  max-width: none;
+}
+.danji-polaroid {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 25.778cqw;
+  height: 31.467cqw;
+  padding: 1.067cqw !important;
+  background: #fff;
+  border-radius: 1.6cqw;
+  box-shadow: 0 2px 6px #0002;
+  transform-origin: center;
+  overflow: hidden;
+}
+.danji-polaroid img {
+  width: 24cqw;
+  height: 24cqw;
+  border-radius: 1.067cqw;
+  object-fit: cover;
+  flex: none;
+}
+.danji-polaroid time {
+  font-size: 3.2cqw;
+  line-height: 4.267cqw;
+  flex: 1;
+  text-align: center;
+  padding-top: 1.067cqw;
+  white-space: nowrap;
+}
+.danji-polaroid.position-0 {
+  left: 20.352cqw;
+  top: 51.97cqw;
+  transform: rotate(2.85deg);
+}
+.danji-polaroid.position-1 {
+  left: 54.161cqw;
+  top: 53.955cqw;
+  transform: rotate(-5.05deg);
+}
+.danji-polaroid.position-2 {
+  left: 35.582cqw;
+  top: 73.665cqw;
+  transform: rotate(8.77deg);
+  z-index: 7;
+}
+.danji-polaroid.position-3 {
+  left: 16.716cqw;
+  top: 88.182cqw;
+  transform: rotate(-7.94deg);
+}
+.danji-polaroid.position-4 {
+  left: 58.67cqw;
+  top: 88.97cqw;
+  transform: rotate(16.15deg);
+}
+.danji-figma-stickers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 8;
+}
+.danji-figma-stickers img {
+  position: absolute;
+  object-fit: contain;
+}
+.sticker-left {
+  left: 13.333cqw;
+  top: 67.467cqw;
+  width: 13.6cqw;
+  height: 13.6cqw;
+}
+.sticker-blue {
+  left: 75.467cqw;
+  top: 61.6cqw;
+  width: 11.2cqw;
+  height: 9.867cqw;
+}
+.sticker-clover {
+  left: 70.133cqw;
+  top: 72cqw;
+  width: 24.533cqw;
+  height: 21.333cqw;
+}
+.sticker-flower {
+  left: 28cqw;
+  top: 89.333cqw;
+  width: 13.067cqw;
+  height: 11.467cqw;
+}
+.sticker-sun {
+  left: 69.77cqw;
+  top: 112.51cqw;
+  width: 18.667cqw;
+  height: 16.267cqw;
+  transform: rotate(-10.28deg);
+}
+.danji-actions {
+  position: absolute;
+  left: 5.333cqw;
+  right: 5.333cqw;
+  bottom: 12.267cqw;
+  height: 12.8cqw;
+  display: flex;
+  gap: 2.133cqw;
+  z-index: 9;
+}
+.danji-actions button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3.733cqw;
+  background: #e5e8eb;
+  color: #4e5968;
+  font-size: 4.533cqw;
+  font-weight: 600;
+}
+.danji-actions button:first-child:not(:last-child) {
+  flex: 0 0 21.333cqw;
+}
+.danji-actions button.primary {
+  background: #ffb331;
+  color: #fff;
+}
+.danji-actions button img {
+  width: 6.4cqw;
+  height: 6.4cqw;
+  object-fit: contain;
+}
+.danji-actions button.primary img {
+  width: 22.667cqw;
+  height: 4.267cqw;
+}
+.danji-actions button img.danji-trash-icon {
+  width: 5.333333cqw;
+  height: 5.6cqw;
+  filter: brightness(0) saturate(100%) invert(25%) sepia(14%) saturate(600%) hue-rotate(175deg) brightness(96%) contrast(89%);
+}
+.danji-settings-button img {
+  width: 4.267cqw !important;
+  height: 5.333cqw !important;
+}
+.danji-actions button:disabled {
+  opacity: 0.5;
+}
+.danji-dots {
+  position: absolute;
+  bottom: 33.984cqw;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 3.2cqw;
+}
+.danji-dots button {
+  width: 2.133cqw;
+  height: 2.133cqw;
+  border-radius: 99px;
+  background: #b0b8c1;
+}
+.danji-dots button.active {
+  width: 3.733cqw;
+  background: #d88300;
+}
+.danji-jar-empty {
+  position: absolute;
+  z-index: 5;
+  top: 80cqw;
+  width: 100%;
+  padding: 0 13.333cqw;
+  text-align: center;
+  color: white;
+  font-size: 4.533cqw;
+  line-height: 1.7;
+}
+.danji-gallery {
+  position: absolute;
+  top: 35.2cqw;
+  left: 0;
+  right: 0;
+  height: 150cqw;
+  overflow-y: auto;
+  padding: 9.6cqw 8.667cqw 25cqw;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3.2cqw;
+  align-content: start;
+  scrollbar-width: none;
+}
+.danji-gallery::-webkit-scrollbar {
+  display: none;
+}
+.danji-mini-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.519cqw;
+  aspect-ratio: 149/170;
+  padding: 2.133cqw 2.667cqw 1.067cqw !important;
+  background: #f5f5f5;
+  border: 1px solid #e5e8eb !important;
+  border-radius: 2.133cqw;
+  box-shadow: 0 0 6px #371e001f;
+  min-width: 0;
+}
+.danji-mini-card img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 1.519cqw;
+}
+.danji-mini-card time {
+  font-size: 4cqw;
+  line-height: 5.4cqw;
+  color: #4e5968;
+  white-space: nowrap;
+}
+.danji-gallery.deleting {
+  top: 25.067cqw;
+  height: 160.133cqw;
+  padding-top: 21.067cqw;
+}
+.danji-delete-heading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 4.267cqw 6.4cqw;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+.danji-delete-heading strong {
+  font-size: 5.333cqw;
+  line-height: 6.667cqw;
+}
+.danji-delete-heading small {
+  font-size: 3.467cqw;
+  color: #6b7684;
+}
+.danji-mini-card.selected {
+  border: 2px solid #ff9e16 !important;
+}
+.danji-delete-check {
+  position: absolute;
+  right: 4.267cqw;
+  top: 4.267cqw;
+  width: 6.4cqw;
+  height: 6.4cqw;
+  background: #d5e2e9;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 4cqw;
+  line-height: 6.4cqw;
+}
+.danji-mini-card.selected .danji-delete-check {
+  background: #ffb331;
+}
+.danji-empty {
+  grid-column: 1/-1;
+  text-align: center;
+  font-size: 4cqw;
+  line-height: 1.7;
+  margin-top: 35cqw;
+}
+.danji-actions.delete-actions {
+  left: 8cqw;
+  right: 8cqw;
+  height: 14.933cqw;
+  bottom: 12.267cqw;
+}
+.danji-actions.delete-actions button:first-child:not(:last-child),
+.danji-actions.delete-actions button.primary {
+  flex: 1;
+  border-radius: 4.267cqw;
+}
+.danji-actions.delete-actions button.primary:disabled {
+  opacity: 0.5;
+}
+/* A single 294 × 330 card and 270 × 270 photo geometry for detail and edit. */
+.danji-detail,
+.danji-edit-preview {
+  position: absolute;
+  left: 0;
+  top: 35.2cqw;
+  width: 100%;
+  height: 181.333cqw;
+}
+.danji-edit-preview {
+  top: 25.067cqw;
+  height: 191.467cqw;
+}
+.danji-detail-hint {
+  position: absolute;
+  left: 0;
+  top: 17.067cqw;
+  width: 100%;
+  margin: 0;
+  text-align: center;
+  font-size: 3.2cqw;
+  line-height: 4.32cqw;
+  color: #8b95a1;
+}
+.danji-edit-preview .danji-detail-hint {
+  top: 27.2cqw;
+}
+.danji-large-card,
+.danji-edit-preview-card {
+  position: absolute;
+  left: var(--record-card-left);
+  top: calc(var(--record-card-top) - 35.2cqw);
+  width: var(--record-card-width);
+  height: var(--record-card-height);
+  padding: var(--record-card-padding) !important;
+  border-radius: 4.8cqw;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  box-shadow: none;
+}
+.danji-edit-preview-card {
+  top: calc(var(--record-card-top) - 25.066667cqw);
+}
+.danji-large-card img,
+.danji-edit-preview-photo img {
+  display: block;
+  width: var(--record-photo-size);
+  height: var(--record-photo-size);
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 3.2cqw;
+  flex: none;
+}
+.danji-large-card time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+  font-size: 4cqw;
+  color: #666;
+}
+.danji-card-note,
+.danji-edit-preview-note {
+  position: relative;
+  width: 72cqw;
+  height: 72cqw;
+  border-radius: 3.2cqw;
+  background: #fff9e7;
+  border: 1px solid #f2f4f6;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 6.4cqw 3.2cqw;
+  font-size: 4.533cqw;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.danji-edit-preview-note {
+  padding: 0;
+}
+.danji-edit-preview-photo {
+  width: var(--record-photo-size);
+  height: var(--record-photo-size);
+  aspect-ratio: 1;
+  background: none;
+  flex: none;
+}
+.danji-date-button {
+  width: 72cqw;
+  flex: 1;
+  margin-top: 1.6cqw;
+  border: 1px solid #f2f4f6 !important;
+  border-radius: 3.2cqw;
+  background: #fff9e7;
+  color: #666;
+  font-size: 4cqw !important;
+}
+.danji-editing-badge {
+  position: absolute;
+  top: 4.267cqw;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 2.133cqw 3.2cqw;
+  border-radius: 99px;
+  background: #fff;
+  color: #faa131;
+  font-size: 4cqw;
+  line-height: 6.4cqw;
+  box-shadow: 0 2px 15px #001b371a;
+}
+.danji-detail-controls,
+.danji-edit-preview-controls {
+  position: absolute;
+  left: 8cqw;
+  right: 8cqw;
+  bottom: 12.267cqw;
+  display: flex;
+  gap: 2.133cqw;
+}
+.danji-detail-controls button,
+.danji-edit-preview-controls button {
+  flex: 1;
+  height: 12.8cqw;
+  border-radius: 3.733cqw;
+  background: #e5e8eb;
+  color: #4e5968;
+  font-size: 4.533cqw;
+  font-weight: 600;
+}
+.danji-edit-preview-controls button {
+  height: 14.933cqw;
+  border-radius: 4.267cqw;
+}
+.danji-detail-controls button:last-child,
+.danji-edit-preview-controls button:last-child {
+  background: #ffb331;
+  color: #fff;
+}
+.danji-edit-preview-controls button:disabled {
+  opacity: 0.5;
+}
+.danji-note-flip {
+  width: 100%;
+  height: 100%;
+  background: none;
+  padding: 6.4cqw 3.2cqw !important;
+  font-size: 4.533cqw !important;
+  line-height: 1.5 !important;
+  color: #333d4b;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.danji-edit-preview-note textarea {
+  width: 100%;
+  height: 100%;
+  padding: 6.4cqw 3.2cqw 16cqw;
+  border: 0;
+  background: none;
+  resize: none;
+  text-align: center;
+  color: #333d4b;
+  font:
+    4.533cqw/1.5 Arial,
+    'Apple SD Gothic Neo',
+    sans-serif;
+  outline: none;
+  user-select: text;
+}
+.danji-edit-preview-note small {
+  position: absolute;
+  right: 3.2cqw;
+  bottom: 3.2cqw;
+  font-size: 3.2cqw;
+  color: #8b95a1;
+}
+.danji-note-pencil {
+  position: absolute;
+  left: 50%;
+  bottom: 4.533cqw;
+  transform: translateX(-50%);
+  min-width: 9.067cqw;
+  height: 9.067cqw;
+  padding: 0 2.133cqw !important;
+  border-radius: 99px;
+  background: #e5e8eb;
+  color: #6b7684;
+  font-size: 4cqw !important;
+}
+.danji-flip-front {
+  position: absolute;
+  left: 0;
+  top: 74cqw;
+  height: 7.467cqw;
+  background: none;
+  color: #8b95a1;
+  font-size: 3.2cqw !important;
+}
+.danji-back-date {
+  position: absolute;
+  right: 0;
+  top: 74cqw;
+  height: 7.467cqw;
+  background: #fff9e7;
+  border-radius: 2cqw;
+  padding: 0 2cqw !important;
+  color: #666;
+  font-size: 3.2cqw !important;
+}
+.danji-confirm-backdrop,
+.danji-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: #0003;
+  display: grid;
+  place-items: center;
+}
+.danji-confirm {
+  width: 82.933cqw;
+  background: #fff;
+  border-radius: 6.4cqw;
+  padding: 6.4cqw 4.267cqw 4.267cqw;
+  color: #333d4b;
+}
+.danji-confirm strong {
+  display: block;
+  padding: 0 1.6cqw;
+  font-size: 5.333cqw;
+  line-height: 6.667cqw;
+}
+.danji-confirm p {
+  padding: 0 1.6cqw;
+  font-size: 4cqw;
+  line-height: 5.4cqw;
+  margin: 3.2cqw 0 6.4cqw;
+  color: #4e5968;
+}
+.danji-confirm div {
+  display: flex;
+  gap: 2.133cqw;
+}
+.danji-confirm button {
+  flex: 1;
+  height: 12.8cqw;
+  border-radius: 3.733cqw;
+  background: #f2f4f6;
+  color: #4e5968;
+  font-size: 4.533cqw;
+  font-weight: 600;
+}
+.danji-confirm button.danger {
+  background: #ffb331;
+  color: #fff;
+}
+.danji-success-toast {
+  position: absolute;
+  z-index: 30;
+  top: 29.333cqw;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 2.133cqw;
+  padding: 2.133cqw 3.2cqw;
+  border-radius: 99px;
+  background: white;
+  box-shadow: 0 2px 15px #001b371a;
+  white-space: nowrap;
+  font-size: 4cqw;
+  color: #333d4b;
+  font-weight: 600;
+}
+.danji-success-toast span {
+  display: grid;
+  place-items: center;
+  width: 5.333cqw;
+  height: 5.333cqw;
+  background: #60be86;
+  color: white;
+  border-radius: 50%;
+}
+.danji-calendar {
+  width: 76cqw;
+  padding: 4.267cqw;
+  border-radius: 2.133cqw;
+  border: 1px solid #e5e8eb;
+  background: white;
+  box-shadow: 0 4px 6px #0002;
+  outline: none;
+}
+.danji-calendar-selects {
+  display: flex;
+  gap: 2.133cqw;
+  margin-bottom: 2.133cqw;
+}
+.danji-calendar-selects select {
+  height: 8.533cqw;
+  border: 1px solid #e5e8eb;
+  border-radius: 2.133cqw;
+  background: white;
+  color: #191f28;
+  padding: 0 2.133cqw;
+  font-size: 4cqw;
+  font-weight: 600;
+  min-width: 0;
+  flex: 1;
+}
+.danji-calendar-selects select:first-child {
+  flex: 1.9;
+}
+.danji-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+}
+.danji-calendar-grid span {
+  height: 9.6cqw;
+  line-height: 9.6cqw;
+  color: #8b95a1;
+  font-size: 4cqw;
+}
+.danji-calendar-grid button {
+  height: 9.6cqw;
+  border-radius: 2.133cqw;
+  background: none;
+  color: #191f28;
+  font-size: 4cqw;
+}
+.danji-calendar-grid button.outside {
+  color: #8b95a1;
+}
+.danji-calendar-grid button.selected {
+  background: #ffb331;
+  color: white;
+}
+.danji-calendar-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.6cqw;
+  border-top: 1px solid #e8e8e6;
+  margin-top: 2.133cqw;
+  padding-top: 2.667cqw;
+}
+.danji-calendar-actions button {
+  min-width: 13.867cqw;
+  height: 8.533cqw;
+  border-radius: 2.133cqw;
+  background: #f2f4f6;
+  color: #4e5968;
+  font-size: 3.467cqw;
+  font-weight: 600;
+}
+.danji-calendar-actions button:last-child {
+  background: #ffb331;
+  color: white;
+}
+/* Existing new-record and decoration flows. */
+.danji-editor {
+  position: absolute;
+  top: 35.2cqw;
+  left: 0;
+  right: 0;
+  height: 181.333cqw;
+  overflow: auto;
+  padding: 6.4cqw 5.333cqw 30cqw;
+  background: #fff7ef;
+}
+.danji-edit-card {
+  background: white;
+  padding: 3.2cqw;
+  border-radius: 3.733cqw;
+}
+.danji-edit-photo {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  background: #f2f4f6;
+  overflow: hidden;
+  border-radius: 2.667cqw;
+}
+.danji-edit-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.danji-edit-photo input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.danji-edit-photo-action {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 7px 11px;
+  border-radius: 20px;
+  background: #fff;
+  font-size: 13px;
+}
+.danji-edit-date {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 13px;
+}
+.danji-edit-date input {
+  border: 0;
+  background: none;
+  max-width: 70%;
+}
+.danji-editor textarea {
+  width: 100%;
+  height: 28.267cqw;
+  padding: 4.267cqw;
+  border: 0;
+  border-top: 1px solid #f2f4f6;
+  resize: none;
+  font:
+    4cqw/1.5 Arial,
+    sans-serif;
+  user-select: text;
+}
+.danji-editor small {
+  display: block;
+  text-align: right;
+  font-size: 3.2cqw;
+  color: #8b95a1;
+}
+.danji-editor .edit-actions {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-top: 12px;
+}
+.danji-stickers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9;
+}
+.danji-stickers button {
+  position: absolute;
+  background: none;
+  font-size: 8cqw;
+  pointer-events: auto;
+}
+.sticker-target {
+  position: absolute;
+  inset: 20cqw 0 35cqw;
+  pointer-events: auto;
+}
+.decorate-controls {
+  position: absolute;
+  bottom: 12cqw;
+  left: 5cqw;
+  right: 5cqw;
+  z-index: 10;
+  text-align: center;
+  font-size: 3.2cqw;
+}
+.decorate-controls button {
+  padding: 2cqw;
+  background: #fff;
+  border-radius: 2cqw;
+}
+.decorate-controls button.active {
+  background: #ffb331;
+}
+.decorate-controls .done {
+  display: block;
+  width: 100%;
+  margin-top: 2cqw;
+  background: #ffb331;
+  color: white;
+}
+.danji-sheet-backdrop {
+  position: absolute;
+  inset: 25.067cqw 0 0;
+  background: #0003;
+  z-index: 35;
+}
+.danji-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  border-radius: 18px 18px 0 0;
+  padding: 18px 12px 36px;
+}
+.danji-sheet-handle {
+  display: block;
+  width: 34px;
+  height: 4px;
+  background: #d9d9d9;
+  border-radius: 99px;
+  margin: 0 auto 19px;
+}
+.danji-sheet-primary,
+.danji-sheet-secondary {
+  display: block;
+  width: 100%;
+  height: 48px;
+  border-radius: 12px;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  background: #ffb331;
+  color: white;
+}
+.danji-sheet-secondary {
+  margin-top: 8px;
+  background: #fff9e7;
+  color: #faa131;
+}
+.danji-sheet-photos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 16px 0;
+}
+.danji-sheet-photos button {
+  border: 2px solid transparent;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.danji-sheet-photos button.selected {
+  border-color: #ffb331;
+}
+.danji-sheet-photos img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.danji-saved-sheet {
+  position: absolute;
+  left: 2.667cqw;
+  right: 2.667cqw;
+  bottom: 2.667cqw;
+  background: white;
+  border-radius: 7.467cqw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4.267cqw 5.333cqw 5.333cqw;
+}
+.danji-saved-handle {
+  width: 12.8cqw;
+  height: 1.067cqw;
+  border-radius: 99px;
+  background: #e5e8eb;
+}
+.danji-saved-sheet strong {
+  font-size: 5.867cqw;
+  line-height: 1.35;
+  margin-top: 5.6cqw;
+}
+.danji-saved-sheet p {
+  font-size: 4cqw;
+  line-height: 6cqw;
+  color: #6b7684;
+  margin: 1.333cqw 0 6cqw;
+  text-align: center;
+}
+.danji-saved-sheet > img {
+  width: 49.367cqw;
+  height: 47.32cqw;
+  object-fit: contain;
+}
+.danji-saved-sheet > div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2.133cqw;
+  margin-top: 9.067cqw;
+}
+.danji-saved-sheet button {
+  width: 100%;
+  height: 14.933cqw;
+  border-radius: 4.267cqw;
+  background: #ffb331;
+  color: white;
+  font-size: 4.533cqw;
+  font-weight: 600;
+}
+.danji-saved-sheet button:last-child {
+  background: #f2f4f6;
+  color: #4e5968;
+}
 
-/* Figma's 375 × 812 autumn scene: each illustration remains a separate asset. */
-.danji-scene{width:375px;max-width:100%;height:calc(100dvh - 133px);min-height:679px;margin:auto;overflow:hidden}
-.danji-art{position:absolute;pointer-events:none;max-width:none}
-.danji-art.ground{width:375px;height:288px;left:0;top:391px}
-.danji-art.shadow-a{width:338px;height:107px;left:12px;top:447px}
-.danji-art.shadow-b{width:323px;height:111px;left:35px;top:443px}
-.danji-art.leaf-top{width:152px;height:121px;left:-14px;top:-13px;object-fit:contain}
-.danji-art.leaf-right{width:75px;height:69px;right:-3px;top:165px;opacity:.65;filter:blur(2px)}
-.danji-art.leaf-left{width:125px;height:115px;left:-47px;top:228px;opacity:.5;filter:blur(3px)}
-.danji-jar{position:absolute;left:0;top:0;width:375px;height:679px;transform:none;filter:none;pointer-events:none}
-.danji-jar img{position:absolute;max-width:none}
-.danji-jar .jar-back{width:335px;height:371px;left:20px;top:149px}
-.danji-jar .jar-inner{width:313px;height:348px;left:31px;top:161px}
-.danji-jar .jar-glow{width:313px;height:315px;left:31px;top:194px}
-.danji-jar .jar-lid-base{width:262px;height:79px;left:56px;top:98px;z-index:2}
-.danji-jar .jar-lid-top{width:243px;height:50px;left:66px;top:82px;z-index:3}
-.danji-scene .danji-polaroid{z-index:4;width:98px;height:118px;padding:4px;background:#fff;border-radius:6px;box-shadow:0 0 4px #78573e30}
-.danji-scene .danji-polaroid img,.danji-scene .danji-polaroid>span:first-child{width:90px;height:90px}
-.danji-scene .danji-polaroid.position-0{left:58px;top:198px;transform:rotate(-3deg)}
-.danji-scene .danji-polaroid.position-1{left:217px;right:auto;top:206px;transform:rotate(-11deg)}
-.danji-scene .danji-polaroid.position-2{left:138px;top:262px;transform:none;z-index:5}
-.danji-scene .danji-polaroid.position-3{left:56px;top:342px;bottom:auto;transform:rotate(-5deg)}
-.danji-scene .danji-polaroid.position-4{left:235px;right:auto;top:324px;bottom:auto;transform:rotate(18deg)}
-.danji-scene .danji-dots{bottom:126px}
-.danji-scene .danji-actions{bottom:46px}
-@media(max-height:700px){.danji-scene .danji-jar{transform:none}.danji-scene .danji-dots{bottom:126px}}
-.danji-sheet-backdrop{position:absolute;inset:94px 0 0;background:#0004;z-index:20}
-.danji-sheet{position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:18px 18px 0 0;padding:18px 12px calc(36px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px #0002}
-.danji-sheet-handle{display:block;width:34px;height:4px;margin:0 auto 19px;border-radius:8px;background:#d9d9d9}
-.danji-sheet-primary,.danji-sheet-secondary{display:block;width:100%;height:48px;border-radius:12px;font-size:16px;font-weight:600}
-.danji-sheet-primary{background:#efb649;color:#fff}.danji-sheet-primary:disabled{background:#f9e8bf;color:#d7b966}
-.danji-sheet-secondary{background:#fff4dc;color:#e2a838;margin-top:8px}
-.danji-select-sheet{padding-bottom:calc(29px + env(safe-area-inset-bottom))}
-.danji-select-sheet strong{display:block;font-size:16px;margin:0 6px 15px}
-.danji-sheet-photos{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 4px 20px}
-.danji-sheet-photos button{height:70px;padding:0;background:#f7f7f5;border:2px solid transparent;border-radius:4px;overflow:hidden}
-.danji-sheet-photos button.selected{border-color:#efb649}.danji-sheet-photos img{width:100%;height:100%;object-fit:cover}
-
-/* Scale the 375 × 812 Figma canvas as one unit, including its header and footer. */
-.danji-page{width:min(100vw,375px,calc(100dvh * 375 / 812));height:auto;min-height:0;aspect-ratio:375/812;margin:0 auto;overflow:hidden;padding:0;background:linear-gradient(180deg,#fff 0%,#fff9f3 45%,#ffe3bf 100%)}
-.danji-header{height:11.576%;padding:5.7% 2.7% 0;gap:4px;position:relative;z-index:10}
-.danji-header button{background:#f8f9fa;width:11.7%;height:34px;font-size:20px}.danji-header button:first-child{background:transparent;width:11.7%}
-.danji-header .header-pair{display:flex;align-items:center;background:#f8f9fa;border-radius:99px;height:34px}.danji-header .header-pair button{width:43px;background:transparent}.danji-header .header-pair button+button{border-left:1px solid #d9dfe4;border-radius:0;font-size:24px}.danji-header-popover{position:absolute;right:10px;top:88px;background:white;padding:12px;border-radius:12px;box-shadow:0 4px 16px #0002;z-index:30}.danji-header-popover button{font-size:13px;width:auto;padding:4px 8px}
-.danji-tabs{height:4.68%;padding:0 20px;position:relative;z-index:8}.danji-tabs button.active{border-bottom:2px solid #333d4b}
-.danji-scene{position:absolute;top:16.25%;left:0;width:100%;height:83.75%;min-height:0;overflow:hidden}
-.danji-art.ground{width:100%;height:auto;left:0;top:57.5%}.danji-art.shadow-a{width:90.1%;height:auto;left:3.2%;top:65.8%}.danji-art.shadow-b{width:86.1%;height:auto;left:9.3%;top:65.2%}
-.danji-art.leaf-top{width:40.5%;height:auto;left:-3.7%;top:-1.8%}.danji-art.leaf-right{width:20%;height:auto;right:-.8%;top:24.3%}.danji-art.leaf-left{width:33.3%;height:auto;left:-12.5%;top:33.6%}
-.danji-jar{width:100%;height:100%;left:0;top:0;transform:none}.danji-jar .jar-back{width:89.33%;height:auto;left:5.33%;top:21.94%}.danji-jar .jar-inner{width:83.47%;height:auto;left:8.27%;top:23.71%}.danji-jar .jar-glow{width:83.47%;height:auto;left:8.27%;top:28.57%}
-.danji-jar .jar-lid-base{width:69.87%;height:auto;left:14.93%;top:14.43%;z-index:3}.danji-jar .jar-lid-top{width:64.8%;height:auto;left:17.6%;top:12.08%;z-index:4}
-.danji-scene .danji-polaroid.position-0{left:15.47%;top:29.15%}.danji-scene .danji-polaroid.position-1{left:57.87%;top:30.34%}.danji-scene .danji-polaroid.position-2{left:36.8%;top:38.58%}.danji-scene .danji-polaroid.position-3{left:14.93%;top:50.37%}.danji-scene .danji-polaroid.position-4{left:62.67%;top:47.72%}
-.danji-dots{position:absolute;bottom:18.6%;left:0;right:0;display:flex;justify-content:center;gap:12px;z-index:5}.danji-dots button{width:8px;height:8px;border-radius:99px;background:#bdc4c9;padding:0}.danji-dots button.active{width:14px;background:#d68420}
-.danji-actions,.danji-scene .danji-actions{position:absolute;left:5.33%;right:5.33%;bottom:5.66%;height:48px;gap:8px;z-index:6}.danji-actions button:first-child:not(:last-child){flex:none;width:80px}.danji-actions button.primary{flex:1;background:#ffb331}.danji-actions button{font-size:17px}
-.danji-gallery{position:absolute;top:16.25%;left:0;width:100%;height:83.75%;min-height:0;overflow:auto;padding:14.2% 8.27% 20%;grid-template-columns:repeat(3,minmax(0,1fr))}.danji-mini-card{height:118px}.danji-mini-card img{height:90px;aspect-ratio:auto}.gallery-actions{position:absolute;max-width:none}
-.danji-detail{position:absolute;top:16.25%;height:83.75%;min-height:0;width:100%;padding-bottom:12%;}.danji-detail .danji-actions{bottom:5.66%}.danji-large-card{width:78.4%}
-.danji-editor{position:absolute;top:16.25%;height:83.75%;width:100%;padding:24px 20px 90px;overflow:auto}.danji-editor .danji-actions{position:absolute;bottom:5.66%;left:5.33%;right:5.33%;max-width:none}.photo-upload{display:block!important}.photo-upload input{max-width:210px}.editor-image{width:130px;height:130px;object-fit:cover;border-radius:8px}.danji-editor textarea{height:140px;margin-top:12px}
-.danji-stickers{position:absolute;left:4%;top:23%;width:92%;height:54%;pointer-events:none;z-index:6}.danji-stickers button{position:absolute;transform:translate(-50%,-50%);background:none;font-size:27px;pointer-events:auto}.sticker-target{position:absolute;inset:0;pointer-events:auto}.decorate-controls{position:absolute;bottom:6%;left:5%;right:5%;padding:10px;background:#fff9;border-radius:14px;z-index:8;text-align:center}.decorate-controls p{font-size:12px;margin:0 0 6px}.decorate-controls button{margin:2px;background:#fff;border-radius:8px;padding:5px}.decorate-controls button.active{outline:2px solid #ffb331}.decorate-controls .done{background:#ffb331;color:#fff;padding:7px 12px}
-.danji-scene .danji-polaroid{width:26.13%;height:auto;min-height:0;aspect-ratio:98/118;padding:1.06%;gap:0}.danji-scene .danji-polaroid img{width:100%;height:auto;aspect-ratio:1;flex:none}.danji-scene .danji-polaroid time{font-size:clamp(9px,3.2vw,12px);line-height:1.55;white-space:nowrap}
-.danji-actions button:first-child{font-size:0}.danji-actions button:first-child::before{content:'☷';font-size:21px;display:block;transform:rotate(0deg)}.danji-detail .danji-actions button:first-child{font-size:17px}.danji-detail .danji-actions button:first-child::before,.danji-editor .danji-actions button:first-child::before{content:none}.danji-editor .danji-actions button:first-child{font-size:17px}
-.danji-decoration-dots span{position:absolute;width:9.6%;aspect-ratio:1;border-radius:50%;background:#fff;z-index:4;pointer-events:none}.danji-decoration-dots span:nth-child(1){left:8.53%;top:33.28%}.danji-decoration-dots span:nth-child(2){left:13.33%;top:57.88%}.danji-decoration-dots span:nth-child(3){left:6.4%;top:51.84%}.danji-decoration-dots span:nth-child(4){left:63.47%;top:64.8%}.danji-decoration-dots span:nth-child(5){left:50.4%;top:29.16%}.danji-decoration-dots span:nth-child(6){left:80%;top:37.85%}
-.danji-scene .danji-polaroid{z-index:5}.danji-scene .danji-polaroid.position-2{z-index:6}.danji-settings-button::before{content:none!important}.danji-settings-button svg{width:22px;height:22px;fill:#e5e8eb;stroke:#4e5968;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}.danji-pencil{font-size:21px;font-weight:400;margin-right:5px}.danji-actions .primary{display:flex;align-items:center;justify-content:center}
-.danji-device-status{position:absolute;top:0;left:0;width:100%;height:6.16%;background:#fff;z-index:30;display:flex;align-items:center;justify-content:space-between;padding:0 8%;color:#111;font-size:14px;font-weight:600;pointer-events:none}.danji-device-status i{position:absolute;width:47%;height:55%;top:0;left:26.5%;background:#000;border-radius:0 0 20px 20px}.danji-device-indicator{position:absolute;z-index:30;bottom:0.98%;left:calc(50% - 17.87%);width:35.73%;height:5px;border-radius:9px;background:#111;pointer-events:none}
-.danji-sheet-backdrop{inset:11.576% 0 0}.danji-sheet{padding-bottom:8%}.danji-sheet-photos{max-height:210px;overflow:auto}
-@media(max-height:700px){.danji-scene .danji-jar{transform:none}.danji-scene .danji-dots{bottom:18.6%}}
-
-/* Final Figma jar frame: coordinates are relative to its 375 × 812 canvas. */
-.danji-jar .jar-lid-base{top:12.22%}
-.danji-scene .danji-polaroid.position-0{left:15.47%;top:28.67%;transform:rotate(-4deg)}
-.danji-scene .danji-polaroid.position-1{left:57.8%;top:29.55%;transform:rotate(-10deg)}
-.danji-scene .danji-polaroid.position-2{left:36.8%;top:38.73%;transform:none}
-.danji-scene .danji-polaroid.position-3{left:14.95%;top:49.35%;transform:rotate(-5deg)}
-.danji-scene .danji-polaroid.position-4{left:62.88%;top:47.86%;transform:rotate(18deg)}
-.danji-actions .danji-settings-button{background:#e5e8eb;color:rgba(3,18,40,.7)}
-.danji-settings-button svg{fill:none;stroke:currentColor;stroke-width:1.8}
-.danji-settings-button svg circle{fill:#e5e8eb}
-.danji-pencil{font-size:0;margin-right:0}
-.danji-pencil::after{content:'✎';font-size:20px;line-height:1;display:inline-block;transform:rotate(-12deg)}
-.danji-page .danji-actions button.primary{font-weight:600;border-radius:14px}
-.danji-editor{padding:24px 20px 90px;background:#fff7ef}
-.danji-edit-card{width:100%;background:#fff;padding:12px 12px 16px;border-radius:14px;box-shadow:0 0 4px #78573e30}
-.danji-edit-photo{position:relative;display:flex!important;align-items:center!important;justify-content:center!important;width:100%;aspect-ratio:1;margin:0!important;border-radius:10px;background:#f2f4f6;overflow:hidden;cursor:pointer}
-.danji-edit-photo img{width:100%;height:100%;object-fit:cover}
-.danji-edit-photo input{position:absolute;width:1px;height:1px;opacity:0}
-.danji-edit-photo-action{position:absolute;right:10px;bottom:10px;padding:7px 11px;border-radius:20px;background:#ffffffed;font-size:13px;color:#333d4b;box-shadow:0 1px 5px #0002}
-.danji-edit-date{display:flex!important;justify-content:center!important;gap:8px;margin:12px 0 0!important;color:#8b95a1;font-size:13px!important}
-.danji-edit-date input{border:0!important;background:none!important;padding:0!important;color:#4e5968;font:inherit}
-.danji-editor textarea{display:block;width:100%;height:106px;resize:none;border:0;border-top:1px solid #f2f4f6;border-radius:0;margin:12px 0 0;padding:16px 6px 4px;font:15px/1.5 inherit;background:#fff;color:#333d4b;outline:none}
-.danji-editor small{padding-right:4px}
-.danji-editor .edit-actions{bottom:5.66%;height:56px}
-.danji-editor .edit-actions .primary{width:100%;border-radius:16px}
-.danji-scene .danji-actions{bottom:6.77%}
-
-/* The illustration follows the viewport height while retaining its 375px art coordinates. */
-.danji-page{width:min(100vw,375px);height:100dvh;min-height:700px;aspect-ratio:auto}
-.danji-header{height:94px;padding-top:50px}
-.danji-tabs{height:39px}
-.danji-scene,.danji-gallery,.danji-detail,.danji-editor{top:133px;height:calc(100% - 133px)}
-.danji-art.leaf-right{right:10%;top:3%;opacity:1;filter:none}
-.danji-art.leaf-left{opacity:.42}
-.danji-jar-empty{z-index:5;top:44%;padding:0 50px;font-weight:600}
-.danji-detail-controls{position:absolute;bottom:7%;left:6%;right:6%;display:flex;gap:10px}
-.danji-detail-controls button{flex:1;padding:13px;border-radius:12px;background:#f2f4f6;color:#4e5968;font-weight:600}
-.danji-detail-controls button:last-child{background:#efb649;color:white}
-.danji-confirm-backdrop{position:absolute;inset:0;z-index:40;background:#0007;display:grid;place-items:center;padding:20px}
-.danji-confirm{width:100%;background:white;border-radius:18px;padding:24px;color:#333d4b;box-shadow:0 12px 40px #0003}
-.danji-confirm strong{font-size:18px}.danji-confirm p{font-size:14px;color:#6b7684;margin:10px 0 24px}
-.danji-confirm div{display:flex;gap:8px}.danji-confirm button{flex:1;padding:12px;border-radius:10px;background:#f2f4f6;font-weight:600}
-.danji-confirm button.danger{background:#e5484d;color:white}
-@media(max-height:700px){.danji-page{min-height:0}.danji-scene,.danji-gallery,.danji-detail,.danji-editor{top:133px;height:calc(100% - 133px)}.danji-header{height:94px;padding-top:50px}}
-
-/* Art coordinates scale with the screen width, so a tall viewport adds room below the jar. */
-.danji-scene{container-type:inline-size}
-.danji-art.ground{top:104.27cqw}
-.danji-art.shadow-a{top:119.2cqw}
-.danji-art.shadow-b{top:118.13cqw}
-.danji-art.leaf-top{top:-3.47cqw}
-.danji-art.leaf-right{top:7.47cqw}
-.danji-art.leaf-left{top:60.8cqw}
-.danji-jar .jar-back{top:39.73cqw}
-.danji-jar .jar-inner{top:42.93cqw}
-.danji-jar .jar-glow{top:51.73cqw}
-.danji-jar .jar-lid-base{top:28.53cqw}
-.danji-jar .jar-lid-top{top:21.87cqw}
-.danji-scene .danji-polaroid.position-0{top:52.8cqw}
-.danji-scene .danji-polaroid.position-1{top:54.93cqw}
-.danji-scene .danji-polaroid.position-2{top:69.87cqw}
-.danji-scene .danji-polaroid.position-3{top:91.2cqw}
-.danji-scene .danji-polaroid.position-4{top:86.4cqw}
-.danji-decoration-dots span:nth-child(1){top:60.27cqw}
-.danji-decoration-dots span:nth-child(2){top:104.8cqw}
-.danji-decoration-dots span:nth-child(3){top:93.87cqw}
-.danji-decoration-dots span:nth-child(4){top:117.33cqw}
-.danji-decoration-dots span:nth-child(5){top:52.8cqw}
-.danji-decoration-dots span:nth-child(6){top:68.53cqw}
-.danji-jar-empty{top:84cqw}
+.danji-header-divider { width: 1px; height: 4.267cqw; background: rgba(0,27,55,.1); }
+.danji-decoration-badge { position:absolute; top:-5.867cqw; left:50%; transform:translateX(-50%); padding:2.133cqw 3.2cqw; background:white; border-radius:99px; color:#faa131; font-size:4cqw; line-height:6.4cqw; box-shadow:0 2px 15px #001b371a; }
+.danji-decoration-sheet { position:absolute; left:0; width:100%; z-index:15; background:#f9fafb; border-radius:6.133cqw 6.133cqw 0 0; padding:4.267cqw 0 6.133cqw; }
+.danji-decoration-sheet.expanded { top:54.133cqw; height:128cqw; }
+.danji-decoration-sheet.collapsed { top:121.067cqw; height:61.333cqw; }
+.danji-decoration-handle { display:block; width:12.8cqw; height:1.067cqw; margin:0 auto; background:#e5e8eb; border-radius:99px; }
+.danji-decoration-sheet h2 { margin:4.267cqw 6.4cqw 4.8cqw; font-size:4.533cqw; line-height:6.133cqw; color:#4e5968; }
+.danji-decoration-grid { display:grid; grid-template-columns:repeat(3,24cqw); gap:3.2cqw; width:78.4cqw; margin:0 auto; }
+.danji-decoration-grid button { width:24cqw; height:24cqw; border:1px solid #e5e8eb; border-radius:2.133cqw; background:#f0f1f3; padding:1.867cqw; }
+.danji-decoration-grid img { display:block; width:100%; height:100%; object-fit:contain; }
+.danji-decoration-actions { display:flex; gap:2.133cqw; margin:8.8cqw 8cqw 0; }
+.danji-decoration-actions button { width:41cqw; height:14.933cqw; border-radius:4.267cqw; background:#e5e8eb; color:#4e5968; font-size:4.533cqw; }
+.danji-decoration-actions button:last-child { background:#ffb331; color:white; }
+.danji-decoration-sheet.collapsed .danji-decoration-grid { max-height:24cqw; overflow-y:auto; }
+.danji-decoration-sheet.collapsed .danji-decoration-actions { margin-top:3.2cqw; }
+.danji-placed-sticker { position:absolute; aspect-ratio:1; pointer-events:auto; }
+.danji-placed-sticker.editable { outline:1px solid #b0b8c1; }
+.danji-placed-sticker.selected { outline:1px dashed #b0b8c1; }
+.danji-stickers .danji-sticker-drag { position:static; width:100%; height:100%; padding:2.133cqw; touch-action:none; }
+.danji-sticker-drag img { width:100%; height:100%; object-fit:contain; pointer-events:none; user-select:none; }
+.danji-stickers .danji-sticker-remove, .danji-stickers .danji-sticker-resize { position:absolute; width:5.333cqw; height:5.333cqw; background:#b0b8c1; color:white; border-radius:50%; font-size:4cqw; line-height:5.333cqw; touch-action:none; }
+.danji-sticker-remove { top:-2.667cqw; right:-2.667cqw; }
+.danji-sticker-resize { bottom:-2.667cqw; left:-2.667cqw; }
