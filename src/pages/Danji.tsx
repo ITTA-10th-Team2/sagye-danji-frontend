@@ -4,7 +4,9 @@ import DanjiCalendar from './DanjiCalendar';
 import jarArt from '../assets/danji/current/jar.png';
 import branchArt from '../assets/danji/current/branch.png';
 import floatingLeaf from '../assets/danji/current/floating-leaf.png';
+import stickerSaveIllustration from '../assets/danji/current/sticker-save-illustration.png';
 import saveIllustration from '../assets/danji/current/save-illustration.png';
+import deleteCheck from '../assets/danji/current/delete-check.png';
 import trashIcon from '../assets/danji/current/trash.png';
 import sample1 from '../assets/danji/sample-1.jpg';
 import sample2 from '../assets/danji/sample-2.jpg';
@@ -91,7 +93,7 @@ export default function Danji() {
     setStickerPanelExpanded(stickers.length === 0);
     setView('decorate');
   }
-  function cancelDecoration() { setView('jar'); setActiveSticker(null); }
+  function cancelDecoration() { requestLeave('jar'); }
   const [headerMenu, setHeaderMenu] = useState(false);
   const [view, setView] = useState<View>('jar');
   const [sheet, setSheet] = useState<Sheet>('none');
@@ -104,6 +106,30 @@ export default function Danji() {
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [stickerSaved, setStickerSaved] = useState(false);
+  const [leaveTarget, setLeaveTarget] = useState<'jar' | 'detail' | 'home' | 'close' | null>(null);
+  function requestLeave(target: 'jar' | 'detail' | 'home' | 'close') {
+    if (view === 'editPreview' || view === 'editor' || view === 'decorate') setLeaveTarget(target);
+    else finishLeave(target);
+  }
+  function finishLeave(target: 'jar' | 'detail' | 'home' | 'close') {
+    setLeaveTarget(null);
+    setCalendarOpen(false);
+    setEditingText(false);
+    setShowNote(false);
+    setActiveSticker(null);
+    setDraftStickers([]);
+    if (target === 'home' || target === 'close') window.location.assign(target === 'home' ? '/home' : '/');
+    else setView(target);
+  }
+  function saveDecoration() {
+    try { localStorage.setItem('danji-preview-stickers', JSON.stringify(draftStickers)); }
+    catch { setSaveError(true); return; }
+    setStickers(draftStickers);
+    setView('jar');
+    setActiveSticker(null);
+    setStickerSaved(true);
+  }
   const [deleteSuccess, setDeleteSuccess] = useState(false);
   const pageCount = Math.max(1, Math.ceil(previewRecords.length / 5));
   const selectedRecord = previewRecords.find((item: (typeof initialRecords)[number]) => item.id === selected);
@@ -217,28 +243,28 @@ export default function Danji() {
           aria-label="뒤로"
           onClick={() =>
             view === 'editPreview'
-              ? setView('detail')
+              ? requestLeave('detail')
               : view === 'editor'
-                ? setView(selectedRecord ? 'detail' : 'jar')
+                ? requestLeave(selectedRecord ? 'detail' : 'jar')
                 : view === 'detail' || view === 'decorate'
-                  ? setView('jar')
+                  ? requestLeave('jar')
                   : window.history.back()
           }
         >
           <img src={navBack} alt="" />
         </button>
-        <span className="danji-title-pill">
+        <button className="danji-title-pill" aria-label="홈으로 이동" onClick={() => requestLeave('home')}>
           <img className="danji-app-icon" src={navLogo} alt="" />
           <strong>사계단지</strong>
           <img className="danji-home-icon" src={navHome} alt="" />
-        </span>
+        </button>
         <span className="danji-header-spacer" />
         <span className="header-pair">
           <button aria-label="더보기" onClick={() => setHeaderMenu(!headerMenu)}>
             <img src={navDots} alt="" />
           </button>
           <span className="danji-header-divider" />
-          <button aria-label="앱 닫기" onClick={() => window.location.assign('/')}><img src={navClose} alt="" /></button>
+          <button aria-label="앱 닫기" onClick={() => requestLeave('close')}><img src={navClose} alt="" /></button>
         </span>
         {headerMenu && (
           <div className="danji-header-popover">
@@ -368,7 +394,7 @@ export default function Danji() {
                 </div>
                 <div className="danji-decoration-actions">
                   <button onClick={cancelDecoration}>취소</button>
-                  <button onClick={() => {setStickers(draftStickers); setView('jar'); setActiveSticker(null);}}>저장하기</button>
+                  <button onClick={saveDecoration}>저장하기</button>
                 </div>
               </section>
             </>
@@ -405,7 +431,7 @@ export default function Danji() {
               <time>{record.date}</time>
               {deleting && (
                 <span className="danji-delete-check" aria-hidden="true">
-                  {deleteIds.includes(record.id) ? '✓' : ''}
+                  <img src={deleteCheck} alt="" />
                 </span>
               )}
             </button>
@@ -417,24 +443,25 @@ export default function Danji() {
           <span aria-hidden="true">✓</span>기록이 삭제되었어요!
         </div>
       )}
-      {saveSuccess && (
-        <div className="danji-modal-backdrop" onClick={() => setSaveSuccess(false)}>
+      {(saveSuccess || stickerSaved) && (
+        <div className="danji-modal-backdrop" onClick={() => { setSaveSuccess(false); setStickerSaved(false); }}>
           <div
-            className="danji-saved-sheet"
+            className={`danji-saved-sheet ${stickerSaved ? 'sticker-saved' : ''}`}
             role="dialog"
             aria-modal="true"
             aria-labelledby="danji-saved-title"
             onClick={(event) => event.stopPropagation()}
           >
             <span className="danji-saved-handle" />
-            <strong id="danji-saved-title">저장했어요!</strong>
-            <p>단지에서 수정된 나의 기록을 확인해보세요.</p>
-            <img src={saveIllustration} alt="" />
+            <strong id="danji-saved-title">{stickerSaved ? '스티커를 저장했어요!' : '저장했어요!'}</strong>
+            <p>{stickerSaved ? '단지에 새로운 스티커가 추가됐어요.' : '단지에서 수정된 나의 기록을 확인해보세요.'}</p>
+            <img src={stickerSaved ? stickerSaveIllustration : saveIllustration} alt="" />
             <div>
               <button
                 autoFocus
                 onClick={() => {
                   setSaveSuccess(false);
+                  setStickerSaved(false);
                   setView('jar');
                 }}
               >
@@ -443,6 +470,7 @@ export default function Danji() {
               <button
                 onClick={() => {
                   setSaveSuccess(false);
+                  setStickerSaved(false);
                   window.location.assign('/home');
                 }}
               >
@@ -574,9 +602,7 @@ export default function Danji() {
           <div className="danji-edit-preview-controls">
             <button
               onClick={() => {
-                setView('detail');
-                setShowNote(false);
-                setEditingText(false);
+                requestLeave('detail');
               }}
             >
               취소
@@ -640,6 +666,18 @@ export default function Danji() {
       {saveError && (
         <div className="danji-success-toast" role="alert">
           저장하지 못했어요. 다시 시도해주세요.<button onClick={() => setSaveError(false)}>닫기</button>
+        </div>
+      )}
+      {leaveTarget && (
+        <div className="danji-confirm-backdrop" onClick={() => setLeaveTarget(null)}>
+          <div className="danji-confirm danji-leave-confirm" role="alertdialog" aria-modal="true" aria-labelledby="danji-leave-title" onClick={(event) => event.stopPropagation()}>
+            <strong id="danji-leave-title">{view === 'decorate' ? '꾸민 내용을 저장하지 않고' : '수정내용을 저장하지 않고'}<br />나갈까요?</strong>
+            <p>{view === 'decorate' ? '지금까지 꾸민 내용이 저장되지 않아요.' : '저장하지 않은 내용은 사라져요.'}</p>
+            <div>
+              <button autoFocus onClick={() => setLeaveTarget(null)}>{view === 'decorate' ? '계속 꾸미기' : '계속 수정하기'}</button>
+              <button className="danger" onClick={() => finishLeave(leaveTarget)}>나가기</button>
+            </div>
+          </div>
         </div>
       )}
       {confirmDelete && (

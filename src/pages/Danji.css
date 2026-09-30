@@ -43,13 +43,13 @@
   background: #fff;
   white-space: nowrap;
 }
-.danji-header > button {
+.danji-header > button:not(.danji-title-pill) {
   flex: none;
   width: 11.733cqw;
   height: 11.733cqw;
   background: none;
 }
-.danji-header > button img {
+.danji-header > button:not(.danji-title-pill) img {
   display: block;
   width: 6.4cqw;
   height: 6.4cqw;
@@ -576,7 +576,9 @@
   border-radius: 4.267cqw;
 }
 .danji-actions.delete-actions button.primary:disabled {
-  opacity: 0.5;
+  opacity: 1;
+  background: #ffb331;
+  color: rgba(25, 31, 40, 0.3);
 }
 /* A single 294 × 330 card and 270 × 270 photo geometry for detail and edit. */
 .danji-detail,
@@ -1198,3 +1200,12 @@
 .danji-stickers .danji-sticker-remove, .danji-stickers .danji-sticker-resize { position:absolute; width:5.333cqw; height:5.333cqw; background:#b0b8c1; color:white; border-radius:50%; font-size:4cqw; line-height:5.333cqw; touch-action:none; }
 .danji-sticker-remove { top:-2.667cqw; right:-2.667cqw; }
 .danji-sticker-resize { bottom:-2.667cqw; left:-2.667cqw; }
+
+.danji-leave-confirm { padding-top: 5.867cqw; }
+.danji-leave-confirm strong { line-height: 1.35; }
+.danji-leave-confirm p { line-height: 1.6; margin: 2.133cqw 0 5.333cqw; }
+.danji-saved-sheet.sticker-saved > img { width: 42.535cqw; height: 33.934cqw; }
+.danji-saved-sheet.sticker-saved p { margin-bottom: 2.492cqw; }
+.danji-delete-check { display: grid; place-items: center; background: #d5dce1; font-weight: 700; }
+
+.danji-delete-check > img { width: 6.4cqw; height: 6.4cqw; object-fit: contain; border-radius: 0; margin: 0; }
