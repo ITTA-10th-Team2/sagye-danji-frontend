@@ -13,7 +13,7 @@ export default function UploadedPhoto({ imageUrl }: UploadedPhotoProps) {
         <img src="/assets/icons/leaf-1.svg" className="absolute top-4 -left-10 w-18 h-18" />
 
         {/* 장식 에셋 2 */}
-        <img src="/assets/icons/leaf-2.svg" className="absolute bottom-6 -right-8 w-20 h-20" />
+        <img src="/assets/icons/leaf-2.svg" className="absolute bottom-6 -right-12 w-20 h-20" />
       </div>
     </div>
   );

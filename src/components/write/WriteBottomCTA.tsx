@@ -7,7 +7,7 @@ interface WriteBottomCTAProps {
 
 export default function WriteBottomCTA({ onBackClick, onNextClick, isNextDisabled = false, isLastStep = false }: WriteBottomCTAProps) {
   return (
-    <div className="flex w-full gap-3 pt-4">
+    <div className="flex w-full gap-3 mt-auto">
       <button
         className="flex-1 py-4 text-[17px] font-semibold text-[#4E5968] bg-[#F2F4F6] rounded-2xl! active:scale-95 transition-all duration-200"
         onClick={onBackClick}

@@ -1,15 +1,29 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Post, Paragraph } from '@toss/tds-mobile';
 
 export default function WriteComplete() {
   const navigate = useNavigate();
+  const [isPop, setIsPop] = useState(false);
+
+  // 완료 애니메이션
+  useEffect(() => {
+    const timer = setTimeout(() => setIsPop(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <main className="flex flex-col h-dvh px-5 pt-4 pb-6 bg-white overflow-hidden">
-      <div className="flex flex-col flex-1 justify-center items-center pb-10">
+      <div className="flex flex-col flex-1 justify-center items-center">
         {/* 이미지 영역 */}
         <div className="w-[80%]">
-          <img src="/assets/write-complete.png" />
+          <img
+            src="/assets/write-complete.png"
+            alt="완료"
+            className={`transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+              isPop ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
+            }`}
+          />
         </div>
 
         {/* 완료 텍스트 영역 */}

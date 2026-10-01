@@ -31,12 +31,12 @@ export default function WriteInput({ onTextChange, initialValue = '' }: WriteInp
   return (
     <div className="flex flex-col w-full">
       <div
-        className={`relative flex flex-col w-full h-[164px] rounded-2xl p-4 transition-colors duration-200 ${getBgColor()}`}
+        className={`relative flex flex-col w-full h-[150px] rounded-2xl p-4 transition-colors duration-200 ${getBgColor()}`}
         onClick={() => textareaRef.current?.focus()}
       >
         <textarea
           ref={textareaRef}
-          className="w-full h-full bg-transparent resize-none outline-none text-[15px] text-[#191F28] placeholder:text-[#B0B8C1] leading-relaxed"
+          className="w-full h-full bg-transparent resize-none appearance-none [&::-webkit-resizer]:hidden [&::-webkit-scrollbar]:hidden outline-none text-[15px] text-[#191F28] placeholder:text-[#B0B8C1] leading-relaxed"
           placeholder="계절의 순간을 기록해보세요!"
           value={text}
           onChange={handleChange}

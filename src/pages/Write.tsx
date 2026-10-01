@@ -63,15 +63,19 @@ export default function Write() {
           </ListHeader.DescriptionParagraph>
         }
       />
+
       <main className="flex flex-col px-5 pt-4 pb-6">
+        {/* 사진 영역 */}
         <section>
           <UploadedPhoto imageUrl={DUMMY_PHOTOS[currentIndex]} />
         </section>
 
+        {/* 작성 영역 */}
         <section>
           <WriteInput key={`input-${currentIndex}`} onTextChange={handleTextChange} initialValue={currentText} />
         </section>
 
+        {/* 버튼 영역 */}
         <WriteBottomCTA onBackClick={handleBack} onNextClick={handleNext} isLastStep={isLastStep} />
       </main>
     </div>
