@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BottomSheet } from '@toss/tds-mobile';
 import { Device, getPermission, openPermissionDialog } from '@apps-in-toss/web-framework';
 
 export default function FloatingRecordCTA() {
+  const navigate = useNavigate();
+
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
   const [isPermissionSheetOpen, setIsPermissionSheetOpen] = useState<boolean>(false);
   const [permissionTarget, setPermissionTarget] = useState<'camera' | 'album'>('album');
@@ -74,10 +77,9 @@ export default function FloatingRecordCTA() {
             return;
           }
 
-          // 수정 예정 - 기록 화면 만들면 사진 넘기기
-          items.forEach((item) => {
-            console.log('앨범에서 가져온 사진:', item.type, item.id);
-          });
+          // 기록 페이지로 이동하면서 사진 데이터 같이 보내기
+          const photoArray = items.map((item) => `data:image/jpeg;base64,${item.dataUri}`);
+          navigate('/write', { state: { photos: photoArray } });
         }
       } else if (permissionTarget === 'camera') {
         // 카메라 권한일 시
@@ -106,9 +108,9 @@ export default function FloatingRecordCTA() {
               return;
             }
 
-            // 수정 예정 - 기록 화면 만들면 사진 넘기기
-            const imageUri = 'data:image/jpeg;base64,' + response.dataUri;
-            console.log('촬영한 사진:', imageUri);
+            // 기록 페이지로 이동하면서 사진 데이터 같이 보내기
+            const imageUri = `data:image/jpeg;base64,${response.dataUri}`;
+            navigate('/write', { state: { photos: [imageUri] } });
           } catch (error) {
             console.error('카메라 실행 및 촬영 오류:', error);
           }

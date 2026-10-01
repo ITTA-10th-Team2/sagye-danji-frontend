@@ -1,19 +1,21 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ListHeader } from '@toss/tds-mobile';
 import UploadedPhoto from '../components/write/UploadedPhoto';
 import WriteInput from '../components/write/WriteInput';
 import WriteBottomCTA from '../components/write/WriteBottomCTA';
 
 export default function Write() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   // 더미 사진 데이터
-  const DUMMY_PHOTOS = [
+  const DUMMY_PHOTOS = location.state?.photos || [
     'https://images.unsplash.com/photo-1507371341162-763b5e419408?q=80&w=400&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1476820865390-c52aeebb9891?q=80&w=400&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1507371341162-763b5e419408?q=80&w=400&auto=format&fit=crop',
   ];
 
-  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [texts, setTexts] = useState<string[]>(Array(DUMMY_PHOTOS.length).fill(''));
 
