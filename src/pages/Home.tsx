@@ -7,7 +7,7 @@ export default function Home() {
     <main className="relative flex flex-col w-full h-dvh bg-[#E7C380] overflow-hidden">
       <div className="absolute inset-0 z-0">
         {/* 풍경 */}
-        <div className="absolute top-0 left-0 w-full h-[60%] bg-[url('/assets/bg-sunset.png')] bg-cover bg-bottom" />
+        <div className="absolute top-0 left-0 w-full h-[60%] bg-[#A3E2FF] bg-[url('/assets/bg-sunset.png')] bg-[length:85%_auto] bg-bottom bg-no-repeat bg-center" />
         {/* 뼈대 */}
         <div className="absolute inset-0 w-full h-full bg-[url('/assets/frame-base.png')] bg-cover bg-center pointer-events-none" />
       </div>
@@ -19,7 +19,7 @@ export default function Home() {
         </section>
 
         {/* 단지 & 테이블  */}
-        <section className="relative flex-1 flex flex-col justify-end items-center w-full pb-[150px]">
+        <section className="relative flex-1 flex flex-col justify-end items-center w-full pb-[120px]">
           <div className="w-full px-6 relative z-20">
             <SeasonJarList />
           </div>
@@ -27,7 +27,7 @@ export default function Home() {
           <img src="/assets/table.png" className="w-[92%] object-contain pointer-events-none -mt-[8%]" />
 
           {/* 안내 텍스트 */}
-          <p className="absolute bottom-[70px] text-[13px] text-gray-700/80 font-medium">단지를 눌러 기록을 확인해보세요.</p>
+          <p className="mt-4 text-[13px] text-gray-700/80 font-medium">단지를 눌러 기록을 확인해보세요.</p>
         </section>
       </div>
 
