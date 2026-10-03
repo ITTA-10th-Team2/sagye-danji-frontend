@@ -44,7 +44,7 @@ export default function WriteComplete() {
         <button
           className="flex-1 py-4 text-[17px] font-semibold rounded-2xl! transition-all duration-200 bg-[#ffb331] text-white active:scale-95"
           onClick={() => {
-            console.log('단지 페이지로 이동 로직 추가');
+            navigate('/danji');
           }}
         >
           단지 보러 가기

@@ -75,7 +75,7 @@ export default function SeasonJarList() {
                 autoplay={true}
                 subscriptions={{
                   complete: () => {
-                    navigate('/');
+                    navigate('/danji');
                   },
                 }}
               />
