@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import FloatingRecordCTA from '../components/home/FloatingRecordCTA';
 import './Danji.css';
 import DanjiCalendar from './DanjiCalendar';
 import jarArt from '../assets/danji/current/jar.png';
@@ -61,7 +61,6 @@ function PencilIcon() {
 }
 
 export default function Danji() {
-  const navigate = useNavigate();
   const [previewRecords, setPreviewRecords] = useState<typeof initialRecords>(() => {
     try {
       const saved = JSON.parse(localStorage.getItem('danji-preview-records') || 'null');
@@ -227,9 +226,6 @@ export default function Danji() {
     setPreviewRecords(next);
     setPage(Math.floor(next.findIndex((record) => record.id === selectedRecord.id) / 5));
     setCalendarOpen(false);
-  }
-  function createRecord() {
-    navigate('/write');
   }
 
   function openDetail(index: number) {
@@ -416,9 +412,11 @@ export default function Danji() {
                 <button className="danji-settings-button" aria-label="단지 꾸미기" onClick={beginDecoration}>
                   <img src={buttonSparkle} alt="" />
                 </button>
-                <button className="primary" aria-label="기록하기" onClick={createRecord}>
-                  <img src={buttonPencil} alt="" />
-                </button>
+                <FloatingRecordCTA renderTrigger={(open) => (
+                  <button className="primary" aria-label="기록하기" onClick={open}>
+                    <img src={buttonPencil} alt="" />
+                  </button>
+                )} />
               </div>
             </>
           ) : (
@@ -567,9 +565,11 @@ export default function Danji() {
               >
                 <img className="danji-trash-icon" src={trashIcon} alt="" />
               </button>
-              <button className="primary" onClick={createRecord}>
-                <img src={buttonPencil} alt="기록하기" />
-              </button>
+              <FloatingRecordCTA renderTrigger={(open) => (
+                <button className="primary" onClick={open}>
+                  <img src={buttonPencil} alt="기록하기" />
+                </button>
+              )} />
             </>
           )}
         </div>

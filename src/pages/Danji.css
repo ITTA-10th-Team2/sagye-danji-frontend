@@ -1271,7 +1271,7 @@
 
 /* Match Home's full-width WebView and let Toss render its native header. */
 .danji-page.browser-preview { --danji-header-height: 25.067cqw; }
-.inapp .danji-jar-background, .inapp .danji-gallery-background { transform: translateY(-25.067cqw); }
+.inapp .danji-jar-background, .inapp .danji-gallery-background { top: -25.067cqw; bottom: 0; }
 .danji-record-background { background-size: cover; }
 .danji-edit-preview-card { background: #fff; }
 .text-editing .danji-edit-preview-note { background: #fff9e7; border-color: #ffcf70; }
