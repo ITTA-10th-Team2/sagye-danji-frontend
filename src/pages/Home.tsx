@@ -49,7 +49,7 @@ export default function Home() {
 
           {/* 테이블 & 안내 문구 */}
           <div className="relative w-full flex justify-center -mt-[7%]">
-            <img src="/assets/home/table.png" className="w-full object-contain pointer-events-none" />
+            <img src="/assets/home/table.png" className="w-[95%] object-contain pointer-events-none" />
             <p className="absolute bottom-[20%] text-[13px] text-[#00132B]/58 font-medium">단지를 눌러 기록을 확인해보세요.</p>
           </div>
         </section>
