@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { TDSMobileAITProvider } from '@toss/tds-mobile-ait';
 import { AnimatePresence } from 'framer-motion';
+import NavigationManager from './components/common/ManageNav';
 import PageTransition from './components/common/PageTransition';
 import Layout from './components/common/Layout';
 import Splash from './pages/Splash';
@@ -14,6 +15,9 @@ function AnimatedRoutes() {
   const location = useLocation();
 
   return (
+    <>
+    <NavigationManager />
+
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageTransition><Splash /></PageTransition>} />
@@ -24,6 +28,7 @@ function AnimatedRoutes() {
         <Route path="/write/complete" element={<PageTransition><WriteComplete /></PageTransition>} />
       </Routes>
     </AnimatePresence>
+    </>
   );
 }
 

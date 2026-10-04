@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { NavigationBar } from '@apps-in-toss/web-framework';
 import RecommendationCard from '../components/home/RecommendationCard';
 import SeasonJarList from '../components/home/SeasonJarList';
 import FloatingRecordCTA from '../components/home/FloatingRecordCTA';
@@ -9,13 +8,6 @@ export default function Home() {
   const [bgImage, setBgImage] = useState('/assets/home/bg-day.png');
 
   useEffect(() => {
-    NavigationBar.setOptions({
-      withBackButton: true,
-      withHomeButton: true,
-      withTitle: true,
-      transparentBackground: true,
-    });
-
     // 현재 시간에 따라 배경 이미지 변경
     const currentHour = new Date().getHours();
 
@@ -50,7 +42,7 @@ export default function Home() {
         </section>
 
         {/* 단지 */}
-        <section className="mt-[36vw] flex flex-col items-center w-full">
+        <section className="mt-[35vw] flex flex-col items-center w-full">
           <div className="w-full px-6 relative z-20">
             <SeasonJarList />
           </div>
@@ -64,7 +56,7 @@ export default function Home() {
       </div>
 
       {/* CTA 버튼 */}
-      <div className="absolute bottom-0 left-0 w-full px-5 pb-safe mb-6 z-30">
+      <div className="absolute bottom-0 left-0 w-full px-5 pb-safe mb-4 z-30">
         <FloatingRecordCTA />
       </div>
     </main>
