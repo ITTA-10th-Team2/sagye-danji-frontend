@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import './Danji.css';
 import DanjiCalendar from './DanjiCalendar';
 import jarArt from '../assets/danji/current/jar.png';
@@ -49,11 +49,18 @@ const initialRecords = Array.from({ length: 15 }, (_, id) => ({
   note: demoNotes[id % 5],
 }));
 function sortRecordsByDate(records: typeof initialRecords): typeof initialRecords {
-  return [...records].sort((a, b) => b.date.replaceAll('-', '/').localeCompare(a.date.replaceAll('-', '/')) || b.id - a.id);
+  return [...records].sort((a, b) => a.date.replaceAll('-', '/').localeCompare(b.date.replaceAll('-', '/')) || a.id - b.id);
 }
 
 type View = 'jar' | 'all' | 'detail' | 'editor' | 'editPreview' | 'decorate';
 type Sheet = 'none' | 'options' | 'select';
+
+function CalendarIcon() {
+  return <svg className="danji-inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4M17 3v4M3 10h18M7 14h2M15 14h2M7 18h2" /></svg>;
+}
+function PencilIcon() {
+  return <svg className="danji-inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m15 4 5 5M4 20l5-1L20 8a2.1 2.1 0 0 0-4-4L5 15l-1 5Z" /><path d="m5 15 4 4" /></svg>;
+}
 
 export default function Danji() {
   const [previewRecords, setPreviewRecords] = useState<typeof initialRecords>(() => {
@@ -128,7 +135,7 @@ export default function Danji() {
     setShowNote(false);
     setActiveSticker(null);
     setDraftStickers([]);
-    if (target === 'home' || target === 'close') window.location.assign('/');
+    if (target === 'home' || target === 'close') window.location.assign('/home');
     else setView(target);
   }
   function saveDecoration() {
@@ -141,7 +148,13 @@ export default function Danji() {
     setStickerSaved(true);
   }
   const [deleteSuccess, setDeleteSuccess] = useState(false);
-  const pageCount = Math.max(1, Math.ceil(previewRecords.length / 5));
+  // Preview the new date order immediately; cancelling keeps the saved records intact.
+  const displayRecords = useMemo(() => sortRecordsByDate(
+    view === 'editPreview' && selected !== null
+      ? previewRecords.map((record) => record.id === selected ? {...record, date: draftDate.replaceAll('-', '/')} : record)
+      : previewRecords,
+  ), [previewRecords, view, selected, draftDate]);
+  const pageCount = Math.max(1, Math.ceil(displayRecords.length / 5));
   const selectedRecord = previewRecords.find((item: (typeof initialRecords)[number]) => item.id === selected);
   useEffect(() => {
     try {
@@ -228,7 +241,7 @@ export default function Danji() {
   }
 
   return (
-    <div className={`danji-page view-${view} ${editingText ? 'text-editing' : ''}`}>
+    <div className={`danji-page ${import.meta.env.DEV ? 'browser-preview' : 'inapp'} view-${view} ${editingText ? 'text-editing' : ''}`}>
       {(view === 'jar' || view === 'decorate') && (
         <div className="danji-jar-background" aria-hidden="true">
           <i className="jar-ground" />
@@ -253,7 +266,7 @@ export default function Danji() {
           <img src={statusRight} alt="" />
         </div>
       )}
-      <header className="danji-header">
+      {import.meta.env.DEV && <header className="danji-header">
         <button
           aria-label="뒤로"
           onClick={() =>
@@ -288,7 +301,7 @@ export default function Danji() {
             브라우저 미리보기에서는 연결되지 않습니다.<button onClick={() => setHeaderMenu(false)}>닫기</button>
           </div>
         )}
-      </header>
+      </header>}
       {!deleting && view !== 'editPreview' && view !== 'decorate' && (
         <nav className="danji-tabs" aria-label="기록 보기 방식">
           <button
@@ -334,7 +347,7 @@ export default function Danji() {
             </p>
           )}
           {previewRecords.length === 0 && <img className="danji-empty-lines" src={emptyLines} alt="" />}
-          {previewRecords.slice(page * 5, page * 5 + 5).map((record: (typeof initialRecords)[number], index: number) => (
+          {displayRecords.slice(page * 5, page * 5 + 5).map((record: (typeof initialRecords)[number], index: number) => (
             <button
               key={record.id}
               className={`danji-polaroid position-${index}`}
@@ -351,25 +364,25 @@ export default function Danji() {
                 style={{ left: `${item.x}%`, top: `${item.y}%`, width: `${item.size}%` }}>
                 <button className="danji-sticker-drag" aria-label={`${stickerNames[item.option]} 스티커 이동`}
                   disabled={view !== 'decorate'}
-                  onPointerDown={(event) => {setActiveSticker(item.id); event.currentTarget.setPointerCapture(event.pointerId);}}
+                  onPointerDown={(event) => {if (view !== 'decorate') return; setActiveSticker(item.id); event.currentTarget.setPointerCapture(event.pointerId);}}
                   onPointerMove={(event) => {
-                    if (!event.currentTarget.hasPointerCapture(event.pointerId)) return;
+                    if (view !== 'decorate' || !event.currentTarget.hasPointerCapture(event.pointerId)) return;
                     const rect = event.currentTarget.closest('.danji-scene')!.getBoundingClientRect();
                     setDraftStickers((items) => items.map((sticker) => sticker.id === item.id ? {...sticker,
                       x: Math.max(0, Math.min(100 - sticker.size, sticker.x + event.movementX / rect.width * 100)),
                       y: Math.max(0, Math.min(100 - sticker.size * rect.width / rect.height, sticker.y + event.movementY / rect.height * 100))} : sticker));
                   }}
-                  onPointerUp={(event) => event.currentTarget.releasePointerCapture(event.pointerId)}>
+                  onPointerUp={(event) => {if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);}}>
                   <img src={stickerOptions[item.option]} alt={stickerNames[item.option]} draggable={false} />
                 </button>
                 {view === 'decorate' && <>
                   <button className="danji-sticker-remove" aria-label="스티커 삭제" onClick={() => {setDraftStickers((items) => items.filter((sticker) => sticker.id !== item.id)); setActiveSticker(null);}}>×</button>
                   <button className="danji-sticker-resize" aria-label="스티커 크기 조절"
                     onPointerDown={(event) => {setActiveSticker(item.id);event.currentTarget.setPointerCapture(event.pointerId);}}
-                    onPointerMove={(event) => {if (!event.currentTarget.hasPointerCapture(event.pointerId)) return;
+                    onPointerMove={(event) => {if (view !== 'decorate' || !event.currentTarget.hasPointerCapture(event.pointerId)) return;
                       const width = event.currentTarget.closest('.danji-scene')!.getBoundingClientRect().width;
                       setDraftStickers((items) => items.map((sticker) => sticker.id === item.id ? {...sticker, size: Math.max(10, Math.min(40, sticker.size - event.movementX / width * 100))} : sticker));}}
-                    onPointerUp={(event) => event.currentTarget.releasePointerCapture(event.pointerId)}>↗</button>
+                    onPointerUp={(event) => {if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);}}>↗</button>
                 </>}
               </div>
             ))}
@@ -433,7 +446,7 @@ export default function Danji() {
               <span>사계단지에<br />첫 기록을 담아보세요.</span>
             </p>
           )}
-          {previewRecords.map((record: (typeof initialRecords)[number]) => (
+          {displayRecords.map((record: (typeof initialRecords)[number]) => (
             <button
               key={record.id}
               className={`danji-mini-card ${deleting && deleteIds.includes(record.id) ? 'selected' : ''}`}
@@ -488,7 +501,7 @@ export default function Danji() {
                 onClick={() => {
                   setSaveSuccess(false);
                   setStickerSaved(false);
-                  window.location.assign('/');
+                  window.location.assign('/home');
                 }}
               >
                 홈으로 이동
@@ -597,12 +610,12 @@ export default function Danji() {
                   aria-label={editingText ? '글 수정 완료' : '글 수정'}
                   onClick={() => setEditingText((value) => !value)}
                 >
-                  ✎
+                  <PencilIcon />
                 </button>}
                 {!editingText && (
                   <>
                     <button className="danji-back-date" onClick={() => setCalendarOpen(true)} aria-label="기록 날짜 수정">
-                      {draftDate.replaceAll('-', '/')}
+                      <CalendarIcon /> <span>{draftDate.replaceAll('-', '/')}</span>
                     </button>
                     <button className="danji-flip-front" onClick={() => setShowNote(false)}>
                       사진 보기
@@ -616,7 +629,7 @@ export default function Danji() {
                   <img src={selectedRecord.image} alt="수정 중인 사진" />
                 </button>
                 <button className="danji-date-button" onClick={() => setCalendarOpen(true)} aria-label="기록 날짜 수정">
-                  ▦ &nbsp; {draftDate.replaceAll('-', '/')}
+                  <CalendarIcon /> <span>{draftDate.replaceAll('-', '/')}</span>
                 </button>
               </>
             )}
@@ -759,7 +772,7 @@ export default function Danji() {
               <button className="danji-sheet-handle" aria-label="닫기" onClick={() => setSheet('none')} />
               <strong>수정할 기록을 선택해주세요.</strong>
               <div className="danji-sheet-photos">
-                {previewRecords.map((record: (typeof initialRecords)[number]) => (
+                {displayRecords.map((record: (typeof initialRecords)[number]) => (
                   <button key={record.id} className={selected === record.id ? 'selected' : ''} onClick={() => setSelected(record.id)}>
                     <img src={record.image} alt={`${record.date} 기록 선택`} />
                   </button>
