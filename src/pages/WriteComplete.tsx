@@ -1,6 +1,14 @@
+import { NavigationBar } from '@apps-in-toss/web-framework';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Post, Paragraph } from '@toss/tds-mobile';
+
+await NavigationBar.setOptions({
+  withBackButton: false,
+  withHomeButton: true,
+  withTitle: true,
+  transparentBackground: false,
+});
 
 export default function WriteComplete() {
   const navigate = useNavigate();

@@ -1,6 +1,14 @@
+import { NavigationBar } from '@apps-in-toss/web-framework';
 import RecommendationCard from '../components/home/RecommendationCard';
 import SeasonJarList from '../components/home/SeasonJarList';
 import FloatingRecordCTA from '../components/home/FloatingRecordCTA';
+
+await NavigationBar.setOptions({
+  withBackButton: true,
+  withHomeButton: true,
+  withTitle: true,
+  transparentBackground: true,
+});
 
 export default function Home() {
   return (
