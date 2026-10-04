@@ -10,6 +10,8 @@ export default function FloatingRecordCTA() {
   const [isPermissionSheetOpen, setIsPermissionSheetOpen] = useState<boolean>(false);
   const [permissionTarget, setPermissionTarget] = useState<'camera' | 'album'>('album');
 
+  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
   // 앨범 선택 시
   const handleGalleryClick = () => {
     setPermissionTarget('album');
@@ -98,6 +100,7 @@ export default function FloatingRecordCTA() {
 
         if (status === 'allowed') {
           setIsPermissionSheetOpen(false);
+          await delay(300);
 
           // 촬영하기
           try {
