@@ -105,7 +105,7 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
 
           // 촬영하기
           try {
-            const response = await Device.openCamera({ base64: true });
+            const response = await Device.openCamera({ base64: true, maxWidth: 500 });
 
             if (!response || !response.dataUri) {
               console.log('사진 촬영이 취소되었어요.');
