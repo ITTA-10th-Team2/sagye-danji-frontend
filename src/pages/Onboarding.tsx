@@ -30,7 +30,6 @@ export default function Onboarding() {
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
 
-  const currentData = ONBOARDING_DATA[step];
   const isLastStep = step === ONBOARDING_DATA.length - 1;
 
   const handleNextClick = () => {
@@ -38,14 +37,6 @@ export default function Onboarding() {
       navigate('/home', { replace: true });
     } else {
       setStep((prev) => prev + 1);
-    }
-  };
-
-  const handlePrevClick = () => {
-    if (step > 0) {
-      setStep((prev) => prev - 1);
-    } else {
-      navigate(-1);
     }
   };
 
