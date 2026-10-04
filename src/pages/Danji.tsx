@@ -400,7 +400,11 @@ export default function Danji() {
                     onPointerMove={(event) => {if (view !== 'decorate' || !event.currentTarget.hasPointerCapture(event.pointerId)) return;
                       const width = event.currentTarget.closest('.danji-scene')!.getBoundingClientRect().width;
                       setDraftStickers((items) => items.map((sticker) => sticker.id === item.id ? {...sticker, size: Math.max(10, Math.min(40, sticker.size - event.movementX / width * 100))} : sticker));}}
-                    onPointerUp={(event) => {if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);}}>↗</button>
+                    onPointerUp={(event) => {if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);}}>
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M9 15 15 9M5 14v5h5M14 5h5v5M5 19l4-4M19 5l-4 4" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
                 </>}
               </div>
             ))}
@@ -430,7 +434,6 @@ export default function Danji() {
             </>
           ) : (
             <>
-              <div className="danji-decoration-badge">수정중</div>
               <section className={`danji-decoration-sheet ${stickerPanelExpanded ? 'expanded' : 'collapsed'}`} aria-label="단지 꾸미기">
                 <button className="danji-decoration-handle" aria-label={stickerPanelExpanded ? '스티커 패널 접기' : '스티커 패널 펼치기'} aria-expanded={stickerPanelExpanded} onClick={() => setStickerPanelExpanded(!stickerPanelExpanded)} />
                 <h2>나의 스티커</h2>
