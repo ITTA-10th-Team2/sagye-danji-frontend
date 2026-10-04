@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Danji.css';
 import DanjiCalendar from './DanjiCalendar';
 import jarArt from '../assets/danji/current/jar.png';
@@ -56,6 +57,7 @@ type View = 'jar' | 'all' | 'detail' | 'editor' | 'editPreview' | 'decorate';
 type Sheet = 'none' | 'options' | 'select';
 
 export default function Danji() {
+  const navigate = useNavigate();
   const [previewRecords, setPreviewRecords] = useState<typeof initialRecords>(() => {
     try {
       const saved = JSON.parse(localStorage.getItem('danji-preview-records') || 'null');
@@ -197,13 +199,7 @@ export default function Danji() {
     setView('detail');
   }
   function createRecord() {
-    setSelected(null);
-    const today = new Date();
-    setDraftDate(`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`);
-    setDraftNote('');
-    setDraftImage(null);
-    setSheet('none');
-    setView('editor');
+    navigate('/write');
   }
 
   function openDetail(index: number) {
