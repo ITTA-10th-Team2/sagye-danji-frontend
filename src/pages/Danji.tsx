@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { graniteEvent } from '@apps-in-toss/web-framework';
 import FloatingRecordCTA from '../components/home/FloatingRecordCTA';
 import './Danji.css';
 import DanjiCalendar from './DanjiCalendar';
@@ -127,6 +128,9 @@ export default function Danji() {
   }
   function finishLeave(target: 'jar' | 'detail' | 'home' | 'close') {
     setLeaveTarget(null);
+    setSaveSuccess(false);
+    setStickerSaved(false);
+    setSheet('none');
     setSaveError(null);
     setCalendarOpen(false);
     setEditingText(false);
@@ -136,6 +140,15 @@ export default function Danji() {
     if (target === 'home' || target === 'close') window.location.assign('/home');
     else setView(target);
   }
+  // Subscribe only inside a card/edit view so the main screen keeps Toss's normal back action.
+  useEffect(() => {
+    if (view !== 'detail' && view !== 'editPreview' && view !== 'editor' && view !== 'decorate') return;
+    return graniteEvent.addEventListener('backEvent', {
+      onEvent: () => requestLeave('jar'),
+      onError: (error) => console.error('단지 뒤로가기 이벤트 오류:', error),
+    });
+  });
+
   function saveDecoration() {
     try { localStorage.setItem('danji-preview-stickers', JSON.stringify(draftStickers)); }
     catch { setSaveError('sticker'); return; }
@@ -279,13 +292,9 @@ export default function Danji() {
         <button
           aria-label="뒤로"
           onClick={() =>
-            view === 'editPreview'
-              ? requestLeave('detail')
-              : view === 'editor'
-                ? requestLeave(selectedRecord ? 'detail' : 'jar')
-                : view === 'detail' || view === 'decorate'
-                  ? requestLeave('jar')
-                  : window.history.back()
+            view === 'detail' || view === 'editPreview' || view === 'editor' || view === 'decorate'
+              ? requestLeave('jar')
+              : window.history.back()
           }
         >
           <img src={navBack} alt="" />
