@@ -114,7 +114,7 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
 
             // 기록 페이지로 이동하면서 사진 데이터 같이 보내기
             const imageUri = `data:image/jpeg;base64,${response.dataUri}`;
-            navigate('/write', { state: { photos: [imageUri] } });
+            navigate('/write', { state: { photos: [imageUri] }, replace: true });
           } catch (error) {
             console.error('카메라 실행 및 촬영 오류:', error);
           }
