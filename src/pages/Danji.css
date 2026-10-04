@@ -1301,3 +1301,15 @@
 .text-editing .danji-note-limit { top: 98cqw; }
 .text-editing:has(.limit-reached) .danji-edit-preview-controls { top: 105.6cqw; }
 .text-editing .danji-edit-preview-note.limit-reached { background: #fff5f5; border-color: #f9caca; }
+
+/* Ground art must cover the remaining viewport, including taller mobile WebViews. */
+.danji-jar-background .jar-ground {
+  bottom: 0;
+  height: auto;
+  min-height: 76.8cqw;
+}
+.danji-gallery-background .gallery-ground {
+  bottom: 0;
+  height: auto;
+  min-height: 74.133cqw;
+}
