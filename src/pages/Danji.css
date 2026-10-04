@@ -1179,7 +1179,6 @@
 }
 
 .danji-header-divider { width: 1px; height: 4.267cqw; background: rgba(0,27,55,.1); }
-.danji-decoration-badge { position:absolute; top:-5.867cqw; left:50%; transform:translateX(-50%); padding:2.133cqw 3.2cqw; background:white; border-radius:99px; color:#faa131; font-size:4cqw; line-height:6.4cqw; box-shadow:0 2px 15px #001b371a; }
 .danji-decoration-sheet { position:absolute; left:0; width:100%; z-index:15; background:#f9fafb; border-radius:6.133cqw 6.133cqw 0 0; padding:4.267cqw 0 6.133cqw; }
 .danji-decoration-sheet.expanded { top:54.133cqw; height:128cqw; }
 .danji-decoration-sheet.collapsed { top:121.067cqw; height:61.333cqw; }
@@ -1200,7 +1199,8 @@
 .danji-sticker-drag img { width:100%; height:100%; object-fit:contain; pointer-events:none; user-select:none; }
 .danji-stickers .danji-sticker-remove, .danji-stickers .danji-sticker-resize { position:absolute; width:5.333cqw; height:5.333cqw; background:#b0b8c1; color:white; border-radius:50%; font-size:4cqw; line-height:5.333cqw; touch-action:none; }
 .danji-sticker-remove { top:-2.667cqw; right:-2.667cqw; }
-.danji-sticker-resize { bottom:-2.667cqw; left:-2.667cqw; }
+.danji-stickers .danji-sticker-resize { bottom:-2.667cqw; left:-2.667cqw; display:grid; place-items:center; padding:0; }
+.danji-sticker-resize svg { display:block; width:3.733cqw; height:3.733cqw; pointer-events:none; }
 
 .danji-leave-confirm { padding-top: 5.867cqw; }
 .danji-leave-confirm strong { line-height: 1.35; }
