@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BottomSheet } from '@toss/tds-mobile';
 import { Device, getPermission, openPermissionDialog } from '@apps-in-toss/web-framework';
 
-export default function FloatingRecordCTA() {
+export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (open: () => void) => ReactNode }) {
   const navigate = useNavigate();
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
@@ -100,6 +100,7 @@ export default function FloatingRecordCTA() {
 
         if (status === 'allowed') {
           setIsPermissionSheetOpen(false);
+
           await delay(300);
 
           // 촬영하기
@@ -119,14 +120,14 @@ export default function FloatingRecordCTA() {
           }
         }
       }
-    } catch (error: any) {
-      console.error('권한 요청 또는 실행 중 오류:', error.message || error);
+    } catch (error: unknown) {
+      console.error('권한 요청 또는 실행 중 오류:', error instanceof Error ? error.message : error);
     }
   };
 
   return (
     <>
-      <div className="flex items-center justify-between w-full p-2 pl-5 pr-5 bg-white/80 backdrop-blur-md border border-white/50 rounded-[16px] shadow-sm">
+      {renderTrigger ? renderTrigger(() => setIsBottomSheetOpen(true)) : <div className="flex items-center justify-between w-full p-2 pl-5 pr-5 bg-white/80 backdrop-blur-md border border-white/50 rounded-[16px] shadow-sm">
         {/* 텍스트 영역 */}
         <div className="flex flex-col">
           <p className="text-[15px] font-medium text-[#000C1E]/80">가을의 순간을 더 담아보세요</p>
@@ -140,7 +141,7 @@ export default function FloatingRecordCTA() {
         >
           기록하기
         </button>
-      </div>
+      </div>}
 
       {/* 사진 추가 바텀시트 */}
       <BottomSheet
