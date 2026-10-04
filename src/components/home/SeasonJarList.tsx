@@ -35,7 +35,7 @@ export default function SeasonJarList() {
 
   return (
     <>
-      <div className="flex items-end justify-between w-full px-2">
+      <div className="flex items-end justify-between w-full px-[1vw]">
         {JAR_DATA.map((jar) => (
           <SeasonJar key={jar.id} season={jar.season} count={jar.count} onClick={() => handleJarClick(jar.season)} />
         ))}
@@ -51,7 +51,7 @@ export default function SeasonJarList() {
             flexDirection: 'column',
           }}
         >
-          <div className="flex flex-col  mb-6">
+          <div className="flex flex-col mb-6">
             <h3 className="text-[20px] font-bold text-[#191F28] mb-2">아직 숙성 중이에요.</h3>
             <p className="text-[15px] font-medium text-gray-500 leading-snug whitespace-pre-line">계절이 무르익으면 열어볼 수 있어요.</p>
           </div>
