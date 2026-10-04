@@ -5,20 +5,20 @@ import FloatingRecordCTA from '../components/home/FloatingRecordCTA';
 
 export default function Home() {
   // 배경 이미지 상태
-  const [bgImage, setBgImage] = useState('/assets/home/bg-day.png');
+  const [bgImage, setBgImage] = useState('/assets/home/bg-day.webp');
 
   useEffect(() => {
     // 현재 시간에 따라 배경 이미지 변경
     const currentHour = new Date().getHours();
 
     if (currentHour >= 6 && currentHour < 7) {
-      setBgImage('/assets/home/bg-sunrise.png');
+      setBgImage('/assets/home/bg-sunrise.webp');
     } else if (currentHour >= 7 && currentHour < 17) {
-      setBgImage('/assets/home/bg-day.png');
+      setBgImage('/assets/home/bg-day.webp');
     } else if (currentHour >= 17 && currentHour < 18) {
-      setBgImage('/assets/home/bg-sunset.png');
+      setBgImage('/assets/home/bg-sunset.webp');
     } else {
-      setBgImage('/assets/home/bg-night.png');
+      setBgImage('/assets/home/bg-night.webp');
     }
   }, []);
 
@@ -49,14 +49,14 @@ export default function Home() {
 
           {/* 테이블 & 안내 문구 */}
           <div className="relative w-full flex justify-center -mt-[7%]">
-            <img src="/assets/home/table.png" className="w-[95%] object-contain pointer-events-none" />
+            <img src="/assets/home/table.webp" className="w-[95%] object-contain pointer-events-none" />
             <p className="absolute bottom-[20%] text-[13px] text-[#00132B]/58 font-medium">단지를 눌러 기록을 확인해보세요.</p>
           </div>
         </section>
       </div>
 
       {/* CTA 버튼 */}
-      <div className="absolute bottom-0 left-0 w-full px-5 pb-safe mb-4 z-30">
+      <div className="absolute bottom-0 left-0 w-full px-5 pb-safe mb-6 z-30">
         <FloatingRecordCTA />
       </div>
     </main>

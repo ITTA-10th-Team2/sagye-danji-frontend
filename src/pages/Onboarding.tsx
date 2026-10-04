@@ -3,19 +3,19 @@ import { useNavigate } from 'react-router-dom';
 
 const ONBOARDING_DATA = [
   {
-    image: '/assets/onboarding/onboarding-1.png',
+    image: '/assets/onboarding/onboarding-1.webp',
     title: '오늘, 이 계절을 누리는 한 가지 방법',
     desc: '지금 놓치기 아쉬운 계절 활동을\n매일 하나씩 추천해 드려요.',
     blurColor: 'bg-[#F8B8B3]',
   },
   {
-    image: '/assets/onboarding/onboarding-2.png',
+    image: '/assets/onboarding/onboarding-2.webp',
     title: '사계 단지에 찰칵!',
     desc: '오늘 누린 계절의 순간을\n사진으로 남겨보세요.',
     blurColor: 'bg-[#CACE56]',
   },
   {
-    image: '/assets/onboarding/onboarding-3.png',
+    image: '/assets/onboarding/onboarding-3.webp',
     title: '계절이 건네는 풍요',
     desc: '하나씩 담은 순간이 모여\n나만의 사계가 됩니다.',
     blurColor: 'bg-[#FFC642]',
@@ -105,7 +105,7 @@ export default function Onboarding() {
 
         {/* 버튼 영역 */}
         <button
-          className="w-full py-4 text-[17px] font-semibold rounded-2xl! transition-all duration-200 bg-[#ffb331] text-white active:scale-95"
+          className="w-full py-4 text-[17px] border-none font-semibold rounded-2xl! transition-all duration-200 bg-[#ffb331] text-white active:scale-95"
           onClick={handleNextClick}
         >
           {isLastStep ? '시작하기' : '다음'}

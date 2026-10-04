@@ -14,13 +14,18 @@ export default function Splash() {
 
   return (
     <main className="flex flex-col items-center justify-center w-full h-dvh bg-white">
+      {/* 배경 */}
+      <div
+        className="absolute inset-0 w-full h-full pointer-events-none transition-all duration-1000"
+        style={{
+          backgroundImage: `url(/assets/onboarding/splash.webp)`,
+          backgroundSize: '100% auto',
+        }}
+      />
       {/* 로고 영역 */}
-      <div className="w-[120px] h-[60px] bg-gray-200 flex items-center justify-center mb-10">
+      <div className="w-[120px] h-[60px] bg-gray-200 flex items-center justify-center z-10">
         <span className="font-bold">로고</span>
       </div>
-      <p className="text-center text-gray-500 font-medium whitespace-pre-line">
-        배경 이미지{'\n'}_홈과 동일한 이미지{'\n'}_수정예정
-      </p>
     </main>
   );
 }
