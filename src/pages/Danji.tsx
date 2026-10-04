@@ -55,9 +55,6 @@ function sortRecordsByDate(records: typeof initialRecords): typeof initialRecord
 type View = 'jar' | 'all' | 'detail' | 'editor' | 'editPreview' | 'decorate';
 type Sheet = 'none' | 'options' | 'select';
 
-function CalendarIcon() {
-  return <svg className="danji-inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4M17 3v4M3 10h18M7 14h2M15 14h2M7 18h2" /></svg>;
-}
 function PencilIcon() {
   return <svg className="danji-inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m15 4 5 5M4 20l5-1L20 8a2.1 2.1 0 0 0-4-4L5 15l-1 5Z" /><path d="m5 15 4 4" /></svg>;
 }
@@ -178,8 +175,8 @@ export default function Danji() {
     setDraftNote(record.note.slice(0, 100));
     setNoteLimitReached(false);
     setDraftImage(record.image);
-    setShowNote(false);
-    setEditingText(false);
+    setShowNote(true);
+    setEditingText(true);
     setSheet('none');
     setView('editPreview');
   }
@@ -205,9 +202,29 @@ export default function Danji() {
     setSelected(id);
     setCalendarOpen(false);
     setEditingText(false);
-    setShowNote(false);
+    setShowNote(view === 'editPreview');
     setSaveSuccess(selected !== null);
     setView('detail');
+  }
+  function openDateEditor() {
+    if (!selectedRecord) return;
+    setDraftDate(selectedRecord.date.replaceAll('/', '-'));
+    setDraftNote(selectedRecord.note);
+    setDraftImage(selectedRecord.image);
+    setCalendarOpen(true);
+  }
+  function saveDate(value: string) {
+    if (!selectedRecord) return;
+    const next = sortRecordsByDate(previewRecords.map((record) =>
+      record.id === selectedRecord.id ? {...record, date: value.replaceAll('-', '/')} : record,
+    ));
+    setDraftDate(value);
+    try { localStorage.setItem('danji-preview-records', JSON.stringify(next)); }
+    catch { setSaveError('edit'); return; }
+    setSaveError(null);
+    setPreviewRecords(next);
+    setPage(Math.floor(next.findIndex((record) => record.id === selectedRecord.id) / 5));
+    setCalendarOpen(false);
   }
   function createRecord() {
     setSelected(null);
@@ -302,7 +319,7 @@ export default function Danji() {
           </div>
         )}
       </header>}
-      {!deleting && view !== 'editPreview' && view !== 'decorate' && (
+      {!deleting && view !== 'detail' && view !== 'editPreview' && view !== 'decorate' && (
         <nav className="danji-tabs" aria-label="기록 보기 방식">
           <button
             className={view !== 'all' ? 'active' : ''}
@@ -514,31 +531,17 @@ export default function Danji() {
       {view === 'detail' && selectedRecord && (
         <section className="danji-detail">
           <p className="danji-detail-hint">카드를 눌러 뒷면을 확인해보세요.</p>
-          <button
-            className="danji-large-card"
-            onClick={() => setShowNote((value) => !value)}
-            aria-label={showNote ? '사진 보기' : '기록 글 보기'}
-          >
-            {showNote ? (
-              <div className="danji-card-note">{selectedRecord.note || '아직 작성한 글이 없어요.'}</div>
-            ) : (
-              <>
-                <img src={selectedRecord.image} alt="가을 기록" />
-                <time>{selectedRecord.date}</time>
-              </>
-            )}
-          </button>
-          <div className="danji-detail-controls">
-            <button
-              onClick={() => {
-                setView('jar');
-                setShowNote(false);
-              }}
-            >
-              뒤로
-            </button>
-            <button onClick={() => editRecord(selectedRecord.id)}>수정하기</button>
-          </div>
+          <article className={`danji-large-card ${showNote ? 'showing-note' : ''}`}>
+            {showNote ? <>
+              <button className="danji-card-note" onClick={() => setShowNote(false)} aria-label="사진 보기">
+                {selectedRecord.note || '아직 작성한 글이 없어요.'}
+              </button>
+              <button className="danji-direct-pencil" aria-label="글 수정" onClick={() => editRecord(selectedRecord.id)}><PencilIcon /></button>
+            </> : <>
+              <button className="danji-detail-photo" onClick={() => setShowNote(true)} aria-label="기록 글 보기"><img src={selectedRecord.image} alt="가을 기록" /></button>
+              <button className="danji-detail-date" onClick={openDateEditor} aria-label="기록 날짜 수정"><span>{selectedRecord.date}</span><PencilIcon /></button>
+            </>}
+          </article>
         </section>
       )}
       {view === 'all' && (
@@ -577,80 +580,31 @@ export default function Danji() {
       )}
 
       {view === 'editPreview' && selectedRecord && (
-        <section className="danji-edit-preview" aria-label="기록 수정하기">
-          <span className="danji-editing-badge">수정중</span>
-          <p className="danji-detail-hint">카드를 눌러 뒷면을 확인해보세요.</p>
+        <section className="danji-edit-preview" aria-label="기록 글 수정">
           <div className="danji-edit-preview-card">
-            {showNote ? (
-              <div className={`danji-edit-preview-note ${noteLimitReached ? 'limit-reached' : ''}`}>
-                {editingText ? (
-                  <>
-                    <textarea
-                      autoFocus
-                      value={draftNote}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setNoteLimitReached(value.length >= 100);
-                        setDraftNote(value.slice(0, 100));
-                      }}
-                      aria-invalid={noteLimitReached}
-                      aria-describedby={noteLimitReached ? 'danji-note-limit' : undefined}
-                      placeholder="기록을 입력해주세요."
-                      aria-label="기록 글 수정"
-                    />
-                    <small>{draftNote.length}/100</small>
-                  </>
-                ) : (
-                  <button className="danji-note-flip" onClick={() => setEditingText(true)}>
-                    {draftNote || '기록을 입력해주세요.'}
-                  </button>
-                )}
-                {!editingText && <button
-                  className="danji-note-pencil"
-                  aria-label={editingText ? '글 수정 완료' : '글 수정'}
-                  onClick={() => setEditingText((value) => !value)}
-                >
-                  <PencilIcon />
-                </button>}
-                {!editingText && (
-                  <>
-                    <button className="danji-back-date" onClick={() => setCalendarOpen(true)} aria-label="기록 날짜 수정">
-                      <CalendarIcon /> <span>{draftDate.replaceAll('-', '/')}</span>
-                    </button>
-                    <button className="danji-flip-front" onClick={() => setShowNote(false)}>
-                      사진 보기
-                    </button>
-                  </>
-                )}
-              </div>
-            ) : (
-              <>
-                <button className="danji-edit-preview-photo" onClick={() => setShowNote(true)} aria-label="글 뒷면 보기">
-                  <img src={selectedRecord.image} alt="수정 중인 사진" />
-                </button>
-                <button className="danji-date-button" onClick={() => setCalendarOpen(true)} aria-label="기록 날짜 수정">
-                  <CalendarIcon /> <span>{draftDate.replaceAll('-', '/')}</span>
-                </button>
-              </>
-            )}
-          </div>
-          {editingText && noteLimitReached && <p className="danji-note-limit" id="danji-note-limit" role="status">최대 100자까지 작성할 수 있어요.</p>}
-          {editingText ? (
-            <div className="danji-writing-controls">
-              <button onClick={() => { setEditingText(false); setNoteLimitReached(false); }}>작성완료</button>
+            <div className={`danji-edit-preview-note ${noteLimitReached ? 'limit-reached' : ''}`}>
+              <textarea
+                autoFocus
+                maxLength={100}
+                value={draftNote}
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setNoteLimitReached(value.length >= 100);
+                  setDraftNote(value.slice(0, 100));
+                }}
+                aria-invalid={noteLimitReached}
+                aria-describedby={noteLimitReached ? 'danji-note-limit' : undefined}
+                placeholder="기록을 입력해주세요."
+                aria-label="기록 글 수정"
+              />
+              <small>{draftNote.length}/100</small>
             </div>
-          ) : <div className="danji-edit-preview-controls">
-            <button
-              onClick={() => {
-                requestLeave('detail');
-              }}
-            >
-              취소
-            </button>
-            <button onClick={saveRecord} disabled={!draftImage || !draftDate}>
-              저장하기
-            </button>
-          </div>}
+          </div>
+          {noteLimitReached && <p className="danji-note-limit" id="danji-note-limit" role="status">최대 100자까지 작성할 수 있어요.</p>}
+          <div className="danji-edit-preview-controls">
+            <button onClick={() => requestLeave('detail')}>취소</button>
+            <button onClick={saveRecord} disabled={!draftImage || !draftDate}>저장하기</button>
+          </div>
         </section>
       )}
 
@@ -700,15 +654,15 @@ export default function Danji() {
           value={draftDate}
           onCancel={() => setCalendarOpen(false)}
           onConfirm={(value) => {
-            setDraftDate(value);
-            setCalendarOpen(false);
+            if (view === 'detail') saveDate(value);
+            else { setDraftDate(value); setCalendarOpen(false); }
           }}
         />
       )}
       {saveError && (
         <div className="danji-error-snackbar" role="alert">
           <span>{saveError === 'delete' ? '기록을 삭제하지 못했어요.' : saveError === 'record' ? '기록을 저장하지 못했어요.' : '수정한 내용을 저장하지 못했어요.'}</span>
-          <button onClick={() => saveError === 'delete' ? deleteSelectedRecords() : saveError === 'sticker' ? saveDecoration() : saveRecord()}>다시시도</button>
+          <button onClick={() => saveError === 'delete' ? deleteSelectedRecords() : saveError === 'sticker' ? saveDecoration() : view === 'detail' ? saveDate(draftDate) : saveRecord()}>다시시도</button>
         </div>
       )}
       {leaveTarget && (

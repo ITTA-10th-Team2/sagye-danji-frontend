@@ -1285,3 +1285,19 @@
 .danji-decoration-sheet.expanded, .danji-decoration-sheet.collapsed { min-height: 0; }
 .danji-loading { inset: var(--danji-header-height) 0 0; }
 .danji-gallery.deleting { height: auto; }
+
+/* Direct edits: the front opens a calendar; the back opens the text field. */
+.danji-detail { top: var(--danji-header-height); height: calc(100% - var(--danji-header-height)); }
+.danji-detail .danji-detail-hint { top: 27.2cqw; }
+.danji-detail .danji-large-card { top: calc(var(--record-card-top) - 25.066667cqw); background: #fff; }
+.danji-detail-photo { display: block; width: var(--record-photo-size); height: var(--record-photo-size); background: none; }
+.danji-detail-date { flex: 1; margin-top: 1.6cqw; display: flex; align-items: center; justify-content: center; gap: 3.2cqw; background: #f2f4f6; border-radius: 3.2cqw; color: #666; font-size: 4cqw !important; }
+.danji-detail-date .danji-inline-icon { width: 4cqw; height: 4cqw; padding: .533cqw; background: #d1d6db; border-radius: 50%; color: white; }
+.danji-direct-pencil { display: grid; place-items: center; width: 6.4cqw; height: 6.4cqw; margin: auto; border-radius: 50%; background: #d1d6db; color: white; }
+.danji-direct-pencil .danji-inline-icon { width: 4.267cqw; height: 4.267cqw; }
+.danji-detail .danji-card-note { font-size: 4.533cqw; }
+.danji-page.text-editing .danji-edit-preview-card { top: 9.067cqw; }
+.text-editing .danji-edit-preview-controls { top: 99.2cqw; bottom: auto; }
+.text-editing .danji-note-limit { top: 98cqw; }
+.text-editing:has(.limit-reached) .danji-edit-preview-controls { top: 105.6cqw; }
+.text-editing .danji-edit-preview-note.limit-reached { background: #fff5f5; border-color: #f9caca; }
