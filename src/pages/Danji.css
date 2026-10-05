@@ -322,8 +322,9 @@
   flex: none;
 }
 .danji-polaroid time {
-  font-size: 3.2cqw;
-  line-height: 4.267cqw;
+  font-size: 2.933333cqw;
+  line-height: 1.35;
+  color: rgba(3, 24, 50, .46);
   flex: 1;
   text-align: center;
   padding-top: 1.067cqw;
@@ -496,25 +497,31 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.519cqw;
+  gap: 0;
   aspect-ratio: 149/170;
-  padding: 2.133cqw 2.667cqw 1.067cqw !important;
+  padding: 2.133cqw 2.667cqw 0 !important;
   background: #f5f5f5;
   border: 1px solid #e5e8eb !important;
   border-radius: 2.133cqw;
   box-shadow: 0 0 6px #371e001f;
   min-width: 0;
 }
-.danji-mini-card img {
+.danji-mini-card > img {
+  flex: none;
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
   border-radius: 1.519cqw;
 }
 .danji-mini-card time {
-  font-size: 4cqw;
-  line-height: 5.4cqw;
-  color: #4e5968;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  font-size: 3.2cqw;
+  line-height: 1.35;
+  color: rgba(3, 24, 50, .46);
   white-space: nowrap;
 }
 .danji-gallery.deleting {
@@ -601,9 +608,9 @@
   width: 100%;
   margin: 0;
   text-align: center;
-  font-size: 3.2cqw;
-  line-height: 4.32cqw;
-  color: #8b95a1;
+  font-size: 3.466667cqw;
+  line-height: 1.252;
+  color: rgba(3, 24, 50, .46);
 }
 .danji-edit-preview .danji-detail-hint {
   top: 27.2cqw;
@@ -1288,13 +1295,14 @@
 
 /* Direct edits: the front opens a calendar; the back opens the text field. */
 .danji-detail { top: var(--danji-header-height); height: calc(100% - var(--danji-header-height)); }
-.danji-detail .danji-detail-hint { top: 27.2cqw; }
-.danji-detail .danji-large-card { top: calc(var(--record-card-top) - 25.066667cqw); background: #fff; }
+.danji-detail .danji-detail-hint { top: 32.533333cqw; }
+.danji-detail .danji-large-card { top: 42.666667cqw; background: #fff; }
 .danji-detail-photo { display: block; width: var(--record-photo-size); height: var(--record-photo-size); background: none; }
-.danji-detail-date { flex: 1; margin-top: 1.6cqw; display: flex; align-items: center; justify-content: center; gap: 3.2cqw; background: #f2f4f6; border-radius: 3.2cqw; color: #666; font-size: 4cqw !important; }
-.danji-detail-date .danji-inline-icon { width: 4cqw; height: 4cqw; padding: .533cqw; background: #d1d6db; border-radius: 50%; color: white; }
-.danji-direct-pencil { display: grid; place-items: center; width: 6.4cqw; height: 6.4cqw; margin: auto; border-radius: 50%; background: #d1d6db; color: white; }
-.danji-direct-pencil .danji-inline-icon { width: 4.267cqw; height: 4.267cqw; }
+.danji-detail-date { flex: 1; margin-top: 1.6cqw; display: flex; align-items: center; justify-content: center; gap: 3.2cqw; padding-left: 4.533333cqw; background: #f9fafb; border-radius: 3.2cqw; color: #666; font-size: 4cqw !important; }
+.danji-detail-date > span { width: 22.4cqw; flex: none; }
+.danji-detail-date .danji-inline-icon { width: 6.4cqw; height: 6.4cqw; padding: 1.067cqw; background: #d1d6db; border-radius: 50%; color: white; }
+.danji-direct-pencil { display: grid; place-items: center; width: 8cqw; height: 8cqw; margin: auto; border-radius: 50%; background: #d1d6db; color: white; }
+.danji-direct-pencil .danji-inline-icon { width: 5.333333cqw; height: 5.333333cqw; }
 .danji-detail .danji-card-note { font-size: 4.533cqw; }
 .danji-page.text-editing .danji-edit-preview-card { top: 9.067cqw; }
 .text-editing .danji-edit-preview-controls { top: 99.2cqw; bottom: auto; }
@@ -1312,4 +1320,45 @@
   bottom: 0;
   height: auto;
   min-height: 74.133cqw;
+}
+
+/* Full jars cycle through the three approved Figma compositions. */
+.record-count-5 .danji-polaroid { transform-origin: top left; }
+.full-layout-0 .position-0 { left: 23.162475cqw; top: 47.466667cqw; transform: rotate(11.170117deg); z-index: 4; }
+.full-layout-0 .position-1 { left: 54.933333cqw; top: 54.267375cqw; transform: rotate(-5.046168deg); z-index: 5; }
+.full-layout-0 .position-2 { left: 41.065344cqw; top: 69.066667cqw; transform: rotate(8.771857deg); z-index: 7; }
+.full-layout-0 .position-3 { left: 15.466667cqw; top: 93.960343cqw; transform: rotate(-7.938884deg); z-index: 6; }
+.full-layout-0 .position-4 { left: 60.082776cqw; top: 89.026978cqw; transform: rotate(10.708197deg); z-index: 8; }
+.full-layout-1 .position-0 { left: 15.963265cqw; top: 54.133333cqw; transform: rotate(2.847628deg); z-index: 8; }
+.full-layout-1 .position-1 { left: 37.333333cqw; top: 66.534115cqw; transform: rotate(-5.046168deg); z-index: 7; }
+.full-layout-1 .position-2 { left: 61.865344cqw; top: 54.133333cqw; transform: rotate(8.771857deg); z-index: 4; }
+.full-layout-1 .position-3 { left: 22.517096cqw; top: 88.266667cqw; transform: rotate(4.588131deg); z-index: 6; }
+.full-layout-1 .position-4 { left: 50.933333cqw; top: 94.951180cqw; transform: rotate(-0.632387deg); z-index: 5; }
+.full-layout-2 .position-0 { left: 16.533333cqw; top: 53.458594cqw; transform: rotate(-7.713445deg); z-index: 4; }
+.full-layout-2 .position-1 { left: 34.933333cqw; top: 69.427897cqw; transform: rotate(-0.210183deg); z-index: 6; }
+.full-layout-2 .position-2 { left: 60.666516cqw; top: 51.200000cqw; transform: rotate(9.511725deg); z-index: 7; }
+.full-layout-2 .position-3 { left: 17.333333cqw; top: 93.160343cqw; transform: rotate(-7.938884deg); z-index: 5; }
+.full-layout-2 .position-4 { left: 60.663281cqw; top: 86.400000cqw; transform: rotate(17.502045deg); z-index: 8; }
+
+/* Keep the sheet within the viewport, with its title visible at either stop. */
+.danji-decoration-sheet {
+  --sticker-sheet-expanded-top: min(54.133cqw, max(0px, calc(100% - 96px)));
+  --sticker-sheet-collapsed-top: min(121.067cqw, max(0px, calc(100% - 96px)));
+  transition: top 220ms ease-out;
+  touch-action: none;
+  user-select: none;
+}
+.danji-decoration-sheet.dragging { transition: none; }
+.danji-decoration-sheet .danji-decoration-grid,
+.danji-decoration-sheet.expanded .danji-decoration-grid {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+  overscroll-behavior: contain;
+  touch-action: none;
+}
+.danji-decoration-sheet .danji-decoration-grid img { pointer-events: none; }
+.danji-decoration-actions { touch-action: manipulation; }
+@media (prefers-reduced-motion: reduce) {
+  .danji-decoration-sheet { transition: none; }
 }
