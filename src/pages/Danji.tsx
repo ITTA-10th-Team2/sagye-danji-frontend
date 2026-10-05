@@ -3,6 +3,7 @@ import { graniteEvent } from '@apps-in-toss/web-framework';
 import FloatingRecordCTA from '../components/home/FloatingRecordCTA';
 import './Danji.css';
 import DanjiCalendar from './DanjiCalendar';
+import DanjiStickerSheet from './DanjiStickerSheet';
 import jarArt from '../assets/danji/current/jar.png';
 import branchArt from '../assets/danji/current/branch.png';
 import floatingLeaf from '../assets/danji/current/floating-leaf.png';
@@ -58,7 +59,7 @@ type View = 'jar' | 'all' | 'detail' | 'editor' | 'editPreview' | 'decorate';
 type Sheet = 'none' | 'options' | 'select';
 
 function PencilIcon() {
-  return <svg className="danji-inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m15 4 5 5M4 20l5-1L20 8a2.1 2.1 0 0 0-4-4L5 15l-1 5Z" /><path d="m5 15 4 4" /></svg>;
+  return <svg className="danji-inline-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m4 16.5 11.7-11.7 3.5 3.5L7.5 20H4v-3.5Zm13-13a1.65 1.65 0 0 1 2.34 0l1.16 1.16a1.65 1.65 0 0 1 0 2.34l-.6.6-3.5-3.5.6-.6Z" /></svg>;
 }
 
 export default function Danji() {
@@ -345,7 +346,7 @@ export default function Danji() {
 
       {(view === 'jar' || view === 'decorate') && (
         <section
-          className={`danji-scene record-count-${Math.min(5, Math.max(0, previewRecords.length - page * 5))}`}
+          className={`danji-scene record-count-${Math.min(5, Math.max(0, previewRecords.length - page * 5))}${previewRecords.slice(page * 5, page * 5 + 5).length === 5 ? ` full-layout-${page % 3}` : ''}`}
           aria-label="가을 단지"
           onTouchStart={(e) => {
             e.currentTarget.dataset.x = String(e.touches[0].clientX);
@@ -434,21 +435,20 @@ export default function Danji() {
             </>
           ) : (
             <>
-              <section className={`danji-decoration-sheet ${stickerPanelExpanded ? 'expanded' : 'collapsed'}`} aria-label="단지 꾸미기">
-                <button className="danji-decoration-handle" aria-label={stickerPanelExpanded ? '스티커 패널 접기' : '스티커 패널 펼치기'} aria-expanded={stickerPanelExpanded} onClick={() => setStickerPanelExpanded(!stickerPanelExpanded)} />
-                <h2>나의 스티커</h2>
-                <div className="danji-decoration-grid">
-                  {stickerOptions.map((src, option) => <button key={src} aria-label={`${stickerNames[option]} 스티커 추가`} onClick={() => {
-                    const id = Date.now();
-                    setDraftStickers((items) => [...items, {id, option, x: 38, y: 33, size: 24.533, page}]);
-                    setActiveSticker(id); setStickerPanelExpanded(false);
-                  }}><img src={src} alt="" /></button>)}
-                </div>
-                <div className="danji-decoration-actions">
+              <DanjiStickerSheet
+                expanded={stickerPanelExpanded}
+                onExpandedChange={setStickerPanelExpanded}
+                actions={<>
                   <button onClick={cancelDecoration}>취소</button>
                   <button onClick={saveDecoration}>저장하기</button>
-                </div>
-              </section>
+                </>}
+              >
+                {stickerOptions.map((src, option) => <button key={src} aria-label={`${stickerNames[option]} 스티커 추가`} onClick={() => {
+                  const id = Date.now();
+                  setDraftStickers((items) => [...items, {id, option, x: 38, y: 33, size: 24.533, page}]);
+                  setActiveSticker(id); setStickerPanelExpanded(false);
+                }}><img src={src} alt="" /></button>)}
+              </DanjiStickerSheet>
             </>
 
           )}

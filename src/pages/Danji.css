@@ -1300,9 +1300,9 @@
 .danji-detail-photo { display: block; width: var(--record-photo-size); height: var(--record-photo-size); background: none; }
 .danji-detail-date { flex: 1; margin-top: 1.6cqw; display: flex; align-items: center; justify-content: center; gap: 3.2cqw; padding-left: 4.533333cqw; background: #f9fafb; border-radius: 3.2cqw; color: #666; font-size: 4cqw !important; }
 .danji-detail-date > span { width: 22.4cqw; flex: none; }
-.danji-detail-date .danji-inline-icon { width: 6.4cqw; height: 6.4cqw; padding: 1.067cqw; background: #d1d6db; border-radius: 50%; color: white; }
-.danji-direct-pencil { display: grid; place-items: center; width: 8cqw; height: 8cqw; margin: auto; border-radius: 50%; background: #d1d6db; color: white; }
-.danji-direct-pencil .danji-inline-icon { width: 5.333333cqw; height: 5.333333cqw; }
+.danji-detail-date .danji-inline-icon { width: 5.866667cqw; height: 5.866667cqw; padding: 1.066667cqw; background: #d1d6db; border-radius: 50%; color: white; }
+.danji-direct-pencil { display: grid; place-items: center; width: 5.866667cqw; height: 5.866667cqw; margin: auto; border-radius: 50%; background: #d1d6db; color: white; }
+.danji-direct-pencil .danji-inline-icon { width: 3.733333cqw; height: 3.733333cqw; }
 .danji-detail .danji-card-note { font-size: 4.533cqw; }
 .danji-page.text-editing .danji-edit-preview-card { top: 9.067cqw; }
 .text-editing .danji-edit-preview-controls { top: 99.2cqw; bottom: auto; }
