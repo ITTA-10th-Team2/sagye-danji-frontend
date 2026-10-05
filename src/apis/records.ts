@@ -1,0 +1,64 @@
+import api from '../lib/axios';
+import type { ApiResponse } from '../lib/axios';
+
+export type RecordSeason = 'SPRING' | 'SUMMER' | 'AUTUMN' | 'WINTER';
+export interface RecordImage {
+  id: number;
+  source: 'CAMERA' | 'GALLERY';
+  sortOrder: number;
+}
+export interface RecordListItem {
+  id: number;
+  recordDate: string;
+  season: RecordSeason;
+  memo: string | null;
+  coverImage: RecordImage | null;
+  imageCount: number;
+}
+export interface RecordDetail {
+  id: number;
+  recordDate: string;
+  season: RecordSeason;
+  memo: string | null;
+  images: RecordImage[];
+  createdAt: string;
+  updatedAt: string;
+}
+export interface RecordPage {
+  items: RecordListItem[];
+  nextCursor: string | null;
+  hasNext: boolean;
+}
+
+export async function getSeasonRecords(year: number, season: RecordSeason, signal?: AbortSignal): Promise<RecordListItem[]> {
+  const items: RecordListItem[] = [];
+  const visited = new Set<string>();
+  let cursor: string | undefined;
+  do {
+    const result = await api.get<ApiResponse<RecordPage>, ApiResponse<RecordPage>>(`/records/seasons/${season}`, {
+      params: { year, size: 50, ...(cursor ? { cursor } : {}) }, signal,
+    });
+    items.push(...result.data.items);
+    if (!result.data.hasNext) break;
+    const next = result.data.nextCursor;
+    if (!next || visited.has(next)) throw new Error('기록 목록의 다음 페이지를 확인하지 못했어요.');
+    visited.add(next);
+    cursor = next;
+  } while (true);
+  return [...new Map(items.map(item => [item.id, item])).values()];
+}
+
+export async function getRecord(id: number, signal?: AbortSignal): Promise<RecordDetail> {
+  const result = await api.get<ApiResponse<RecordDetail>, ApiResponse<RecordDetail>>(`/records/${id}`, { signal });
+  return result.data;
+}
+
+export async function updateRecord(id: number, recordDate: string, memo: string): Promise<RecordDetail> {
+  // images를 생략해야 기존 사진이 유지된다. 날짜 수정 시에도 memo를 함께 보낸다.
+  const result = await api.patch<ApiResponse<RecordDetail>, ApiResponse<RecordDetail>>(`/records/${id}`, { recordDate, memo });
+  return result.data;
+}
+
+export async function deleteRecord(id: number): Promise<void> {
+  await api.delete<ApiResponse<null>, ApiResponse<null>>(`/records/${id}`);
+}
