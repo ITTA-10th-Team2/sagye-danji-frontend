@@ -35,7 +35,7 @@ export default function SeasonJarList() {
 
   return (
     <>
-      <div className="flex items-end justify-center gap-3 w-full px-[1vw]">
+      <div className="grid grid-cols-4 items-end gap-[clamp(6px,2%,8px)] w-full max-w-[324px] mx-auto">
         {JAR_DATA.map((jar) => (
           <SeasonJar key={jar.id} season={jar.season} count={jar.count} onClick={() => handleJarClick(jar.season)} />
         ))}
