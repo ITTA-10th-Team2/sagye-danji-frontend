@@ -1,4 +1,5 @@
 import axios from 'axios';
+import type { InternalAxiosRequestConfig } from 'axios';
 import { getAccessToken } from './authStorage';
 
 export interface ApiResponse<T> {
@@ -36,7 +37,7 @@ export class ApiError extends Error {
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  withCredentials: true,
+  withCredentials: false,
   timeout: 10000,
 });
 
@@ -59,7 +60,7 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
-    // 200 OK인데 success: false를 줄 때 예외처리
+    // 200 OK인데 { success: false }를 줄 때 예외처리
     if (response.data && response.data.success === false) {
       const errData = response.data as ApiErrorResponse;
       const customError = new ApiError(errData, '요청 처리에 실패했습니다.', response.status);
@@ -69,11 +70,24 @@ api.interceptors.response.use(
     // 성공 시 응답 데이터 반환
     return response.data;
   },
-  (error) => {
+  async (error) => {
     // 실패 시 에러 메시지 반환
     if (error.response?.data) {
       const errData = error.response.data as ApiErrorResponse;
       const customError = new ApiError(errData, '서버 통신 중 오류가 발생했습니다.', error.response.status);
+      const config = error.config as (InternalAxiosRequestConfig & { authRetried?: boolean }) | undefined;
+      const isAuthRequest = /^\/auth\/(anonymous|refresh|logout)\/?(?:\?|$)/.test(config?.url ?? '');
+
+      // 만료된 일반 API 요청만 한 번 복구
+      if (config && !isAuthRequest && !config.authRetried && customError.status === 401 && customError.code === 'AUTH_001') {
+        config.authRetried = true;
+        const latestToken = getAccessToken();
+        if (!latestToken || config.headers.Authorization === `Bearer ${latestToken}`) {
+          const { refreshAuthTokens } = await import('../apis/auth');
+          await refreshAuthTokens();
+        }
+        return api.request(config);
+      }
 
       return Promise.reject(customError);
     }

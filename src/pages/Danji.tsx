@@ -82,9 +82,13 @@ export default function Danji() {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     let mounted = true;
-    Promise.all(demoImages.map((src) => new Promise<void>((resolve) => {
-      const image = new Image(); image.onload = () => resolve(); image.onerror = () => resolve(); image.src = src;
-    }))).then(() => { if (mounted) setLoading(false); });
+    async function preloadImages() {
+      await Promise.all(demoImages.map((src) => new Promise<void>((resolve) => {
+        const image = new Image(); image.onload = () => resolve(); image.onerror = () => resolve(); image.src = src;
+      })));
+      if (mounted) setLoading(false);
+    }
+    void preloadImages();
     return () => { mounted = false; };
   }, []);
   const [page, setPage] = useState(0);
