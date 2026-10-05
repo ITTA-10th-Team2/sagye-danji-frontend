@@ -32,7 +32,7 @@ export default function SeasonJar({ season, count, onClick }: SeasonJarProps) {
       onClick={onClick}
     >
       {/* 이미지 영역 */}
-      <img src={currentImgSrc} className="w-[70px] object-contain drop-shadow-sm transition-all duration-300" />
+      <img src={currentImgSrc} className="w-[75px] object-contain drop-shadow-sm transition-all duration-300" />
 
       {/* 텍스트 영역 */}
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-3">

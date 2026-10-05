@@ -23,31 +23,22 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="relative flex flex-col w-full h-dvh bg-[#F3D8AB] overflow-hidden">
-      {/* 배경 */}
-      <div
-        className="absolute inset-0 z-0 w-full h-full pointer-events-none transition-all duration-1000"
-        style={{
-          backgroundImage: `url(${bgImage})`,
-          backgroundPosition: 'top center',
-          backgroundSize: '100% auto',
-          backgroundRepeat: 'no-repeat',
-        }}
-      />
+    <main className="relative flex flex-col w-full min-h-dvh bg-[#F3D8AB] overflow-x-hidden">
+      <div className="relative w-full aspect-[375/812] max-h-dvh">
+        {/* 배경 이미지 */}
+        <img src={bgImage} className="absolute inset-0 w-full h-full object-cover object-top pointer-events-none" />
 
-      <div className="relative z-10 flex flex-col w-full h-full">
-        {/* 상단 추천 카드 */}
-        <section className="pt-[40vw] px-6">
+        {/* 컨텐츠 추천 카드 */}
+        <section className="absolute top-[20%] w-full px-6 z-10">
           <RecommendationCard />
         </section>
 
-        {/* 단지 */}
-        <section className="mt-[35vw] flex flex-col items-center w-full">
+        {/* 단지 & 테이블 */}
+        <section className="absolute top-[68%] w-full flex flex-col items-center z-10">
           <div className="w-full px-6 relative z-20">
             <SeasonJarList />
           </div>
 
-          {/* 테이블 & 안내 문구 */}
           <div className="relative w-full flex justify-center -mt-[7%]">
             <img src="/assets/home/table.webp" className="w-[95%] object-contain pointer-events-none" />
             <p className="absolute bottom-[20%] text-[13px] text-[#00132B]/58 font-medium">단지를 눌러 기록을 확인해보세요.</p>
@@ -56,7 +47,7 @@ export default function Home() {
       </div>
 
       {/* CTA 버튼 */}
-      <div className="absolute bottom-4 left-0 w-full px-5 z-30">
+      <div className="fixed bottom-0 left-0 w-full px-5 pb-safe mb-[clamp(16px,3.5dvh,48px)] z-30">
         <FloatingRecordCTA />
       </div>
     </main>
