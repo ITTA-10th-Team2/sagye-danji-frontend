@@ -36,9 +36,9 @@ export default function WriteInput({ onTextChange, initialValue = '' }: WriteInp
       >
         <textarea
           ref={textareaRef}
-          className="w-full h-full bg-transparent resize-none appearance-none [&::-webkit-resizer]:hidden [&::-webkit-scrollbar]:hidden outline-none text-[15px] text-[#191F28] placeholder:text-[#B0B8C1] leading-relaxed"
-          placeholder="계절의 순간을 기록해보세요!"
           value={text}
+          className="w-full h-full bg-transparent resize-none appearance-none [&::-webkit-resizer]:hidden [&::-webkit-scrollbar]:hidden outline-none text-[15px] text-[#191F28] placeholder:text-[#B0B8C1] leading-relaxed"
+          placeholder={'계절의 순간을 기록해보세요!\n(글은 남기지 않아도 괜찮아요.)'}
           onChange={handleChange}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}

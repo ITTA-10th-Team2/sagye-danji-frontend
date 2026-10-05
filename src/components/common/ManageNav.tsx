@@ -9,6 +9,7 @@ export default function NavigationManager() {
     const path = location.pathname;
 
     switch (path) {
+      case '/':
       case '/home':
         NavigationBar.setOptions({
           withBackButton: true,
