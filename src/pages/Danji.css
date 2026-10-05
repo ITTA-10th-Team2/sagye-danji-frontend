@@ -1,0 +1,1315 @@
+/* Figma 375 × 812. All scenery coordinates scale together with the mobile canvas. */
+.danji-page {
+  --record-card-left: 10.933333cqw;
+  --record-card-top: 62.4cqw;
+  --record-card-width: 78.4cqw;
+  --record-card-height: 88cqw;
+  --record-card-padding: 3.2cqw;
+  --record-photo-size: 72cqw;
+  position: relative;
+  container-type: inline-size;
+  width: 100%;
+  height: 100dvh;
+  --danji-header-height: 0px;
+  flex: none;
+  margin: 0;
+  overflow: hidden;
+  color: #333d4b;
+  font-family: Arial, 'Apple SD Gothic Neo', sans-serif;
+  background: linear-gradient(179.964deg, #fff 0%, #fedcb6 97.646%);
+}
+.danji-page * {
+  box-sizing: border-box;
+}
+.danji-page button {
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+}
+.danji-page button:disabled {
+  cursor: default;
+}
+.danji-page button:focus-visible {
+  outline: 2px solid #3278ff;
+  outline-offset: 2px;
+}
+.danji-header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  height: 25.067cqw;
+  padding: 13.333cqw 2.667cqw 0 0;
+  background: #fff;
+  white-space: nowrap;
+}
+.danji-header > button:not(.danji-title-pill) {
+  flex: none;
+  width: 11.733cqw;
+  height: 11.733cqw;
+  background: none;
+}
+.danji-header > button:not(.danji-title-pill) img {
+  display: block;
+  width: 6.4cqw;
+  height: 6.4cqw;
+  margin: auto;
+}
+.danji-title-pill {
+  display: flex;
+  align-items: center;
+  gap: 1.6cqw;
+  height: 9.067cqw;
+  padding: 0 2.667cqw 0 3.2cqw;
+  border-radius: 99px;
+  background: rgba(0, 23, 51, 0.02);
+}
+.danji-title-pill strong {
+  font-size: 4cqw;
+  font-weight: 600;
+  color: #191f28;
+}
+.danji-app-icon,
+.danji-home-icon {
+  width: 4.8cqw;
+  height: 4.8cqw;
+}
+.danji-header-spacer {
+  flex: 1;
+}
+.header-pair {
+  display: flex;
+  align-items: center;
+  height: 9.067cqw;
+  border-radius: 99px;
+  background: rgba(0, 23, 51, 0.02);
+}
+.header-pair button {
+  width: 11.733cqw;
+  height: 9.067cqw;
+  background: none;
+}
+.header-pair img {
+  display: block;
+  width: 5.333cqw;
+  height: 5.333cqw;
+  margin: auto;
+}
+.danji-header-popover {
+  position: absolute;
+  right: 10px;
+  top: 90px;
+  border-radius: 12px;
+  padding: 12px;
+  background: white;
+  box-shadow: 0 4px 16px #0002;
+  font-size: 12px;
+}
+.danji-header-popover button {
+  display: block;
+  padding: 8px;
+  background: none;
+}
+.danji-device-status {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 13.333cqw;
+  z-index: 11;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3.733cqw 0 5.6cqw;
+  pointer-events: none;
+}
+.danji-device-status img:first-child {
+  width: 14.4cqw;
+  height: 5.6cqw;
+}
+.danji-device-status img:last-child {
+  width: 17.867cqw;
+  height: 3.2cqw;
+}
+.danji-device-status i {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 48.8cqw;
+  height: 7.467cqw;
+  border-radius: 0 0 6.4cqw 6.4cqw;
+  background: #000;
+}
+.danji-device-indicator {
+  position: absolute;
+  bottom: 2.133cqw;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 35.733cqw;
+  height: 1.333cqw;
+  border-radius: 99px;
+  background: #111;
+  z-index: 12;
+  pointer-events: none;
+}
+.danji-tabs {
+  position: relative;
+  z-index: 9;
+  display: flex;
+  height: 10.133cqw;
+  padding: 0 5.333cqw;
+  background: #fff;
+  border-bottom: 1px solid rgba(0, 27, 55, 0.1);
+}
+.danji-tabs button {
+  flex: 1;
+  position: relative;
+  background: none;
+  font-size: 4cqw;
+  color: #6b7684;
+  font-weight: 600;
+}
+.danji-tabs button.active {
+  color: #333d4b;
+  font-weight: 700;
+}
+.danji-tabs button.active::after {
+  content: '';
+  position: absolute;
+  left: 2.133cqw;
+  right: 2.133cqw;
+  bottom: 0;
+  height: 2px;
+  background: #333d4b;
+  border-radius: 10px;
+}
+/* Exported static layers retain the clipping and blur of their Figma parents. */
+.danji-jar-background,
+.danji-gallery-background {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.danji-jar-background i,
+.danji-gallery-background i {
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+.jar-ground {
+  left: 0;
+  top: 139.733cqw;
+  width: 100cqw;
+  height: 76.8cqw;
+  background-image: url('../assets/danji/current/jar-ground.png');
+}
+.jar-shadow-a {
+  left: 3.2cqw;
+  top: 154.667cqw;
+  width: 90.133cqw;
+  height: 28.533cqw;
+  background-image: url('../assets/danji/current/jar-shadow-a.png');
+}
+.jar-shadow-b {
+  left: 8.267cqw;
+  top: 153.6cqw;
+  width: 86.133cqw;
+  height: 29.6cqw;
+  background-image: url('../assets/danji/current/jar-shadow-b.png');
+}
+.jar-blurred-left {
+  left: 0;
+  top: 94.667cqw;
+  width: 22.449cqw;
+  height: 33.932cqw;
+  background-image: url('../assets/danji/current/jar-blurred-left.png');
+}
+.jar-blurred-right {
+  left: 80.533cqw;
+  top: 76.533cqw;
+  width: 19.467cqw;
+  height: 21.552cqw;
+  background-image: url('../assets/danji/current/jar-blurred-right.png');
+}
+.gallery-glow-a {
+  left: 34.933cqw;
+  top: 39.733cqw;
+  width: 65.067cqw;
+  height: 94.667cqw;
+  background-image: url('../assets/danji/current/gallery-glow-a.png');
+}
+.gallery-glow-b {
+  left: 0;
+  top: 12.8cqw;
+  width: 72.533cqw;
+  height: 126.133cqw;
+  background-image: url('../assets/danji/current/gallery-glow-b.png');
+}
+.gallery-ground {
+  left: 0;
+  top: 142.4cqw;
+  width: 100cqw;
+  height: 74.133cqw;
+  background-image: url('../assets/danji/current/gallery-ground.png');
+}
+.danji-record-background {
+  position: absolute;
+  left: 0;
+  top: var(--danji-header-height);
+  width: 100%;
+  height: calc(100% - var(--danji-header-height));
+  /* Keep the native 375 × 718 artwork ratio in both record views. */
+  background: url('../assets/danji/current/detail-background.png') 0 0/100% auto no-repeat;
+  pointer-events: none;
+}
+.view-detail,
+.view-editPreview {
+  background: #fff7ef;
+}
+.danji-scene {
+  position: absolute;
+  left: 0;
+  top: calc(var(--danji-header-height) + 10.133cqw);
+  width: 100%;
+  height: calc(100% - var(--danji-header-height) - 10.133cqw);
+}
+.danji-art,
+.danji-jar {
+  position: absolute;
+  pointer-events: none;
+}
+.danji-art.leaf-top {
+  left: 0;
+  top: 0;
+  width: 36.8cqw;
+  height: 29.067cqw;
+}
+.danji-art.leaf-right {
+  left: 68.8cqw;
+  top: 12.267cqw;
+  width: 11.733cqw;
+  height: 10.933cqw;
+}
+.danji-jar {
+  left: 5.334cqw;
+  top: 22.133cqw;
+  width: 89.334cqw;
+  height: 116.8cqw;
+  max-width: none;
+}
+.danji-polaroid {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 25.778cqw;
+  height: 31.467cqw;
+  padding: 1.067cqw !important;
+  background: #fff;
+  border-radius: 1.6cqw;
+  box-shadow: 0 2px 6px #0002;
+  transform-origin: center;
+  overflow: hidden;
+}
+.danji-polaroid img {
+  width: 24cqw;
+  height: 24cqw;
+  border-radius: 1.067cqw;
+  object-fit: cover;
+  flex: none;
+}
+.danji-polaroid time {
+  font-size: 3.2cqw;
+  line-height: 4.267cqw;
+  flex: 1;
+  text-align: center;
+  padding-top: 1.067cqw;
+  white-space: nowrap;
+}
+.danji-polaroid.position-0 {
+  left: 20.352cqw;
+  top: 51.97cqw;
+  transform: rotate(2.85deg);
+}
+.danji-polaroid.position-1 {
+  left: 54.161cqw;
+  top: 53.955cqw;
+  transform: rotate(-5.05deg);
+}
+.danji-polaroid.position-2 {
+  left: 35.582cqw;
+  top: 73.665cqw;
+  transform: rotate(8.77deg);
+  z-index: 7;
+}
+.danji-polaroid.position-3 {
+  left: 16.716cqw;
+  top: 88.182cqw;
+  transform: rotate(-7.94deg);
+}
+.danji-polaroid.position-4 {
+  left: 58.67cqw;
+  top: 88.97cqw;
+  transform: rotate(16.15deg);
+}
+.danji-figma-stickers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 8;
+}
+.danji-figma-stickers img {
+  position: absolute;
+  object-fit: contain;
+}
+.sticker-left {
+  left: 13.333cqw;
+  top: 67.467cqw;
+  width: 13.6cqw;
+  height: 13.6cqw;
+}
+.sticker-blue {
+  left: 75.467cqw;
+  top: 61.6cqw;
+  width: 11.2cqw;
+  height: 9.867cqw;
+}
+.sticker-clover {
+  left: 70.133cqw;
+  top: 72cqw;
+  width: 24.533cqw;
+  height: 21.333cqw;
+}
+.sticker-flower {
+  left: 28cqw;
+  top: 89.333cqw;
+  width: 13.067cqw;
+  height: 11.467cqw;
+}
+.sticker-sun {
+  left: 69.77cqw;
+  top: 112.51cqw;
+  width: 18.667cqw;
+  height: 16.267cqw;
+  transform: rotate(-10.28deg);
+}
+.danji-actions {
+  position: absolute;
+  left: 5.333cqw;
+  right: 5.333cqw;
+  bottom: max(6.4cqw, env(safe-area-inset-bottom, 0px));
+  height: 12.8cqw;
+  display: flex;
+  gap: 2.133cqw;
+  z-index: 9;
+}
+.danji-actions button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3.733cqw;
+  background: #e5e8eb;
+  color: #4e5968;
+  font-size: 4.533cqw;
+  font-weight: 600;
+}
+.danji-actions button:first-child:not(:last-child) {
+  flex: 0 0 21.333cqw;
+}
+.danji-actions button.primary {
+  background: #ffb331;
+  color: #fff;
+}
+.danji-actions button img {
+  width: 6.4cqw;
+  height: 6.4cqw;
+  object-fit: contain;
+}
+.danji-actions button.primary img {
+  width: 22.667cqw;
+  height: 4.267cqw;
+}
+.danji-actions button img.danji-trash-icon {
+  width: 5.333333cqw;
+  height: 5.6cqw;
+  filter: brightness(0) saturate(100%) invert(25%) sepia(14%) saturate(600%) hue-rotate(175deg) brightness(96%) contrast(89%);
+}
+.danji-settings-button img {
+  width: 4.267cqw !important;
+  height: 5.333cqw !important;
+}
+.danji-actions button:disabled {
+  opacity: 0.5;
+}
+.danji-dots {
+  position: absolute;
+  bottom: 33.984cqw;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 3.2cqw;
+}
+.danji-dots button {
+  width: 2.133cqw;
+  height: 2.133cqw;
+  border-radius: 99px;
+  background: #b0b8c1;
+}
+.danji-dots button.active {
+  width: 3.733cqw;
+  background: #d88300;
+}
+.danji-jar-empty {
+  position: absolute;
+  z-index: 5;
+  top: 80cqw;
+  width: 100%;
+  padding: 0 13.333cqw;
+  text-align: center;
+  color: white;
+  font-size: 4.533cqw;
+  line-height: 1.7;
+}
+.danji-gallery {
+  position: absolute;
+  top: calc(var(--danji-header-height) + 10.133cqw);
+  left: 0;
+  right: 0;
+  bottom: calc(30cqw + env(safe-area-inset-bottom, 0px));
+  overflow-y: auto;
+  padding: 9.6cqw 8.667cqw 25cqw;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3.2cqw;
+  align-content: start;
+  scrollbar-width: none;
+}
+.danji-gallery::-webkit-scrollbar {
+  display: none;
+}
+.danji-mini-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.519cqw;
+  aspect-ratio: 149/170;
+  padding: 2.133cqw 2.667cqw 1.067cqw !important;
+  background: #f5f5f5;
+  border: 1px solid #e5e8eb !important;
+  border-radius: 2.133cqw;
+  box-shadow: 0 0 6px #371e001f;
+  min-width: 0;
+}
+.danji-mini-card img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 1.519cqw;
+}
+.danji-mini-card time {
+  font-size: 4cqw;
+  line-height: 5.4cqw;
+  color: #4e5968;
+  white-space: nowrap;
+}
+.danji-gallery.deleting {
+  top: var(--danji-header-height);
+  height: 160.133cqw;
+  padding-top: 21.067cqw;
+}
+.danji-delete-heading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 4.267cqw 6.4cqw;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+.danji-delete-heading strong {
+  font-size: 5.333cqw;
+  line-height: 6.667cqw;
+}
+.danji-delete-heading small {
+  font-size: 3.467cqw;
+  color: #6b7684;
+}
+.danji-mini-card.selected {
+  border: 2px solid #ff9e16 !important;
+}
+.danji-delete-check {
+  position: absolute;
+  right: 4.267cqw;
+  top: 4.267cqw;
+  width: 6.4cqw;
+  height: 6.4cqw;
+  background: #d5e2e9;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 4cqw;
+  line-height: 6.4cqw;
+}
+.danji-mini-card.selected .danji-delete-check {
+  background: #ffb331;
+}
+.danji-empty {
+  grid-column: 1/-1;
+  text-align: center;
+  font-size: 4cqw;
+  line-height: 1.7;
+  margin-top: 35cqw;
+}
+.danji-actions.delete-actions {
+  left: 8cqw;
+  right: 8cqw;
+  height: 14.933cqw;
+  bottom: max(6.4cqw, env(safe-area-inset-bottom, 0px));
+}
+.danji-actions.delete-actions button:first-child:not(:last-child),
+.danji-actions.delete-actions button.primary {
+  flex: 1;
+  border-radius: 4.267cqw;
+}
+.danji-actions.delete-actions button.primary:disabled {
+  opacity: 1;
+  background: #ffb331;
+  color: rgba(25, 31, 40, 0.3);
+}
+/* A single 294 × 330 card and 270 × 270 photo geometry for detail and edit. */
+.danji-detail,
+.danji-edit-preview {
+  position: absolute;
+  left: 0;
+  top: calc(var(--danji-header-height) + 10.133cqw);
+  width: 100%;
+  height: calc(100% - var(--danji-header-height) - 10.133cqw);
+}
+.danji-edit-preview {
+  top: var(--danji-header-height);
+  height: calc(100% - var(--danji-header-height));
+}
+.danji-detail-hint {
+  position: absolute;
+  left: 0;
+  top: 17.067cqw;
+  width: 100%;
+  margin: 0;
+  text-align: center;
+  font-size: 3.2cqw;
+  line-height: 4.32cqw;
+  color: #8b95a1;
+}
+.danji-edit-preview .danji-detail-hint {
+  top: 27.2cqw;
+}
+.danji-large-card,
+.danji-edit-preview-card {
+  position: absolute;
+  left: var(--record-card-left);
+  top: calc(var(--record-card-top) - 35.2cqw);
+  width: var(--record-card-width);
+  height: var(--record-card-height);
+  padding: var(--record-card-padding) !important;
+  border-radius: 4.8cqw;
+  background: #f2f4f6;
+  display: flex;
+  flex-direction: column;
+  box-shadow: none;
+}
+.danji-edit-preview-card {
+  top: calc(var(--record-card-top) - 25.066667cqw);
+}
+.danji-large-card img,
+.danji-edit-preview-photo img {
+  display: block;
+  width: var(--record-photo-size);
+  height: var(--record-photo-size);
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 3.2cqw;
+  flex: none;
+}
+.danji-large-card time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+  font-size: 4cqw;
+  color: #666;
+}
+.danji-card-note,
+.danji-edit-preview-note {
+  position: relative;
+  width: 72cqw;
+  height: 72cqw;
+  border-radius: 3.2cqw;
+  background: #f2f4f6;
+  border: 1px solid #e5e8eb;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 6.4cqw 3.2cqw;
+  font-size: 4.533cqw;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.danji-edit-preview-note {
+  padding: 0;
+}
+.danji-edit-preview-photo {
+  width: var(--record-photo-size);
+  height: var(--record-photo-size);
+  aspect-ratio: 1;
+  background: none;
+  flex: none;
+}
+.danji-date-button {
+  width: 72cqw;
+  flex: 1;
+  margin-top: 1.6cqw;
+  border: 1px solid #f2f4f6 !important;
+  border-radius: 3.2cqw;
+  background: #fff9e7;
+  color: #666;
+  font-size: 4cqw !important;
+}
+.danji-editing-badge {
+  position: absolute;
+  top: 4.267cqw;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 2.133cqw 3.2cqw;
+  border-radius: 99px;
+  background: #fff;
+  color: #faa131;
+  font-size: 4cqw;
+  line-height: 6.4cqw;
+  box-shadow: 0 2px 15px #001b371a;
+}
+.danji-detail-controls,
+.danji-edit-preview-controls {
+  position: absolute;
+  left: 8cqw;
+  right: 8cqw;
+  bottom: max(6.4cqw, env(safe-area-inset-bottom, 0px));
+  display: flex;
+  gap: 2.133cqw;
+}
+.danji-detail-controls button,
+.danji-edit-preview-controls button {
+  flex: 1;
+  height: 12.8cqw;
+  border-radius: 3.733cqw;
+  background: #e5e8eb;
+  color: #4e5968;
+  font-size: 4.533cqw;
+  font-weight: 600;
+}
+.danji-edit-preview-controls button {
+  height: 14.933cqw;
+  border-radius: 4.267cqw;
+}
+.danji-detail-controls button:last-child,
+.danji-edit-preview-controls button:last-child {
+  background: #ffb331;
+  color: #fff;
+}
+.danji-edit-preview-controls button:disabled {
+  opacity: 0.5;
+}
+.danji-note-flip {
+  width: 100%;
+  height: 100%;
+  background: none;
+  padding: 6.4cqw 3.2cqw !important;
+  font-size: 4.533cqw !important;
+  line-height: 1.5 !important;
+  color: #333d4b;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.danji-edit-preview-note textarea {
+  width: 100%;
+  height: 100%;
+  padding: 6.4cqw 3.2cqw 16cqw;
+  border: 0;
+  background: none;
+  resize: none;
+  text-align: center;
+  color: #333d4b;
+  font:
+    4.533cqw/1.5 Arial,
+    'Apple SD Gothic Neo',
+    sans-serif;
+  outline: none;
+  user-select: text;
+}
+.danji-edit-preview-note small {
+  position: absolute;
+  right: 3.2cqw;
+  bottom: 3.2cqw;
+  font-size: 3.2cqw;
+  color: #8b95a1;
+}
+.danji-note-pencil {
+  position: absolute;
+  left: 50%;
+  bottom: 4.533cqw;
+  transform: translateX(-50%);
+  min-width: 9.067cqw;
+  height: 9.067cqw;
+  padding: 0 2.133cqw !important;
+  border-radius: 99px;
+  background: #e5e8eb;
+  color: #6b7684;
+  font-size: 4cqw !important;
+}
+.danji-flip-front {
+  position: absolute;
+  left: 0;
+  top: 74cqw;
+  height: 7.467cqw;
+  background: none;
+  color: #8b95a1;
+  font-size: 3.2cqw !important;
+}
+.danji-back-date {
+  position: absolute;
+  right: 0;
+  top: 74cqw;
+  height: 7.467cqw;
+  background: #fff9e7;
+  border-radius: 2cqw;
+  padding: 0 2cqw !important;
+  color: #666;
+  font-size: 3.2cqw !important;
+}
+.danji-confirm-backdrop,
+.danji-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: #0003;
+  display: grid;
+  place-items: center;
+}
+.danji-confirm {
+  width: 82.933cqw;
+  background: #fff;
+  border-radius: 6.4cqw;
+  padding: 6.4cqw 4.267cqw 4.267cqw;
+  color: #333d4b;
+}
+.danji-confirm strong {
+  display: block;
+  padding: 0 1.6cqw;
+  font-size: 5.333cqw;
+  line-height: 6.667cqw;
+}
+.danji-confirm p {
+  padding: 0 1.6cqw;
+  font-size: 4cqw;
+  line-height: 5.4cqw;
+  margin: 3.2cqw 0 6.4cqw;
+  color: #4e5968;
+}
+.danji-confirm div {
+  display: flex;
+  gap: 2.133cqw;
+}
+.danji-confirm button {
+  flex: 1;
+  height: 12.8cqw;
+  border-radius: 3.733cqw;
+  background: #f2f4f6;
+  color: #4e5968;
+  font-size: 4.533cqw;
+  font-weight: 600;
+}
+.danji-confirm button.danger {
+  background: #ffb331;
+  color: #fff;
+}
+.danji-success-toast {
+  position: absolute;
+  z-index: 30;
+  top: calc(var(--danji-header-height) + 14.4cqw);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 2.133cqw;
+  padding: 2.133cqw 3.2cqw;
+  border-radius: 99px;
+  background: white;
+  box-shadow: 0 2px 15px #001b371a;
+  white-space: nowrap;
+  font-size: 4cqw;
+  color: #333d4b;
+  font-weight: 600;
+}
+.danji-success-toast span {
+  display: grid;
+  place-items: center;
+  width: 5.333cqw;
+  height: 5.333cqw;
+  background: #60be86;
+  color: white;
+  border-radius: 50%;
+}
+.danji-calendar {
+  width: 76cqw;
+  padding: 4.267cqw;
+  border-radius: 2.133cqw;
+  border: 1px solid #e5e8eb;
+  background: white;
+  box-shadow: 0 4px 6px #0002;
+  outline: none;
+}
+.danji-calendar-selects {
+  display: flex;
+  gap: 2.133cqw;
+  margin-bottom: 2.133cqw;
+}
+.danji-calendar-selects select {
+  height: 8.533cqw;
+  border: 1px solid #e5e8eb;
+  border-radius: 2.133cqw;
+  background: white;
+  color: #191f28;
+  padding: 0 2.133cqw;
+  font-size: 4cqw;
+  font-weight: 600;
+  min-width: 0;
+  flex: 1;
+}
+.danji-calendar-selects select:first-child {
+  flex: 1.9;
+}
+.danji-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+}
+.danji-calendar-grid span {
+  height: 9.6cqw;
+  line-height: 9.6cqw;
+  color: #8b95a1;
+  font-size: 4cqw;
+}
+.danji-calendar-grid button {
+  height: 9.6cqw;
+  border-radius: 2.133cqw;
+  background: none;
+  color: #191f28;
+  font-size: 4cqw;
+}
+.danji-calendar-grid button.outside {
+  color: #8b95a1;
+}
+.danji-calendar-grid button.selected {
+  background: #ffb331;
+  color: white;
+}
+.danji-calendar-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.6cqw;
+  border-top: 1px solid #e8e8e6;
+  margin-top: 2.133cqw;
+  padding-top: 2.667cqw;
+}
+.danji-calendar-actions button {
+  min-width: 13.867cqw;
+  height: 8.533cqw;
+  border-radius: 2.133cqw;
+  background: #f2f4f6;
+  color: #4e5968;
+  font-size: 3.467cqw;
+  font-weight: 600;
+}
+.danji-calendar-actions button:last-child {
+  background: #ffb331;
+  color: white;
+}
+/* Existing new-record and decoration flows. */
+.danji-editor {
+  position: absolute;
+  top: calc(var(--danji-header-height) + 10.133cqw);
+  left: 0;
+  right: 0;
+  height: calc(100% - var(--danji-header-height) - 10.133cqw);
+  overflow: auto;
+  padding: 6.4cqw 5.333cqw 30cqw;
+  background: #fff7ef;
+}
+.danji-edit-card {
+  background: white;
+  padding: 3.2cqw;
+  border-radius: 3.733cqw;
+}
+.danji-edit-photo {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  background: #f2f4f6;
+  overflow: hidden;
+  border-radius: 2.667cqw;
+}
+.danji-edit-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.danji-edit-photo input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.danji-edit-photo-action {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 7px 11px;
+  border-radius: 20px;
+  background: #fff;
+  font-size: 13px;
+}
+.danji-edit-date {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 13px;
+}
+.danji-edit-date input {
+  border: 0;
+  background: none;
+  max-width: 70%;
+}
+.danji-editor textarea {
+  width: 100%;
+  height: 28.267cqw;
+  padding: 4.267cqw;
+  border: 0;
+  border-top: 1px solid #f2f4f6;
+  resize: none;
+  font:
+    4cqw/1.5 Arial,
+    sans-serif;
+  user-select: text;
+}
+.danji-editor small {
+  display: block;
+  text-align: right;
+  font-size: 3.2cqw;
+  color: #8b95a1;
+}
+.danji-editor .edit-actions {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-top: 12px;
+}
+.danji-stickers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9;
+}
+.danji-stickers button {
+  position: absolute;
+  background: none;
+  font-size: 8cqw;
+  pointer-events: auto;
+}
+.sticker-target {
+  position: absolute;
+  inset: 20cqw 0 35cqw;
+  pointer-events: auto;
+}
+.decorate-controls {
+  position: absolute;
+  bottom: 12cqw;
+  left: 5cqw;
+  right: 5cqw;
+  z-index: 10;
+  text-align: center;
+  font-size: 3.2cqw;
+}
+.decorate-controls button {
+  padding: 2cqw;
+  background: #fff;
+  border-radius: 2cqw;
+}
+.decorate-controls button.active {
+  background: #ffb331;
+}
+.decorate-controls .done {
+  display: block;
+  width: 100%;
+  margin-top: 2cqw;
+  background: #ffb331;
+  color: white;
+}
+.danji-sheet-backdrop {
+  position: absolute;
+  inset: 25.067cqw 0 0;
+  background: #0003;
+  z-index: 35;
+}
+.danji-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  border-radius: 18px 18px 0 0;
+  padding: 18px 12px 36px;
+}
+.danji-sheet-handle {
+  display: block;
+  width: 34px;
+  height: 4px;
+  background: #d9d9d9;
+  border-radius: 99px;
+  margin: 0 auto 19px;
+}
+.danji-sheet-primary,
+.danji-sheet-secondary {
+  display: block;
+  width: 100%;
+  height: 48px;
+  border-radius: 12px;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  background: #ffb331;
+  color: white;
+}
+.danji-sheet-secondary {
+  margin-top: 8px;
+  background: #fff9e7;
+  color: #faa131;
+}
+.danji-sheet-photos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 16px 0;
+}
+.danji-sheet-photos button {
+  border: 2px solid transparent;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.danji-sheet-photos button.selected {
+  border-color: #ffb331;
+}
+.danji-sheet-photos img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.danji-saved-sheet {
+  position: absolute;
+  left: 2.667cqw;
+  right: 2.667cqw;
+  bottom: 2.667cqw;
+  background: white;
+  border-radius: 7.467cqw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4.267cqw 5.333cqw 5.333cqw;
+}
+.danji-saved-handle {
+  width: 12.8cqw;
+  height: 1.067cqw;
+  border-radius: 99px;
+  background: #e5e8eb;
+}
+.danji-saved-sheet strong {
+  font-size: 5.867cqw;
+  line-height: 1.35;
+  margin-top: 5.6cqw;
+}
+.danji-saved-sheet p {
+  font-size: 4cqw;
+  line-height: 6cqw;
+  color: #6b7684;
+  margin: 1.333cqw 0 6cqw;
+  text-align: center;
+}
+.danji-saved-sheet > img {
+  width: 49.367cqw;
+  height: 47.32cqw;
+  object-fit: contain;
+}
+.danji-saved-sheet > div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2.133cqw;
+  margin-top: 9.067cqw;
+}
+.danji-saved-sheet button {
+  width: 100%;
+  height: 14.933cqw;
+  border-radius: 4.267cqw;
+  background: #ffb331;
+  color: white;
+  font-size: 4.533cqw;
+  font-weight: 600;
+}
+.danji-saved-sheet button:last-child {
+  background: #f2f4f6;
+  color: #4e5968;
+}
+
+.danji-header-divider { width: 1px; height: 4.267cqw; background: rgba(0,27,55,.1); }
+.danji-decoration-sheet { position:absolute; left:0; width:100%; z-index:15; background:#f9fafb; border-radius:6.133cqw 6.133cqw 0 0; padding:4.267cqw 0 6.133cqw; }
+.danji-decoration-sheet.expanded { top:54.133cqw; height:128cqw; }
+.danji-decoration-sheet.collapsed { top:121.067cqw; height:61.333cqw; }
+.danji-decoration-handle { display:block; width:12.8cqw; height:1.067cqw; margin:0 auto; background:#e5e8eb; border-radius:99px; }
+.danji-decoration-sheet h2 { margin:4.267cqw 6.4cqw 4.8cqw; font-size:4.533cqw; font-weight:700; line-height:6.133cqw; color:#4e5968; }
+.danji-decoration-grid { display:grid; grid-template-columns:repeat(3,24cqw); gap:3.2cqw; width:78.4cqw; margin:0 auto; }
+.danji-decoration-grid button { width:24cqw; height:24cqw; border:1px solid #e5e8eb; border-radius:2.133cqw; background:#f0f1f3; padding:1.867cqw; }
+.danji-decoration-grid img { display:block; width:100%; height:100%; object-fit:contain; }
+.danji-decoration-actions { display:flex; gap:2.133cqw; margin:8.8cqw 8cqw 0; }
+.danji-decoration-actions button { width:41cqw; height:14.933cqw; border-radius:4.267cqw; background:#e5e8eb; color:#4e5968; font-size:4.533cqw; font-weight:590; }
+.danji-decoration-actions button:last-child { background:#ffb331; color:white; }
+.danji-decoration-sheet.collapsed .danji-decoration-grid { max-height:24cqw; overflow-y:auto; }
+.danji-decoration-sheet.collapsed .danji-decoration-actions { margin-top:3.2cqw; }
+.danji-placed-sticker { position:absolute; aspect-ratio:1; pointer-events:auto; }
+.danji-placed-sticker.editable { outline:1px solid #b0b8c1; }
+.danji-placed-sticker.selected { outline:1px dashed #b0b8c1; }
+.danji-stickers .danji-sticker-drag { position:static; width:100%; height:100%; padding:2.133cqw; touch-action:none; }
+.danji-sticker-drag img { width:100%; height:100%; object-fit:contain; pointer-events:none; user-select:none; }
+.danji-stickers .danji-sticker-remove, .danji-stickers .danji-sticker-resize { position:absolute; width:5.333cqw; height:5.333cqw; background:#b0b8c1; color:white; border-radius:50%; font-size:4cqw; line-height:5.333cqw; touch-action:none; }
+.danji-sticker-remove { top:-2.667cqw; right:-2.667cqw; }
+.danji-stickers .danji-sticker-resize { bottom:-2.667cqw; left:-2.667cqw; display:grid; place-items:center; padding:0; }
+.danji-sticker-resize svg { display:block; width:3.733cqw; height:3.733cqw; pointer-events:none; }
+
+.danji-leave-confirm { padding-top: 5.867cqw; }
+.danji-leave-confirm strong { line-height: 1.35; }
+.danji-leave-confirm p { line-height: 1.6; margin: 2.133cqw 0 5.333cqw; }
+.danji-saved-sheet.sticker-saved > img { width: 42.535cqw; height: 33.934cqw; }
+.danji-saved-sheet.sticker-saved p { margin-bottom: 2.492cqw; }
+.danji-delete-check { display: grid; place-items: center; background: #d5dce1; font-weight: 700; }
+
+.danji-delete-check > img { width: 6.4cqw; height: 6.4cqw; object-fit: contain; border-radius: 0; margin: 0; }
+/* Check icons are the original 24 × 24 Figma checkbox renders. */
+.danji-gallery .danji-delete-check { background: transparent; border: 0; }
+.danji-gallery .danji-delete-check > img { width:6.4cqw; height:6.4cqw; border-radius:0; }
+.danji-gallery .danji-mini-card.selected { border-color:#ffb331 !important; }
+.danji-edit-preview-note { border:1.5px solid rgba(249,172,0,.59); }
+.danji-edit-preview-note.limit-reached { background:rgba(239,34,47,.05); border-color:rgba(237,40,49,.24); }
+.danji-page.text-editing .danji-edit-preview-card { top:9.6cqw; }
+.danji-page.text-editing .danji-editing-badge { z-index:3; }
+.danji-page.text-editing .danji-detail-hint { display:none; }
+.danji-edit-preview-note textarea { padding:20cqw 3.2cqw 12cqw; font-family:inherit; }
+.danji-writing-controls { position:absolute; left:8cqw; right:8cqw; top:96.533cqw; }
+.danji-writing-controls button { width:100%; height:14.933cqw; border-radius:4.267cqw; background:#ffb331; color:white; font-size:4.533cqw; font-weight:600; }
+.danji-note-limit { position:absolute; left:18.4cqw; top:86cqw; margin:0; color:#e42939; font-size:3.2cqw; }
+.danji-leave-confirm p { margin:2.133cqw 0 5.333cqw; line-height:1.6; }
+.danji-leave-confirm button:focus:not(:focus-visible) { outline:none; }
+.danji-decoration-sheet { box-sizing:border-box; display:flex; flex-direction:column; overflow:hidden; }
+.danji-decoration-sheet.expanded { top:54.133cqw; bottom:0; height:auto; min-height:128cqw; }
+.danji-decoration-sheet.collapsed { top:121.067cqw; bottom:0; height:auto; min-height:61.333cqw; }
+.danji-decoration-handle { flex:none; width:24cqw; height:6.4cqw; margin:-1.867cqw auto 0; background:transparent; position:relative; }
+.danji-decoration-handle::after { content:''; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:12.8cqw; height:1.067cqw; border-radius:99px; background:#e5e8eb; }
+.danji-decoration-sheet h2 { flex:none; margin:2.133cqw 6.4cqw 4.8cqw; }
+.danji-decoration-grid { flex:1; min-height:0; overflow:auto; align-content:start; width:78.4cqw; grid-template-columns:repeat(3,minmax(0,1fr)); gap:3.2cqw; }
+.danji-decoration-grid button { width:24cqw; height:24cqw; }
+.danji-decoration-sheet.collapsed .danji-decoration-grid { max-height:none; }
+.danji-decoration-actions,.danji-decoration-sheet.collapsed .danji-decoration-actions { flex:none; margin:8.8cqw 8cqw 0; }
+.danji-decoration-sheet.collapsed .danji-decoration-actions { margin-top:3.2cqw; }
+.danji-decoration-actions button { flex:1; width:auto; }
+.danji-error-snackbar { position:absolute; z-index:45; left:8cqw; right:8cqw; bottom:30.4cqw; min-height:16cqw; padding:3.2cqw 6.4cqw; display:flex; align-items:center; gap:5.067cqw; background:#4e5968; color:white; border-radius:2.667cqw; font-size:3.467cqw; }
+.danji-error-snackbar span { flex:1; }
+.danji-error-snackbar button { color:#ffb331; background:none; white-space:nowrap; font-size:inherit; }
+.danji-loading { position:absolute; inset:25.067cqw 0 9.067cqw; background:white; z-index:35; display:flex; align-items:center; flex-direction:column; padding-top:31.467cqw; gap:14.4cqw; }
+.danji-loading img { width:42.667cqw; height:42.667cqw; animation:danji-loading-spin 1.5s linear infinite; }
+.danji-loading strong { font-size:5.867cqw; color:#4e5968; }
+@keyframes danji-loading-spin { to { transform:rotate(360deg); } }
+.danji-jar-empty strong { display:block; font-size:5.333cqw; color:white; line-height:1.35; }
+.danji-jar-empty span { display:block; margin-top:4.267cqw; font-size:4cqw; line-height:1.5; color:rgba(248,248,255,.6); }
+.danji-empty-lines { position:absolute; left:26.667cqw; top:96.8cqw; width:49.333cqw; height:28.588cqw; z-index:6; pointer-events:none; }
+/* Counts 1–4 use the positions from Figma's 단지 저장방법 frames. */
+.record-count-1 .position-0 { left:35.167cqw; top:70.427cqw; transform:rotate(14.27deg); }
+.record-count-2 .position-0 { left:47.967cqw; top:61.36cqw; transform:rotate(14.27deg); }
+.record-count-2 .position-1 { left:24.806cqw; top:80.46cqw; transform:rotate(-7.94deg); }
+.record-count-3 .position-0 { left:22.807cqw; top:53.154cqw; transform:rotate(2.85deg); }
+.record-count-3 .position-1 { left:55.233cqw; top:69.417cqw; transform:rotate(16.53deg); }
+.record-count-3 .position-2 { left:33.606cqw; top:91.927cqw; transform:rotate(-7.94deg); z-index:7; }
+.record-count-4 .position-0 { left:17.297cqw; top:58.242cqw; transform:rotate(-9.87deg); }
+.record-count-4 .position-1 { left:49.54cqw; top:51.504cqw; transform:rotate(3.89deg); }
+.record-count-4 .position-2 { left:26.447cqw; top:87.741cqw; transform:rotate(2.48deg); }
+.record-count-4 .position-3 { left:55.773cqw; top:77.916cqw; transform:rotate(16.15deg); z-index:7; }
+.danji-jar-empty { top:64.267cqw; margin:0; }
+.danji-edit-preview .danji-back-date { background:#fff9e7; }
+.danji-edit-preview .danji-note-flip { color:#333d4b; }
+.danji-page button:focus { outline:none; }
+.danji-page button:focus-visible { outline:2px solid #3278ff; outline-offset:2px; }
+.danji-decoration-handle { height:5.333cqw; margin-top:-4.267cqw; }
+.danji-decoration-sheet h2 { margin:2.133cqw 6.4cqw 5.867cqw; }
+.danji-decoration-sheet.expanded .danji-decoration-grid { flex:none; height:78.4cqw; }
+.danji-decoration-sheet.expanded { padding-bottom:6.133cqw; }
+.danji-decoration-handle::after { top:calc(50% + 2.133cqw); }
+
+/* Match Home's full-width WebView and let Toss render its native header. */
+.danji-page.browser-preview { --danji-header-height: 25.067cqw; }
+.inapp .danji-jar-background, .inapp .danji-gallery-background { top: -25.067cqw; bottom: 0; }
+.danji-record-background { background-size: cover; }
+.danji-edit-preview-card { background: #fff; }
+.text-editing .danji-edit-preview-note { background: #fff9e7; border-color: #ffcf70; }
+.danji-page:not(.view-decorate) .danji-stickers,
+.danji-page:not(.view-decorate) .danji-placed-sticker,
+.danji-page:not(.view-decorate) .danji-sticker-drag { pointer-events: none; }
+.danji-inline-icon { width: 5.333cqw; height: 5.333cqw; flex: none; }
+.danji-date-button, .danji-back-date { display: flex; align-items: center; justify-content: center; gap: 2.133cqw; }
+.danji-note-pencil { display: grid; place-items: center; }
+.danji-back-date .danji-inline-icon { width: 4cqw; height: 4cqw; }
+.danji-decoration-sheet.expanded, .danji-decoration-sheet.collapsed { min-height: 0; }
+.danji-loading { inset: var(--danji-header-height) 0 0; }
+.danji-gallery.deleting { height: auto; }
+
+/* Direct edits: the front opens a calendar; the back opens the text field. */
+.danji-detail { top: var(--danji-header-height); height: calc(100% - var(--danji-header-height)); }
+.danji-detail .danji-detail-hint { top: 27.2cqw; }
+.danji-detail .danji-large-card { top: calc(var(--record-card-top) - 25.066667cqw); background: #fff; }
+.danji-detail-photo { display: block; width: var(--record-photo-size); height: var(--record-photo-size); background: none; }
+.danji-detail-date { flex: 1; margin-top: 1.6cqw; display: flex; align-items: center; justify-content: center; gap: 3.2cqw; background: #f2f4f6; border-radius: 3.2cqw; color: #666; font-size: 4cqw !important; }
+.danji-detail-date .danji-inline-icon { width: 4cqw; height: 4cqw; padding: .533cqw; background: #d1d6db; border-radius: 50%; color: white; }
+.danji-direct-pencil { display: grid; place-items: center; width: 6.4cqw; height: 6.4cqw; margin: auto; border-radius: 50%; background: #d1d6db; color: white; }
+.danji-direct-pencil .danji-inline-icon { width: 4.267cqw; height: 4.267cqw; }
+.danji-detail .danji-card-note { font-size: 4.533cqw; }
+.danji-page.text-editing .danji-edit-preview-card { top: 9.067cqw; }
+.text-editing .danji-edit-preview-controls { top: 99.2cqw; bottom: auto; }
+.text-editing .danji-note-limit { top: 98cqw; }
+.text-editing:has(.limit-reached) .danji-edit-preview-controls { top: 105.6cqw; }
+.text-editing .danji-edit-preview-note.limit-reached { background: #fff5f5; border-color: #f9caca; }
+
+/* Ground art must cover the remaining viewport, including taller mobile WebViews. */
+.danji-jar-background .jar-ground {
+  bottom: 0;
+  height: auto;
+  min-height: 76.8cqw;
+}
+.danji-gallery-background .gallery-ground {
+  bottom: 0;
+  height: auto;
+  min-height: 74.133cqw;
+}

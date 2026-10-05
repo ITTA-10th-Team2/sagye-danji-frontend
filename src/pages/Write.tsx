@@ -31,7 +31,7 @@ export default function Write() {
     if (currentIndex > 0) {
       setCurrentIndex((prev) => prev - 1);
     } else {
-      navigate('/');
+      navigate('/home');
     }
   };
 

@@ -1,0 +1,86 @@
+/* Figma-aligned refinements for the Danji MVP. Kept separate from legacy styles so the visual overrides are easy to review. */
+.danji-page{background:#fff8ef!important;min-height:100dvh!important;height:100dvh!important;aspect-ratio:auto!important;width:min(100vw,430px)!important;overflow:hidden!important}
+.danji-header{height:94px!important;padding:50px 16px 0!important}
+.danji-tabs{height:44px!important}
+.danji-scene,.danji-gallery,.danji-detail,.danji-editor{top:138px!important;height:calc(100dvh - 138px)!important;min-height:0!important;background:linear-gradient(180deg,#fffaf4 0%,#fff7ec 68%,#fbe8c4 100%)!important}
+/* Illustration layering: branch/leaves sit in front of the jar as in Figma. */
+.danji-art.leaf-top{z-index:8!important;width:46%!important;left:-5%!important;top:0!important;filter:none!important;opacity:1!important}
+.danji-art.leaf-right{z-index:9!important;width:13%!important;right:8%!important;top:18%!important;filter:none!important;opacity:.9!important}
+.danji-art.leaf-left{z-index:7!important;width:19%!important;left:20%!important;top:9%!important;filter:none!important;opacity:.82!important}
+.danji-jar{z-index:3!important}
+.danji-art.ground,.danji-art.shadow-a,.danji-art.shadow-b{z-index:1!important}
+.danji-scene .danji-polaroid{z-index:6!important}
+/* Bottom action bars share one geometry in Jar and All. */
+.danji-actions,.gallery-actions{position:absolute!important;left:22px!important;right:22px!important;bottom:calc(26px + env(safe-area-inset-bottom))!important;height:54px!important;gap:10px!important;max-width:none!important;margin:0!important;z-index:15}
+.danji-actions button{height:54px!important;border-radius:14px!important;font-size:17px!important}
+.danji-actions button:first-child:not(:last-child){flex:0 0 72px!important}
+.danji-actions button.primary{flex:1!important;background:#f4b943!important}
+/* Detail screen: no white footer and a square, unrotated card. */
+.danji-detail{position:absolute!important;left:0;right:0;display:flex!important;justify-content:flex-start!important;padding:106px 42px 100px!important}
+.danji-detail::before{content:'카드를 눌러 뒷면을 확인해보세요.';position:absolute;top:66px;left:0;right:0;text-align:center;color:#7d8793;font-size:14px}
+.danji-large-card{width:100%!important;max-width:330px!important;border-radius:18px!important;padding:12px!important;box-shadow:0 2px 10px #7a57331a!important;transform:none!important}
+.danji-large-card img{display:block;width:100%!important;aspect-ratio:1/1!important;object-fit:cover!important;border-radius:10px!important;transform:none!important}
+.danji-large-card time{font-size:16px!important;padding:16px 0 4px!important}
+.danji-badge{display:none!important}
+.danji-detail-controls{position:absolute;left:30px;right:30px;bottom:calc(26px + env(safe-area-inset-bottom));display:flex;gap:10px;height:54px}
+.danji-detail-controls button{flex:1;border-radius:14px;background:#e7e9ec;color:#4e5968;font-weight:700}
+.danji-detail-controls button:last-child{background:#f4b943;color:#fff}
+/* All records: fixed square cards, fixed grid, and background reaches the bottom. */
+.danji-gallery{position:absolute!important;left:0;right:0;padding:26px 22px 104px!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-rows:max-content!important;gap:12px!important;align-content:start!important;overflow-y:auto!important}
+.danji-mini-card{width:100%!important;height:auto!important;min-width:0!important;padding:6px 6px 10px!important;border-radius:7px!important;box-shadow:0 2px 8px #7a57331a!important;transform:none!important;position:relative!important}
+.danji-mini-card img{width:100%!important;aspect-ratio:1/1!important;height:auto!important;object-fit:cover!important;border-radius:5px!important;transform:none!important}
+.danji-mini-card time{height:26px!important;line-height:26px!important;font-size:13px!important;text-align:center!important}
+.danji-mini-card.delete-mode{padding:6px 6px 10px!important}
+.danji-delete-check{position:absolute;top:12px;right:12px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#fff;border:2px solid #d5d9de;color:transparent;z-index:3}
+.danji-mini-card.delete-selected .danji-delete-check{background:#f4b943;border-color:#f4b943;color:#fff}
+.danji-delete-toolbar{position:absolute;left:22px;right:22px;bottom:calc(26px + env(safe-area-inset-bottom));height:54px;display:flex;gap:10px;z-index:16}
+.danji-delete-toolbar button{height:54px;border-radius:14px;font-weight:700}.danji-delete-toolbar .cancel{flex:0 0 72px;background:#e7e9ec;color:#4e5968}.danji-delete-toolbar .delete{flex:1;background:#f4b943;color:#fff}.danji-delete-toolbar .delete:disabled{opacity:.45}
+.danji-toast{position:absolute;top:150px;left:50%;transform:translateX(-50%);z-index:40;background:#fff;border-radius:24px;padding:11px 18px;box-shadow:0 4px 18px #00000014;font-size:14px;font-weight:700;color:#4e5968;white-space:nowrap}.danji-toast span{display:inline-grid;place-items:center;width:20px;height:20px;margin-right:7px;border-radius:50%;background:#62c995;color:#fff}
+/* Figma edit flow. */
+.danji-editor{position:absolute!important;left:0;right:0;padding:0 22px 104px!important;overflow-y:auto!important}
+.danji-edit-status{display:table;margin:16px auto 18px;padding:9px 15px;background:#fff;border-radius:22px;color:#e5a72d;font-size:14px;font-weight:700;box-shadow:0 2px 10px #7a57331a}
+.danji-edit-help{text-align:center;color:#9a938b;font-size:12px;margin:0 0 12px}
+.danji-edit-card{width:100%;max-width:310px;margin:0 auto;background:#fff;border-radius:15px;padding:10px;box-shadow:0 2px 10px #7a57331a;position:relative}
+.danji-edit-photo{position:relative!important;width:100%;aspect-ratio:1/1;margin:0!important;display:block!important;border-radius:10px;overflow:hidden;background:#f5f3ef;cursor:pointer}
+.danji-edit-photo img{width:100%;height:100%;object-fit:cover;display:block}.danji-edit-photo input{display:none}.danji-edit-photo-action{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);width:36px;height:36px;border-radius:50%;background:#dfe3e7;color:#687582;font-size:0;display:grid;place-items:center}.danji-edit-photo-action::after{content:'✎';font-size:17px}
+.danji-edit-back{width:100%;aspect-ratio:1/1;border-radius:10px;background:#faf9f6;display:flex;align-items:center;justify-content:center;padding:30px;text-align:center;white-space:pre-wrap;color:#4e5968;line-height:1.65;font-size:15px}
+.danji-edit-back textarea{width:100%!important;height:100%!important;margin:0!important;border:0!important;background:transparent!important;text-align:center;outline:0;line-height:1.65!important;padding:24px 10px!important}.danji-edit-card small{display:block;text-align:right;padding:5px 4px 0;color:#b0b5ba}.danji-edit-date{display:none!important}
+.edit-actions{position:absolute!important}.edit-actions::before{content:''}.edit-actions button.primary{margin-left:82px}.edit-actions button.primary::before{content:''}
+.danji-edit-cancel{position:absolute;left:22px;bottom:calc(26px + env(safe-area-inset-bottom));width:72px;height:54px;border-radius:14px;background:#e7e9ec;color:#4e5968;font-weight:700;z-index:16}
+/* Save completion modal */
+.danji-save-backdrop{position:absolute;inset:0;background:#0004;z-index:50;display:flex;align-items:flex-end}.danji-save-modal{width:100%;background:#fff;border-radius:22px 22px 0 0;padding:34px 24px calc(26px + env(safe-area-inset-bottom));text-align:center}.danji-save-modal strong{display:block;font-size:18px;margin-bottom:8px}.danji-save-modal p{font-size:13px;color:#8b95a1;margin-bottom:22px}.danji-save-jar{font-size:62px;margin:12px 0 20px}.danji-save-modal button{display:block;width:100%;height:48px;border-radius:12px;font-weight:700}.danji-save-modal .go-jar{background:#f4b943;color:#fff;margin-bottom:8px}.danji-save-modal .go-home{background:#f4f5f6;color:#6b7684}
+@media(max-width:390px){.danji-gallery{padding-left:20px!important;padding-right:20px!important}.danji-detail{padding-left:34px!important;padding-right:34px!important}}
+
+/* Autumn artwork and card placement from the supplied Figma frames. */
+.danji-scene{background:linear-gradient(180deg,#fffaf4 0%,#fff5e9 72%,#f7dfb2 100%)!important}
+.danji-art.leaf-top{width:42%!important;left:-4%!important;top:1%!important;z-index:9!important;object-fit:contain!important}
+.danji-art.leaf-left{width:17%!important;left:10%!important;top:10%!important;z-index:8!important;opacity:.9!important;filter:blur(1px)!important}
+.danji-art.leaf-right{width:14%!important;right:5%!important;top:9%!important;z-index:8!important;opacity:.65!important;filter:blur(4px)!important}
+.danji-art.ground{width:100%!important;left:0!important}
+.danji-decoration-dots{display:none!important}
+.danji-detail,.danji-editor{background:#fff8f0!important}
+.danji-detail{padding-top:106px!important}
+.danji-large-card{display:block!important;flex:0 0 auto!important;text-align:initial!important;border:0!important;color:inherit!important;cursor:pointer!important}
+.danji-large-card img,.danji-card-back{width:100%!important;aspect-ratio:1!important;border-radius:10px!important}
+.danji-card-back{display:grid;place-items:center;padding:24px;background:#faf8f4;color:#4e5968;text-align:center;white-space:pre-wrap;line-height:1.6}
+.danji-edit-photo-action{left:auto!important;right:10px!important;bottom:10px!important;transform:none!important;width:auto!important;height:auto!important;padding:7px 12px!important;border-radius:20px!important;background:#fff!important;font-size:13px!important;color:#4e5968!important;box-shadow:0 2px 8px #0002!important;display:block!important;cursor:pointer!important}
+.danji-edit-photo-action::after{content:none!important}
+.danji-edit-photo-action input{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;opacity:0!important;cursor:pointer!important}
+.danji-edit-back{position:relative}
+.danji-flip-front{position:absolute;right:9px;top:9px;background:#fff!important;border-radius:18px;padding:6px 11px;color:#4e5968;z-index:2;font-size:12px!important;box-shadow:0 1px 5px #0002}
+
+/* Extend the autumn canvas through the bottom safe area on tall screens. */
+.danji-page{height:max(100vh,100dvh)!important;min-height:max(100vh,100dvh)!important;background:#f7dfb2!important}
+.danji-scene{height:calc(100% - 138px)!important;background:linear-gradient(180deg,#fffaf4 0%,#fff6eb 62%,#f5ddb1 100%)!important}
+.danji-art.leaf-top{top:1%!important;left:-3%!important;width:43%!important}
+.danji-art.leaf-left{left:-10%!important;top:32%!important;width:19%!important;opacity:.38!important;filter:blur(4px)!important}
+.danji-art.leaf-right{right:5%!important;top:11%!important;width:14%!important;opacity:.58!important;filter:blur(5px)!important}
+body:has(.danji-page),#root:has(.danji-page),#root:has(.danji-page)>div,#root:has(.danji-page) main{min-height:max(100vh,100dvh)!important;background:#f7dfb2!important}
+.danji-stickers button{z-index:1;width:46px;height:46px;padding:0!important;display:grid;place-items:center}
+.danji-stickers button img{width:100%;height:100%;object-fit:contain;pointer-events:none}
+.danji-stickers .sticker-target{z-index:0}
+.decorate-controls{bottom:22px!important;background:#fff!important;box-shadow:0 4px 18px #6142272b;padding:12px!important}
+.sticker-palette{display:flex;gap:3px;overflow-x:auto;padding:4px 2px 8px}
+.decorate-controls .sticker-palette button{flex:0 0 40px;width:40px;height:40px;padding:2px!important;display:grid;place-items:center}
+.sticker-palette img{width:36px;height:36px;object-fit:contain}
+.decorate-controls .done{width:100%;margin:2px 0 0!important}

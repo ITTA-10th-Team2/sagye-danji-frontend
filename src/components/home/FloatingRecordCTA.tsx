@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BottomSheet } from '@toss/tds-mobile';
 import { Device, getPermission, openPermissionDialog } from '@apps-in-toss/web-framework';
 
-export default function FloatingRecordCTA() {
+export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (open: () => void) => ReactNode }) {
   const navigate = useNavigate();
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
   const [isPermissionSheetOpen, setIsPermissionSheetOpen] = useState<boolean>(false);
   const [permissionTarget, setPermissionTarget] = useState<'camera' | 'album'>('album');
+
+  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   // 앨범 선택 시
   const handleGalleryClick = () => {
@@ -68,7 +70,7 @@ export default function FloatingRecordCTA() {
           // 사진 선택
           const items = await Device.getAlbumItems({
             types: ['PHOTO'],
-            maxCount: 10,
+            maxCount: 5,
             base64: true,
           });
 
@@ -99,9 +101,11 @@ export default function FloatingRecordCTA() {
         if (status === 'allowed') {
           setIsPermissionSheetOpen(false);
 
+          await delay(300);
+
           // 촬영하기
           try {
-            const response = await Device.openCamera({ base64: true });
+            const response = await Device.openCamera({ base64: true, maxWidth: 500 });
 
             if (!response || !response.dataUri) {
               console.log('사진 촬영이 취소되었어요.');
@@ -110,34 +114,38 @@ export default function FloatingRecordCTA() {
 
             // 기록 페이지로 이동하면서 사진 데이터 같이 보내기
             const imageUri = `data:image/jpeg;base64,${response.dataUri}`;
-            navigate('/write', { state: { photos: [imageUri] } });
+            navigate('/write', { state: { photos: [imageUri] }, replace: true });
           } catch (error) {
             console.error('카메라 실행 및 촬영 오류:', error);
           }
         }
       }
-    } catch (error: any) {
-      console.error('권한 요청 또는 실행 중 오류:', error.message || error);
+    } catch (error: unknown) {
+      console.error('권한 요청 또는 실행 중 오류:', error instanceof Error ? error.message : error);
     }
   };
 
   return (
     <>
-      <div className="flex items-center justify-between w-full p-2 pl-5 pr-5 bg-white/80 backdrop-blur-md border border-white/50 rounded-[16px] shadow-sm">
-        {/* 텍스트 영역 */}
-        <div className="flex flex-col">
-          <p className="text-[15px] font-medium text-[#000C1E]/80">가을의 순간을 더 담아보세요</p>
-          <p className="text-[11px] font-medium text-[#00132B]/58">기록 3개 · 12일째</p>
-        </div>
+      {renderTrigger ? (
+        renderTrigger(() => setIsBottomSheetOpen(true))
+      ) : (
+        <div className="flex items-center justify-between w-full p-2 pl-5 pr-5 bg-white/80 backdrop-blur-md border border-white/50 rounded-[16px] shadow-sm">
+          {/* 텍스트 영역 */}
+          <div className="flex flex-col">
+            <p className="text-[15px] font-medium text-[#000C1E]/80">가을의 순간을 더 담아보세요</p>
+            <p className="text-[11px] font-medium text-[#00132B]/58">기록 3개 · 12일째</p>
+          </div>
 
-        {/* 기록하기 버튼 */}
-        <button
-          className="px-3.5 py-2 text-[13px] font-semibold text-white rounded-xl! bg-gradient-to-r from-[#FFB84C] to-[#FFA31A] shadow-[0_2px_8px_rgba(255,163,26,0.3)] active:scale-95 transition-transform"
-          onClick={() => setIsBottomSheetOpen(true)}
-        >
-          기록하기
-        </button>
-      </div>
+          {/* 기록하기 버튼 */}
+          <button
+            className="px-3.5 py-2 text-[13px] font-semibold text-white rounded-xl! bg-gradient-to-r from-[#FFB84C] to-[#FFA31A] shadow-[0_2px_8px_rgba(255,163,26,0.3)] active:scale-95 transition-transform"
+            onClick={() => setIsBottomSheetOpen(true)}
+          >
+            기록하기
+          </button>
+        </div>
+      )}
 
       {/* 사진 추가 바텀시트 */}
       <BottomSheet

@@ -1,18 +1,8 @@
 import { useState, useEffect } from 'react';
-import { NavigationBar } from '@apps-in-toss/web-framework';
 import { useNavigate } from 'react-router-dom';
 import { Post, Paragraph } from '@toss/tds-mobile';
 
 export default function WriteComplete() {
-  useEffect(() => {
-    NavigationBar.setOptions({
-      withBackButton: false,
-      withHomeButton: true,
-      withTitle: true,
-      transparentBackground: false,
-    });
-  }, []);
-
   const navigate = useNavigate();
   const [isPop, setIsPop] = useState(false);
 
