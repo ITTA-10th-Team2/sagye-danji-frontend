@@ -16,11 +16,10 @@ export default function WriteComplete() {
     <main className="flex flex-col h-dvh px-5 pt-4 pb-6 bg-white overflow-hidden">
       <div className="flex flex-col flex-1 justify-center items-center">
         {/* 이미지 영역 */}
-        <div className="w-[80%]">
+        <div className="w-[90%]">
           <img
             src="/assets/write-complete.png"
-            alt="완료"
-            className={`transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+            className={`z-999 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
               isPop ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
             }`}
           />

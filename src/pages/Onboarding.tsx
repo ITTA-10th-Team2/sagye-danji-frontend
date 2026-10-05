@@ -9,7 +9,7 @@ const ONBOARDING_DATA = [
     blurColor: 'bg-[#F8B8B3]',
   },
   {
-    image: '/assets/onboarding/onboarding-2.webp',
+    image: '/assets/onboarding/onboarding-2.png',
     title: '사계 단지에 찰칵!',
     desc: '오늘 누린 계절의 순간을\n사진으로 남겨보세요.',
     blurColor: 'bg-[#CACE56]',
@@ -78,7 +78,7 @@ export default function Onboarding() {
         >
           {ONBOARDING_DATA.map((data, index) => (
             <div key={index} className="flex flex-col items-center justify-center min-w-full px-6 pt-16">
-              <div className="relative w-[180px] h-[180px] mb-4 flex justify-center items-center">
+              <div className="relative w-[240px] h-[240px] mb-4 flex justify-center items-center">
                 {/* 블러 영역 */}
                 <div className={`absolute -top-8 -right-10 w-[180px] h-[180px] rounded-full blur-[30px] opacity-35 ${data.blurColor}`} />
                 {/* 이미지 영역 */}

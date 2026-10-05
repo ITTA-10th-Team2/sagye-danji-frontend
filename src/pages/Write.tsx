@@ -50,6 +50,7 @@ export default function Write() {
 
   return (
     <div className="flex flex-col h-dvh bg-white overflow-hidden">
+      {/* 리스트헤더 */}
       <ListHeader
         title={
           <ListHeader.TitleParagraph typography="t4" fontWeight="bold">
@@ -57,26 +58,35 @@ export default function Write() {
             이야기를 작성해주세요.
           </ListHeader.TitleParagraph>
         }
+        right={
+          <ListHeader.RightArrow typography="t7" onClick={() => navigate('/write/complete')}>
+            바로 저장하기
+          </ListHeader.RightArrow>
+        }
         description={
           <ListHeader.DescriptionParagraph fontWeight="regular">
             {currentIndex + 1}/{DUMMY_PHOTOS.length}
           </ListHeader.DescriptionParagraph>
         }
+        titleWidthRatio={0.68}
       />
 
-      <main className="flex flex-col px-5 pt-4 pb-6">
-        {/* 사진 영역 */}
-        <section>
-          <UploadedPhoto imageUrl={DUMMY_PHOTOS[currentIndex]} />
-        </section>
+      <main className="flex flex-col flex-1 px-5 pt-4 pb-6">
+        {/* 사진 & 글쓰기 영역 */}
+        <div className="flex flex-col gap-y-4">
+          <section>
+            <UploadedPhoto imageUrl={DUMMY_PHOTOS[currentIndex]} />
+          </section>
 
-        {/* 작성 영역 */}
-        <section>
-          <WriteInput key={`input-${currentIndex}`} onTextChange={handleTextChange} initialValue={currentText} />
-        </section>
+          <section>
+            <WriteInput key={`input-${currentIndex}`} onTextChange={handleTextChange} initialValue={currentText} />
+          </section>
+        </div>
 
         {/* 버튼 영역 */}
-        <WriteBottomCTA onBackClick={handleBack} onNextClick={handleNext} isLastStep={isLastStep} />
+        <div className="mt-auto">
+          <WriteBottomCTA onBackClick={handleBack} onNextClick={handleNext} isLastStep={isLastStep} />
+        </div>
       </main>
     </div>
   );

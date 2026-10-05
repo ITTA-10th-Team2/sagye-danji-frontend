@@ -4,7 +4,7 @@ interface UploadedPhotoProps {
 
 export default function UploadedPhoto({ imageUrl }: UploadedPhotoProps) {
   return (
-    <div className="flex justify-center items-center w-full py-4 mb-2">
+    <div className="flex justify-center items-center w-full">
       <div className="relative w-[254px] h-[254px]">
         {/* 메인 사진 */}
         <img src={imageUrl} className="w-full h-full object-cover rounded-[24px]" />

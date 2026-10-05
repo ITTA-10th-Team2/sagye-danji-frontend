@@ -14,11 +14,7 @@ const getJarImage = (season: string, count: number) => {
   };
   const engSeason = seasonMap[season];
 
-  let level = 0;
-  if (count >= 5) level = 5;
-  else if (count >= 3) level = 3;
-  else if (count >= 1) level = 1;
-  else level = 0;
+  const level = count >= 5 ? 5 : count >= 3 ? 3 : count >= 1 ? 1 : 0;
 
   return `/assets/jars/jar-${engSeason}-${level}.svg`;
 };
@@ -28,11 +24,11 @@ export default function SeasonJar({ season, count, onClick }: SeasonJarProps) {
 
   return (
     <div
-      className="relative flex flex-col items-center justify-center cursor-pointer active:scale-95 transition-transform"
+      className="relative flex flex-col min-w-0 items-center justify-center cursor-pointer active:scale-95 transition-transform"
       onClick={onClick}
     >
       {/* 이미지 영역 */}
-      <img src={currentImgSrc} className="w-[75px] object-contain drop-shadow-sm transition-all duration-300" />
+      <img src={currentImgSrc} className="w-full max-w-[75px] object-contain drop-shadow-sm transition-all duration-300" />
 
       {/* 텍스트 영역 */}
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-3">

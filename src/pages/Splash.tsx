@@ -13,14 +13,12 @@ export default function Splash() {
   }, [navigate]);
 
   return (
-    <main className="flex flex-col items-center justify-center w-full h-dvh bg-white">
+    <main className="flex flex-col items-center w-full h-dvh bg-white">
       {/* 배경 */}
-      <img src="/assets/onboarding/splash.webp" className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
+      <img src="/assets/onboarding/splash.png" className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
 
-      {/* 로고 영역 */}
-      <div className="w-[120px] h-[60px] bg-gray-200 flex items-center justify-center z-10">
-        <span className="font-bold">로고</span>
-      </div>
+      {/* 로고 */}
+      <img src="/assets/onboarding/app-logo.svg" className="w-[65%] mt-60 z-999" />
     </main>
   );
 }
