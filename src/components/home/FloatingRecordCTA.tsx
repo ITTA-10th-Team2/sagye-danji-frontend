@@ -1,9 +1,13 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BottomSheet } from '@toss/tds-mobile';
 import { Device, getPermission, openPermissionDialog } from '@apps-in-toss/web-framework';
 import { sdkPhotoToDataUrl } from '../../lib/recordImage';
 import type { WritePhotoState } from '../../lib/recordImage';
+import { getRecordSummary } from '../../apis/records';
+import type { RecordSummary } from '../../apis/records';
+
+type SummaryState = { status: 'loading' } | { status: 'error' } | { status: 'success'; summary: RecordSummary };
 
 export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (open: () => void) => ReactNode }) {
   const navigate = useNavigate();
@@ -12,6 +16,25 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
   const [isPermissionSheetOpen, setIsPermissionSheetOpen] = useState<boolean>(false);
   const [permissionTarget, setPermissionTarget] = useState<'camera' | 'album'>('album');
   const [photoError, setPhotoError] = useState<string | null>(null);
+  const [summaryState, setSummaryState] = useState<SummaryState>({ status: 'loading' });
+  const [summaryAttempt, setSummaryAttempt] = useState(0);
+  const showSummary = !renderTrigger;
+
+  useEffect(() => {
+    if (!showSummary) return;
+    const controller = new AbortController();
+    /** 홈 카드의 기록 요약 조회 */
+    async function loadSummary() {
+      try {
+        const summary = await getRecordSummary(controller.signal);
+        if (!controller.signal.aborted) setSummaryState({ status: 'success', summary });
+      } catch {
+        if (!controller.signal.aborted) setSummaryState({ status: 'error' });
+      }
+    }
+    void loadSummary();
+    return () => controller.abort();
+  }, [showSummary, summaryAttempt]);
 
   const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -146,7 +169,26 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
           {/* 텍스트 영역 */}
           <div className="flex flex-col">
             <p className="text-[15px] font-medium text-[#000C1E]/80">가을의 순간을 더 담아보세요</p>
-            <p className="text-[11px] font-medium text-[#00132B]/58">기록 3개 · 12일째</p>
+            <p className="text-[11px] font-medium text-[#00132B]/58" aria-live="polite" aria-busy={summaryState.status === 'loading'}>
+              {summaryState.status === 'loading'
+                ? '기록을 불러오는 중이에요'
+                : summaryState.status === 'error'
+                  ? '기록 정보를 불러오지 못했어요'
+                  : summaryState.summary.recordCount === 0
+                    ? '첫 계절의 순간을 담아보세요'
+                    : `기록 ${summaryState.summary.recordCount}개 · ${summaryState.summary.recordingDayCount}일째`}
+            </p>
+            {summaryState.status === 'error' && (
+              <button
+                className="self-start text-[11px] text-[#00132B]/58 underline"
+                onClick={() => {
+                  setSummaryState({ status: 'loading' });
+                  setSummaryAttempt((value) => value + 1);
+                }}
+              >
+                다시 시도
+              </button>
+            )}
           </div>
 
           {/* 기록하기 버튼 */}

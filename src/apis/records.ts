@@ -36,7 +36,8 @@ export async function getSeasonRecords(year: number, season: RecordSeason, signa
   let cursor: string | undefined;
   do {
     const result = await api.get<ApiResponse<RecordPage>, ApiResponse<RecordPage>>(`/records/seasons/${season}`, {
-      params: { year, size: 50, ...(cursor ? { cursor } : {}) }, signal,
+      params: { year, size: 50, ...(cursor ? { cursor } : {}) },
+      signal,
     });
     items.push(...result.data.items);
     if (!result.data.hasNext) break;
@@ -45,7 +46,7 @@ export async function getSeasonRecords(year: number, season: RecordSeason, signa
     visited.add(next);
     cursor = next;
   } while (true);
-  return [...new Map(items.map(item => [item.id, item])).values()];
+  return [...new Map(items.map((item) => [item.id, item])).values()];
 }
 
 export async function getRecord(id: number, signal?: AbortSignal): Promise<RecordDetail> {
@@ -61,4 +62,15 @@ export async function updateRecord(id: number, recordDate: string, memo: string)
 
 export async function deleteRecord(id: number): Promise<void> {
   await api.delete<ApiResponse<null>, ApiResponse<null>>(`/records/${id}`);
+}
+
+export interface RecordSummary {
+  recordCount: number;
+  recordingDayCount: number;
+}
+
+/** 홈 - 전체 기록 수 / 기록 기간 조회 */
+export async function getRecordSummary(signal?: AbortSignal): Promise<RecordSummary> {
+  const result = await api.get<ApiResponse<RecordSummary>, ApiResponse<RecordSummary>>('/records/summary', { signal });
+  return result.data;
 }
