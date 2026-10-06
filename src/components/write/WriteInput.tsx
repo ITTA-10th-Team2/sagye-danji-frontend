@@ -6,17 +6,18 @@ interface WriteInputProps {
 }
 
 export default function WriteInput({ onTextChange, initialValue = '' }: WriteInputProps) {
-  const [text, setText] = useState<string>(initialValue);
+  const [text, setText] = useState<string>(() => Array.from(initialValue).slice(0, 100).join(''));
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const MAX_LENGTH = 100;
-  const isOverLimit = text.length >= MAX_LENGTH;
+  const textLength = Array.from(text).length;
+  const isOverLimit = textLength >= MAX_LENGTH;
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const inputText = e.target.value;
-    const clippedText = inputText.slice(0, MAX_LENGTH);
+    const clippedText = Array.from(inputText).slice(0, MAX_LENGTH).join('');
     setText(clippedText);
 
     if (onTextChange) onTextChange(clippedText);
@@ -42,14 +43,13 @@ export default function WriteInput({ onTextChange, initialValue = '' }: WriteInp
           onChange={handleChange}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          maxLength={MAX_LENGTH + 1}
         />
 
         <span
           className={`absolute bottom-4 right-4 text-[13px] font-medium transition-colors duration-200
             ${isOverLimit ? 'text-[#E42939]' : 'text-[#B0B8C1]'}`}
         >
-          {text.length}/{MAX_LENGTH}
+          {textLength}/{MAX_LENGTH}
         </span>
       </div>
 

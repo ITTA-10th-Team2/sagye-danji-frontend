@@ -2,6 +2,8 @@ import { useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BottomSheet } from '@toss/tds-mobile';
 import { Device, getPermission, openPermissionDialog } from '@apps-in-toss/web-framework';
+import { sdkPhotoToDataUrl } from '../../lib/recordImage';
+import type { WritePhotoState } from '../../lib/recordImage';
 
 export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (open: () => void) => ReactNode }) {
   const navigate = useNavigate();
@@ -9,11 +11,13 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
   const [isPermissionSheetOpen, setIsPermissionSheetOpen] = useState<boolean>(false);
   const [permissionTarget, setPermissionTarget] = useState<'camera' | 'album'>('album');
+  const [photoError, setPhotoError] = useState<string | null>(null);
 
   const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   // 앨범 선택 시
   const handleGalleryClick = () => {
+    setPhotoError(null);
     setPermissionTarget('album');
     setIsBottomSheetOpen(false);
     setTimeout(() => {
@@ -23,6 +27,7 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
 
   // 카메라 선택 시
   const handleCameraClick = () => {
+    setPhotoError(null);
     setPermissionTarget('camera');
     setIsBottomSheetOpen(false);
     setTimeout(() => setIsPermissionSheetOpen(true), 200);
@@ -80,8 +85,8 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
           }
 
           // 기록 페이지로 이동하면서 사진 데이터 같이 보내기
-          const photoArray = items.map((item) => `data:image/jpeg;base64,${item.dataUri}`);
-          navigate('/write', { state: { photos: photoArray } });
+          const photoArray = items.map((item) => sdkPhotoToDataUrl(item.dataUri));
+          navigate('/write', { state: { photos: photoArray, source: 'GALLERY' } satisfies WritePhotoState });
         }
       } else if (permissionTarget === 'camera') {
         // 카메라 권한일 시
@@ -113,20 +118,27 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
             }
 
             // 기록 페이지로 이동하면서 사진 데이터 같이 보내기
-            const imageUri = `data:image/jpeg;base64,${response.dataUri}`;
-            navigate('/write', { state: { photos: [imageUri] }, replace: true });
+            const imageUri = sdkPhotoToDataUrl(response.dataUri);
+            navigate('/write', { state: { photos: [imageUri], source: 'CAMERA' } satisfies WritePhotoState, replace: true });
           } catch (error) {
+            setPhotoError(error instanceof Error ? error.message : '사진을 준비하지 못했어요. 다시 시도해주세요.');
             console.error('카메라 실행 및 촬영 오류:', error);
           }
         }
       }
     } catch (error: unknown) {
+      setPhotoError(error instanceof Error ? error.message : '사진을 준비하지 못했어요. 다시 시도해주세요.');
       console.error('권한 요청 또는 실행 중 오류:', error instanceof Error ? error.message : error);
     }
   };
 
   return (
     <>
+      {photoError && (
+        <p role="alert" className="mb-2 text-center text-[13px] text-[#E42939]">
+          {photoError}
+        </p>
+      )}
       {renderTrigger ? (
         renderTrigger(() => setIsBottomSheetOpen(true))
       ) : (

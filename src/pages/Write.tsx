@@ -4,13 +4,15 @@ import { ListHeader } from '@toss/tds-mobile';
 import UploadedPhoto from '../components/write/UploadedPhoto';
 import WriteInput from '../components/write/WriteInput';
 import WriteBottomCTA from '../components/write/WriteBottomCTA';
+import type { WritePhotoState } from '../lib/recordImage';
 
 export default function Write() {
   const navigate = useNavigate();
   const location = useLocation();
+  const photoState = location.state as WritePhotoState | null;
 
   // 더미 사진 데이터
-  const DUMMY_PHOTOS = location.state?.photos || [
+  const DUMMY_PHOTOS = photoState?.photos || [
     'https://images.unsplash.com/photo-1507371341162-763b5e419408?q=80&w=400&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1476820865390-c52aeebb9891?q=80&w=400&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1507371341162-763b5e419408?q=80&w=400&auto=format&fit=crop',
