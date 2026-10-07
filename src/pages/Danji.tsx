@@ -2,6 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { deleteRecord, getRecord, getSeasonRecords, updateRecord } from '../apis/records';
 import type { RecordDetail, RecordListItem, RecordSeason } from '../apis/records';
+import { getJarPage, saveJarStickers } from '../apis/jars';
+import type { JarStickerItem, StickerType } from '../apis/jars';
+import { ApiError } from '../lib/axios';
 import { graniteEvent } from '@apps-in-toss/web-framework';
 import FloatingRecordCTA from '../components/home/FloatingRecordCTA';
 import './Danji.css';
@@ -28,7 +31,7 @@ import statusRight from '../assets/danji/figma/status-right.png';
 import buttonSparkle from '../assets/danji/figma/button-sparkle.png';
 import buttonPencil from '../assets/danji/figma/button-pencil.png';
 
-// Records come from the authenticated API; decoration remains device-local until its API exists.
+// Records and decorations are scoped to the authenticated member and jar page.
 
 import decor0 from '../assets/danji/current/sticker-0.png';
 import decor1 from '../assets/danji/current/sticker-1.png';
@@ -38,23 +41,39 @@ import decor4 from '../assets/danji/current/sticker-4.png';
 import decor5 from '../assets/danji/current/sticker-5.png';
 import decor6 from '../assets/danji/current/sticker-6.png';
 const stickerOptions = [decor0, decor1, decor2, decor3, decor4, decor5, decor6];
-const stickerNames = ['클로버', '물방울', '별', '노란 불꽃', '분홍 불꽃', '카메라', '꽃'];
-type Sticker = { id: number; option: number; x: number; y: number; size: number; page: number };
+const stickerNames = ['클로버', '물방울', '별', '꽃', '불꽃', '카메라', '꽃다발'];
+const stickerTypes: StickerType[] = ['CLOVER', 'BUBBLE', 'SHOOTING_STAR', 'FLOWER', 'FIREWORK', 'CAMERA', 'BOUQUET'];
+const baseStickerSize = 24.533;
+type Sticker = { id: number; option: number; x: number; y: number; size: number; page: number; rotation: number; zIndex: number };
 type DisplayRecord = { id: number; image: string; date: string; note: string; season: RecordSeason };
-// The current backend exposes image IDs but no image retrieval URL.
+// Keep a placeholder for missing or expired photo URLs.
 const unavailablePhoto =
   'data:image/svg+xml;charset=utf-8,' +
   encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><rect width="100%" height="100%" fill="#e7e5df"/><text x="50%" y="50%" text-anchor="middle" fill="#65635d" font-size="16">사진을 불러올 수 없어요</text></svg>',
   );
-function toDisplayRecord(record: RecordListItem | RecordDetail): DisplayRecord {
+function toDisplayRecord(record: RecordListItem | RecordDetail, original = false): DisplayRecord {
   return {
     id: record.id,
-    image: unavailablePhoto,
+    image:
+      (original ? record.image?.originalUrl || record.image?.thumbnailUrl : record.image?.thumbnailUrl || record.image?.originalUrl) ||
+      unavailablePhoto,
     date: record.recordDate.replaceAll('-', '/'),
     note: record.memo ?? '',
     season: record.season,
   };
+}
+function fromApiStickers(items: JarStickerItem[], page: number): Sticker[] {
+  return items.map((item, index) => ({
+    id: index + 1,
+    option: stickerTypes.indexOf(item.stickerType),
+    x: item.xRatio * 100,
+    y: item.yRatio * 100,
+    size: item.scale * baseStickerSize,
+    page,
+    rotation: item.rotation,
+    zIndex: item.zIndex,
+  }));
 }
 function sortRecordsByDate(records: DisplayRecord[]): DisplayRecord[] {
   return [...records].sort((a, b) => a.date.localeCompare(b.date) || a.id - b.id);
@@ -89,13 +108,14 @@ export default function Danji() {
   useEffect(() => () => detailRequest.current?.abort(), []);
   useEffect(() => {
     const controller = new AbortController();
+    // Reset the loading state when starting a cancellable network request.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     setLoadError(false);
     getSeasonRecords(year, season, controller.signal)
       .then((records) => {
         if (!controller.signal.aborted) {
-          setPreviewRecords(sortRecordsByDate(records.map(toDisplayRecord)));
-          setPage(0);
+          setPreviewRecords(sortRecordsByDate(records.map((record) => toDisplayRecord(record))));
         }
       })
       .catch(() => {
@@ -110,22 +130,41 @@ export default function Danji() {
   const [draftDate, setDraftDate] = useState(new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Seoul' }).format(new Date()));
   const [draftNote, setDraftNote] = useState('');
   const [draftImage, setDraftImage] = useState<string | null>(null);
-  const [stickers, setStickers] = useState<Sticker[]>(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem(`danji-local-stickers-${year}-${season}`) || '[]');
-      return Array.isArray(saved)
-        ? saved
-            .filter((item) => Number.isInteger(item.option) && item.option >= 0 && item.option < 7)
-            .map((item) => ({ ...item, size: item.size ?? 24.533, page: item.page ?? 0 }))
-        : [];
-    } catch {
-      return [];
-    }
-  });
+  const [stickers, setStickers] = useState<Sticker[]>([]);
+  const [jarPageId, setJarPageId] = useState<number | null>(null);
+  const [jarRecords, setJarRecords] = useState<DisplayRecord[]>([]);
+  const [jarLoading, setJarLoading] = useState(true);
+  const [jarError, setJarError] = useState(false);
+  useEffect(() => {
+    const controller = new AbortController();
+    // Invalidate the old page ID before fetching another page to prevent saving to it.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setJarPageId(null);
+    setJarRecords([]);
+    setStickers([]);
+    setJarLoading(true);
+    setJarError(false);
+    getJarPage(year, season, page, controller.signal)
+      .then((data) => {
+        if (controller.signal.aborted) return;
+        setJarPageId(data.jarPageId);
+        // Use server page membership so decorations stay with the correct five records.
+        setJarRecords(data.records.map((record) => toDisplayRecord(record)));
+        setStickers(fromApiStickers(data.stickers, page));
+      })
+      .catch((error: unknown) => {
+        if (!controller.signal.aborted && !(error instanceof ApiError && error.status === 404)) setJarError(true);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setJarLoading(false);
+      });
+    return () => controller.abort();
+  }, [year, season, page, reload]);
   const [draftStickers, setDraftStickers] = useState<Sticker[]>([]);
   const [activeSticker, setActiveSticker] = useState<number | null>(null);
   const [stickerPanelExpanded, setStickerPanelExpanded] = useState(true);
   function beginDecoration() {
+    if (jarLoading || jarError || jarPageId === null || mutationPending.current) return;
     setDraftStickers(stickers.map((item) => ({ ...item })));
     setActiveSticker(null);
     setStickerPanelExpanded(true);
@@ -136,6 +175,13 @@ export default function Danji() {
   }
   const [headerMenu, setHeaderMenu] = useState(false);
   const [view, setView] = useState<View>('jar');
+  const scope = `${year}-${season}`;
+  const [previousScope, setPreviousScope] = useState(scope);
+  if (previousScope !== scope) {
+    setPreviousScope(scope);
+    setPage(0);
+    setView('jar');
+  }
   const [sheet, setSheet] = useState<Sheet>('none');
   const [selected, setSelected] = useState<number | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -179,18 +225,33 @@ export default function Danji() {
     });
   });
 
-  function saveDecoration() {
+  async function saveDecoration() {
+    if (mutationPending.current || jarPageId === null || jarLoading || jarError) return;
+    mutationPending.current = true;
+    setBusy(true);
     try {
-      localStorage.setItem(`danji-local-stickers-${year}-${season}`, JSON.stringify(draftStickers));
+      const items = draftStickers
+        .filter((item) => item.page === page)
+        .map((item) => ({
+          stickerType: stickerTypes[item.option],
+          xRatio: item.x / 100,
+          yRatio: item.y / 100,
+          scale: item.size / baseStickerSize,
+          rotation: item.rotation,
+          zIndex: item.zIndex,
+        }));
+      const saved = await saveJarStickers(jarPageId, items);
+      setStickers(fromApiStickers(saved.items, page));
+      setSaveError(null);
+      setView('jar');
+      setActiveSticker(null);
+      setStickerSaved(true);
     } catch {
       setSaveError('sticker');
-      return;
+    } finally {
+      mutationPending.current = false;
+      setBusy(false);
     }
-    setSaveError(null);
-    setStickers(draftStickers);
-    setView('jar');
-    setActiveSticker(null);
-    setStickerSaved(true);
   }
   const [deleteSuccess, setDeleteSuccess] = useState(false);
   // Preview the new date order immediately; cancelling keeps the saved records intact.
@@ -204,6 +265,7 @@ export default function Danji() {
     [previewRecords, view, selected, draftDate],
   );
   const pageCount = Math.max(1, Math.ceil(displayRecords.length / 5));
+  if (!loading && page >= pageCount) setPage(pageCount - 1);
   const selectedRecord = previewRecords.find((item: DisplayRecord) => item.id === selected);
   useEffect(() => {
     if (!deleteSuccess) return;
@@ -239,6 +301,7 @@ export default function Danji() {
       setShowNote(true);
       setSaveSuccess(true);
       setView('detail');
+      setReload((value) => value + 1);
     } catch {
       setSaveError('edit');
     } finally {
@@ -267,6 +330,7 @@ export default function Danji() {
       setPage(belongs ? Math.floor(next.findIndex((item) => item.id === record.id) / 5) : 0);
       setCalendarOpen(false);
       setSaveError(null);
+      setReload((value) => value + 1);
       if (!belongs) {
         setSelected(null);
         setView('jar');
@@ -290,7 +354,7 @@ export default function Danji() {
     setSheet('none');
     setLoading(true);
     try {
-      const record = toDisplayRecord(await getRecord(id, controller.signal));
+      const record = toDisplayRecord(await getRecord(id, controller.signal), true);
       if (!controller.signal.aborted) {
         setPreviewRecords((items) => items.map((item) => (item.id === id ? record : item)));
         setLoadError(false);
@@ -314,6 +378,7 @@ export default function Danji() {
     const deleted = deleteIds.filter((_, i) => results[i].status === 'fulfilled');
     const failed = deleteIds.filter((_, i) => results[i].status === 'rejected');
     setPreviewRecords((items) => items.filter((item) => !deleted.includes(item.id)));
+    if (deleted.length) setReload((value) => value + 1);
     setDeleteIds(failed);
     setConfirmDelete(false);
     setSelected(null);
@@ -412,7 +477,7 @@ export default function Danji() {
 
       {(view === 'jar' || view === 'decorate') && (
         <section
-          className={`danji-scene record-count-${Math.min(5, Math.max(0, previewRecords.length - page * 5))}${previewRecords.slice(page * 5, page * 5 + 5).length === 5 ? ` full-layout-${page % 3}` : ''}`}
+          className={`danji-scene record-count-${jarRecords.length}${jarRecords.length === 5 ? ` full-layout-${page % 3}` : ''}`}
           aria-label="가을 단지"
           onTouchStart={(e) => {
             e.currentTarget.dataset.x = String(e.touches[0].clientX);
@@ -435,14 +500,21 @@ export default function Danji() {
             </p>
           )}
           {!loading && !loadError && previewRecords.length === 0 && <img className="danji-empty-lines" src={emptyLines} alt="" />}
-          {displayRecords.slice(page * 5, page * 5 + 5).map((record: DisplayRecord, index: number) => (
+          {jarRecords.map((record: DisplayRecord, index: number) => (
             <button
               key={record.id}
               className={`danji-polaroid position-${index}`}
               onClick={() => view === 'jar' && openDetail(record.id)}
               aria-label={`${record.date} 기록 상세보기`}
             >
-              <img src={record.image} alt="기록 사진 (조회 URL 미제공)" />
+              <img
+                src={record.image}
+                alt="기록 사진"
+                onError={(event) => {
+                  event.currentTarget.onerror = null;
+                  event.currentTarget.src = unavailablePhoto;
+                }}
+              />
               <time>{record.date}</time>
             </button>
           ))}
@@ -453,7 +525,13 @@ export default function Danji() {
                 <div
                   key={item.id}
                   className={`danji-placed-sticker ${view === 'decorate' ? 'editable' : ''} ${activeSticker === item.id ? 'selected' : ''}`}
-                  style={{ left: `${item.x}%`, top: `${item.y}%`, width: `${item.size}%` }}
+                  style={{
+                    left: `${item.x}%`,
+                    top: `${item.y}%`,
+                    width: `${item.size}%`,
+                    transform: `rotate(${item.rotation}deg)`,
+                    zIndex: item.zIndex,
+                  }}
                 >
                   <button
                     className="danji-sticker-drag"
@@ -555,7 +633,12 @@ export default function Danji() {
                 ))}
               </div>
               <div className="danji-actions">
-                <button className="danji-settings-button" aria-label="단지 꾸미기" onClick={beginDecoration}>
+                <button
+                  className="danji-settings-button"
+                  aria-label="단지 꾸미기"
+                  disabled={jarLoading || jarError || jarPageId === null}
+                  onClick={beginDecoration}
+                >
                   <img src={buttonSparkle} alt="" />
                 </button>
                 <FloatingRecordCTA
@@ -577,15 +660,28 @@ export default function Danji() {
                   onClick={() => setStickerPanelExpanded(!stickerPanelExpanded)}
                 />
                 <h2>나의 스티커</h2>
-                <p style={{ fontSize: 12, textAlign: 'center' }}>꾸민 내용은 현재 기기에만 저장돼요.</p>
+                <p style={{ fontSize: 12, textAlign: 'center' }}>스티커는 단지 하나에 최대 20개까지 붙일 수 있어요.</p>
                 <div className="danji-decoration-grid">
                   {stickerOptions.map((src, option) => (
                     <button
                       key={src}
                       aria-label={`${stickerNames[option]} 스티커 추가`}
+                      disabled={busy || draftStickers.length >= 20}
                       onClick={() => {
-                        const id = Date.now();
-                        setDraftStickers((items) => [...items, { id, option, x: 38, y: 33, size: 24.533, page }]);
+                        const id = Math.max(0, ...draftStickers.map((item) => item.id)) + 1;
+                        setDraftStickers((items) => [
+                          ...items,
+                          {
+                            id,
+                            option,
+                            x: 38,
+                            y: 33,
+                            size: baseStickerSize,
+                            page,
+                            rotation: 0,
+                            zIndex: Math.max(0, ...items.map((item) => item.zIndex)) + 1,
+                          },
+                        ]);
                         setActiveSticker(id);
                         setStickerPanelExpanded(false);
                       }}
@@ -595,8 +691,12 @@ export default function Danji() {
                   ))}
                 </div>
                 <div className="danji-decoration-actions">
-                  <button onClick={cancelDecoration}>취소</button>
-                  <button onClick={saveDecoration}>이 기기에 저장</button>
+                  <button disabled={busy} onClick={cancelDecoration}>
+                    취소
+                  </button>
+                  <button disabled={busy || jarLoading || jarError || jarPageId === null} onClick={saveDecoration}>
+                    저장하기
+                  </button>
                 </div>
               </section>
             </>
@@ -632,7 +732,14 @@ export default function Danji() {
                   : openDetail(record.id)
               }
             >
-              <img src={record.image} alt="기록 사진 (조회 URL 미제공)" />
+              <img
+                src={record.image}
+                alt="기록 사진"
+                onError={(event) => {
+                  event.currentTarget.onerror = null;
+                  event.currentTarget.src = unavailablePhoto;
+                }}
+              />
               <time>{record.date}</time>
               {deleting && (
                 <span className="danji-delete-check" aria-hidden="true">
@@ -664,8 +771,8 @@ export default function Danji() {
             onClick={(event) => event.stopPropagation()}
           >
             <span className="danji-saved-handle" />
-            <strong id="danji-saved-title">{stickerSaved ? '이 기기에 스티커를 저장했어요!' : '저장했어요!'}</strong>
-            <p>{stickerSaved ? '스티커는 현재 기기에만 저장돼요.' : '단지에서 수정된 나의 기록을 확인해보세요.'}</p>
+            <strong id="danji-saved-title">{stickerSaved ? '스티커를 저장했어요!' : '저장했어요!'}</strong>
+            <p>{stickerSaved ? '단지에서 꾸민 내용을 확인해보세요.' : '단지에서 수정된 나의 기록을 확인해보세요.'}</p>
             <img src={stickerSaved ? stickerSaveIllustration : saveIllustration} alt="" />
             <div>
               <button
@@ -708,7 +815,14 @@ export default function Danji() {
             ) : (
               <>
                 <button className="danji-detail-photo" onClick={() => setShowNote(true)} aria-label="기록 글 보기">
-                  <img src={selectedRecord.image} alt="기록 사진 (조회 URL 미제공)" />
+                  <img
+                    src={selectedRecord.image}
+                    alt="기록 사진"
+                    onError={(event) => {
+                      event.currentTarget.onerror = null;
+                      event.currentTarget.src = unavailablePhoto;
+                    }}
+                  />
                 </button>
                 <button className="danji-detail-date" onClick={openDateEditor} aria-label="기록 날짜 수정">
                   <span>{selectedRecord.date}</span>
@@ -972,13 +1086,13 @@ export default function Danji() {
           )}
         </div>
       )}
-      {loadError && !loading && (
+      {(loadError || jarError) && !loading && !jarLoading && (
         <div className="danji-error-snackbar" role="alert">
-          <span>기록을 불러오지 못했어요.</span>
+          <span>단지 정보를 불러오지 못했어요.</span>
           <button onClick={() => setReload((value) => value + 1)}>다시시도</button>
         </div>
       )}
-      {(loading || busy) && (
+      {(loading || busy || ((view === 'jar' || view === 'decorate') && jarLoading)) && (
         <div className="danji-loading" role="status">
           <img src={loadingRing} alt="" />
           <strong>잠시만 기다려주세요</strong>
