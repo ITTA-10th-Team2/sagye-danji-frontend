@@ -11,6 +11,8 @@ import Home from './pages/Home';
 import Danji from './pages/Danji';
 import Write from './pages/Write';
 import WriteComplete from './pages/WriteComplete';
+import { useEffect } from 'react';
+import { startAnalytics } from './lib/analytics';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -35,6 +37,7 @@ function AnimatedRoutes() {
 }
 
 export default function App() {
+  useEffect(startAnalytics, []);
   return (
     <TDSMobileAITProvider>
       <BrowserRouter>

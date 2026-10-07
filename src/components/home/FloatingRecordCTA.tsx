@@ -1,19 +1,38 @@
-import { useState, type ReactNode } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BottomSheet } from '@toss/tds-mobile';
 import { Device, getPermission, openPermissionDialog } from '@apps-in-toss/web-framework';
+import { sdkPhotoToDataUrl } from '../../lib/recordImage';
+import type { WritePhotoState } from '../../lib/recordImage';
+import type { RecordSummary } from '../../apis/records';
+import { trackEvent } from '../../lib/analytics';
 
-export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (open: () => void) => ReactNode }) {
+export type SummaryState = { status: 'loading' } | { status: 'error' } | { status: 'success'; summary: RecordSummary };
+
+export default function FloatingRecordCTA({
+  renderTrigger,
+  summaryState = { status: 'loading' },
+  onSummaryRetry,
+}: {
+  renderTrigger?: (open: () => void) => ReactNode;
+  summaryState?: SummaryState;
+  onSummaryRetry?: () => void;
+}) {
   const navigate = useNavigate();
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
   const [isPermissionSheetOpen, setIsPermissionSheetOpen] = useState<boolean>(false);
   const [permissionTarget, setPermissionTarget] = useState<'camera' | 'album'>('album');
+  const [photoError, setPhotoError] = useState<string | null>(null);
+  const selectingPhoto = useRef(false);
+  const [isSelectingPhoto, setIsSelectingPhoto] = useState(false);
 
   const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   // 앨범 선택 시
   const handleGalleryClick = () => {
+    trackEvent('RECORD_START', { source: 'GALLERY' });
+    setPhotoError(null);
     setPermissionTarget('album');
     setIsBottomSheetOpen(false);
     setTimeout(() => {
@@ -23,6 +42,8 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
 
   // 카메라 선택 시
   const handleCameraClick = () => {
+    trackEvent('RECORD_START', { source: 'CAMERA' });
+    setPhotoError(null);
     setPermissionTarget('camera');
     setIsBottomSheetOpen(false);
     setTimeout(() => setIsPermissionSheetOpen(true), 200);
@@ -47,11 +68,16 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
   const content = permissionContent[permissionTarget];
 
   // '계속하기' 버튼 클릭 시
+  /** 권한 확인 후 카메라 또는 앨범에서 사진 가져오기 */
   const handleContinueClick = async () => {
+    if (selectingPhoto.current) return;
+    selectingPhoto.current = true;
+    setIsSelectingPhoto(true);
     try {
       // 갤러리 권한일 시
       if (permissionTarget === 'album') {
         let status = await getPermission({ name: 'photos', access: 'read' });
+        console.info('[Photo] 권한 상태', { target: 'album', status });
 
         // 권한 팝업 열기
         if (status !== 'allowed') {
@@ -61,6 +87,7 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
         if (status === 'denied') {
           console.log('갤러리 접근 권한을 거부했어요.');
           setIsPermissionSheetOpen(false);
+          setPhotoError('사진 접근 권한이 꺼져 있어요. 토스의 미니앱 권한 설정을 확인해주세요.');
           return;
         }
 
@@ -68,11 +95,15 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
           setIsPermissionSheetOpen(false);
 
           // 사진 선택
+          await delay(300);
+          console.info('[Photo] 앨범 실행');
           const items = await Device.getAlbumItems({
             types: ['PHOTO'],
             maxCount: 5,
+            maxWidth: 1024,
             base64: true,
           });
+          console.info('[Photo] 앨범 반환', { count: items.length });
 
           if (items.length === 0) {
             console.log('사진 선택이 취소되었어요.');
@@ -80,12 +111,13 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
           }
 
           // 기록 페이지로 이동하면서 사진 데이터 같이 보내기
-          const photoArray = items.map((item) => `data:image/jpeg;base64,${item.dataUri}`);
-          navigate('/write', { state: { photos: photoArray } });
+          const photoArray = items.map((item) => sdkPhotoToDataUrl(item.dataUri));
+          navigate('/write', { state: { photos: photoArray, source: 'GALLERY' } satisfies WritePhotoState });
         }
       } else if (permissionTarget === 'camera') {
         // 카메라 권한일 시
         let status = await getPermission({ name: 'camera', access: 'access' });
+        console.info('[Photo] 권한 상태', { target: 'camera', status });
 
         // 권한 팝업 열기
         if (status !== 'allowed') {
@@ -95,6 +127,7 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
         if (status === 'denied') {
           console.log('카메라 접근 권한을 거부했어요.');
           setIsPermissionSheetOpen(false);
+          setPhotoError('카메라 접근 권한이 꺼져 있어요. 토스의 미니앱 권한 설정을 확인해주세요.');
           return;
         }
 
@@ -105,7 +138,9 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
 
           // 촬영하기
           try {
+            console.info('[Photo] 카메라 실행');
             const response = await Device.openCamera({ base64: true, maxWidth: 500 });
+            console.info('[Photo] 카메라 반환', { hasPhoto: Boolean(response?.dataUri) });
 
             if (!response || !response.dataUri) {
               console.log('사진 촬영이 취소되었어요.');
@@ -113,20 +148,30 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
             }
 
             // 기록 페이지로 이동하면서 사진 데이터 같이 보내기
-            const imageUri = `data:image/jpeg;base64,${response.dataUri}`;
-            navigate('/write', { state: { photos: [imageUri] }, replace: true });
+            const imageUri = sdkPhotoToDataUrl(response.dataUri);
+            navigate('/write', { state: { photos: [imageUri], source: 'CAMERA' } satisfies WritePhotoState, replace: true });
           } catch (error) {
-            console.error('카메라 실행 및 촬영 오류:', error);
+            setPhotoError(error instanceof Error ? error.message : '사진을 준비하지 못했어요. 다시 시도해주세요.');
+            console.error('[Photo] 카메라 오류', { errorName: error instanceof Error ? error.name : 'UnknownError' });
           }
         }
       }
     } catch (error: unknown) {
+      setPhotoError(error instanceof Error ? error.message : '사진을 준비하지 못했어요. 다시 시도해주세요.');
       console.error('권한 요청 또는 실행 중 오류:', error instanceof Error ? error.message : error);
+    } finally {
+      selectingPhoto.current = false;
+      setIsSelectingPhoto(false);
     }
   };
 
   return (
     <>
+      {photoError && (
+        <p role="alert" className="mb-2 text-center text-[13px] text-[#E42939]">
+          {photoError}
+        </p>
+      )}
       {renderTrigger ? (
         renderTrigger(() => setIsBottomSheetOpen(true))
       ) : (
@@ -134,7 +179,20 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
           {/* 텍스트 영역 */}
           <div className="flex flex-col">
             <p className="text-[15px] font-medium text-[#000C1E]/80">가을의 순간을 더 담아보세요</p>
-            <p className="text-[11px] font-medium text-[#00132B]/58">기록 3개 · 12일째</p>
+            <p className="text-[11px] font-medium text-[#00132B]/58" aria-live="polite" aria-busy={summaryState.status === 'loading'}>
+              {summaryState.status === 'loading'
+                ? '기록을 불러오는 중이에요'
+                : summaryState.status === 'error'
+                  ? '기록 정보를 불러오지 못했어요'
+                  : summaryState.summary.recordCount === 0
+                    ? '첫 계절의 순간을 담아보세요'
+                    : `기록 ${summaryState.summary.recordCount}개 · ${summaryState.summary.recordingDayCount}일째`}
+            </p>
+            {summaryState.status === 'error' && (
+              <button className="self-start text-[11px] text-[#00132B]/58 underline" onClick={onSummaryRetry}>
+                다시 시도
+              </button>
+            )}
           </div>
 
           {/* 기록하기 버튼 */}
@@ -190,6 +248,7 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
             <button
               className="flex-1 py-4 text-[17px] font-semibold text-white bg-[#ffb331] rounded-2xl! active:scale-95 transition-transform"
               onClick={handleContinueClick}
+              disabled={isSelectingPhoto}
             >
               계속하기
             </button>

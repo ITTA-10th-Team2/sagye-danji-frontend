@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { completeOnboarding } from '../apis/member';
+import { useAnalyticsScreen } from '../lib/useAnalyticsScreen';
 
 const ONBOARDING_DATA = [
   {
@@ -23,8 +25,12 @@ const ONBOARDING_DATA = [
 ];
 
 export default function Onboarding() {
+  useAnalyticsScreen('ONBOARDING');
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
+  const submitting = useRef(false);
 
   // 스와이프 감지 관련 상태
   const [touchStartX, setTouchStartX] = useState(0);
@@ -32,9 +38,24 @@ export default function Onboarding() {
 
   const isLastStep = step === ONBOARDING_DATA.length - 1;
 
-  const handleNextClick = () => {
+  const handleNextClick = async () => {
+    if (submitting.current) return;
     if (isLastStep) {
-      navigate('/home', { replace: true });
+      submitting.current = true;
+      setIsSubmitting(true);
+      setSubmitError(false);
+
+      // 로그인 상태에 따른 분기 처리
+      try {
+        const member = await completeOnboarding();
+        if (member.onboardingStatus !== 'COMPLETED') throw new Error('온보딩 완료 상태가 반영되지 않았습니다.');
+        navigate('/home', { replace: true });
+      } catch {
+        setSubmitError(true);
+      } finally {
+        submitting.current = false;
+        setIsSubmitting(false);
+      }
     } else {
       setStep((prev) => prev + 1);
     }
@@ -50,6 +71,11 @@ export default function Onboarding() {
   };
 
   const handleTouchEnd = () => {
+    if (submitting.current) {
+      setTouchStartX(0);
+      setTouchEndX(0);
+      return;
+    }
     if (!touchStartX || !touchEndX) return;
     const distance = touchStartX - touchEndX;
     const minSwipeDistance = 50;
@@ -104,11 +130,18 @@ export default function Onboarding() {
         </div>
 
         {/* 버튼 영역 */}
+        {submitError && (
+          <p className="mb-3 text-center text-[13px] text-[#E42939]" role="alert">
+            완료 상태를 저장하지 못했어요. 다시 시도해주세요.
+          </p>
+        )}
         <button
-          className="w-full py-4 text-[17px] border-none font-semibold rounded-2xl! transition-all duration-200 bg-[#ffb331] text-white active:scale-95"
+          className="w-full py-4 text-[17px] border-none font-semibold rounded-2xl! transition-all duration-200 bg-[#ffb331] text-white active:scale-95 disabled:opacity-60"
           onClick={handleNextClick}
+          disabled={isSubmitting}
+          aria-busy={isSubmitting}
         >
-          {isLastStep ? '시작하기' : '다음'}
+          {isSubmitting ? '저장 중…' : isLastStep ? '시작하기' : '다음'}
         </button>
       </div>
     </main>

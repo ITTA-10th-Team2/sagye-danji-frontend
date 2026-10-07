@@ -6,17 +6,20 @@ interface WriteInputProps {
 }
 
 export default function WriteInput({ onTextChange, initialValue = '' }: WriteInputProps) {
-  const [text, setText] = useState<string>(initialValue);
+  const [text, setText] = useState<string>(() => Array.from(initialValue).slice(0, 100).join(''));
   const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [isOverLimit, setIsOverLimit] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const MAX_LENGTH = 100;
-  const isOverLimit = text.length >= MAX_LENGTH;
+  const textLength = Array.from(text).length;
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const inputText = e.target.value;
-    const clippedText = inputText.slice(0, MAX_LENGTH);
+    const characters = Array.from(inputText);
+    const clippedText = characters.slice(0, MAX_LENGTH).join('');
+    setIsOverLimit(characters.length > MAX_LENGTH);
     setText(clippedText);
 
     if (onTextChange) onTextChange(clippedText);
@@ -37,19 +40,18 @@ export default function WriteInput({ onTextChange, initialValue = '' }: WriteInp
         <textarea
           ref={textareaRef}
           value={text}
-          className="w-full h-full bg-transparent resize-none appearance-none [&::-webkit-resizer]:hidden [&::-webkit-scrollbar]:hidden outline-none text-[15px] text-[#191F28] placeholder:text-[#B0B8C1] leading-relaxed"
+          className="w-full h-full pb-6 bg-transparent resize-none appearance-none [&::-webkit-resizer]:hidden [&::-webkit-scrollbar]:hidden outline-none text-[15px] text-[#191F28] placeholder:text-[#B0B8C1] leading-relaxed"
           placeholder={'계절의 순간을 기록해보세요!\n(글은 남기지 않아도 괜찮아요.)'}
           onChange={handleChange}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          maxLength={MAX_LENGTH + 1}
         />
 
         <span
           className={`absolute bottom-4 right-4 text-[13px] font-medium transition-colors duration-200
             ${isOverLimit ? 'text-[#E42939]' : 'text-[#B0B8C1]'}`}
         >
-          {text.length}/{MAX_LENGTH}
+          {textLength}/{MAX_LENGTH}
         </span>
       </div>
 
