@@ -40,7 +40,19 @@ export function prepareRecordImage(data: string): { blob: Blob; contentType: Rec
 
 // 사진 미리보기에 MIME 타입 붙이기
 export function sdkPhotoToDataUrl(data: string): string {
-  const { contentType } = prepareRecordImage(data);
   const payload = data.startsWith('data:') ? data.slice(data.indexOf(',') + 1) : data;
-  return `data:${contentType};base64,${payload.replace(/\s/g, '')}`;
+  const base64 = payload.replace(/\s/g, '');
+  if (!base64 || base64.length % 4 !== 0 || !/^[A-Za-z0-9+/]*={0,2}$/.test(base64)) {
+    throw new Error('사진 데이터를 읽을 수 없어요.');
+  }
+  const fileSize = (base64.length / 4) * 3 - (base64.endsWith('==') ? 2 : base64.endsWith('=') ? 1 : 0);
+  const header = atob(base64.slice(0, 12));
+  const pngHeader = [137, 80, 78, 71, 13, 10, 26, 10];
+  const contentType = pngHeader.every((value, index) => header.charCodeAt(index) === value)
+    ? 'image/png'
+    : header.charCodeAt(0) === 255 && header.charCodeAt(1) === 216 && header.charCodeAt(2) === 255
+      ? 'image/jpeg'
+      : '';
+  validateRecordImage(contentType, fileSize);
+  return `data:${contentType};base64,${base64}`;
 }

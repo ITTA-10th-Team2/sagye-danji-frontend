@@ -1,6 +1,20 @@
 import api from '../lib/axios';
 import type { ApiResponse } from '../lib/axios';
 
+export interface RecordCreateRequest {
+  recordDate: string;
+  memo: string | null;
+  objectKey: string;
+}
+
+/** 업로드된 사진의 객체 키로 기록 생성 */
+export async function createRecord(request: RecordCreateRequest): Promise<RecordDetail> {
+  const result = await api.post<RecordDetail | ApiResponse<RecordDetail>, RecordDetail | ApiResponse<RecordDetail>>('/records', request);
+  const record = 'data' in result ? result.data : result;
+  if (!record || !Number.isInteger(record.id) || record.id <= 0) throw new Error('기록 생성 응답을 확인하지 못했습니다.');
+  return record;
+}
+
 export type RecordSeason = 'SPRING' | 'SUMMER' | 'AUTUMN' | 'WINTER';
 export interface RecordImage {
   id: number;
