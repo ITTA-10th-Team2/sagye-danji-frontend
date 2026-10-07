@@ -4,8 +4,7 @@ import { createPortal } from 'react-dom';
 import SeasonJar from './SeasonJar';
 import { Modal } from '@toss/tds-mobile';
 import { Lottie } from 'lottie-react';
-import jarOpenAnimation from '../../../public/assets/lottie/jar-open.json';
-
+import jarOpenAnimation from '../../assets/lottie/jar-open.json';
 type SeasonType = '봄' | '여름' | '가을' | '겨울';
 
 interface JarData {
