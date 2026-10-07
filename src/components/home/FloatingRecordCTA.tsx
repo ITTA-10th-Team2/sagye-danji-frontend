@@ -5,6 +5,7 @@ import { Device, getPermission, openPermissionDialog } from '@apps-in-toss/web-f
 import { sdkPhotoToDataUrl } from '../../lib/recordImage';
 import type { WritePhotoState } from '../../lib/recordImage';
 import type { RecordSummary } from '../../apis/records';
+import { trackEvent } from '../../lib/analytics';
 
 export type SummaryState = { status: 'loading' } | { status: 'error' } | { status: 'success'; summary: RecordSummary };
 
@@ -30,6 +31,7 @@ export default function FloatingRecordCTA({
 
   // 앨범 선택 시
   const handleGalleryClick = () => {
+    trackEvent('RECORD_START', { source: 'GALLERY' });
     setPhotoError(null);
     setPermissionTarget('album');
     setIsBottomSheetOpen(false);
@@ -40,6 +42,7 @@ export default function FloatingRecordCTA({
 
   // 카메라 선택 시
   const handleCameraClick = () => {
+    trackEvent('RECORD_START', { source: 'CAMERA' });
     setPhotoError(null);
     setPermissionTarget('camera');
     setIsBottomSheetOpen(false);

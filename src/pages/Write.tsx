@@ -10,21 +10,21 @@ import type { ImageUploadStage } from '../apis/images';
 import { createRecord } from '../apis/records';
 import { ApiError } from '../lib/axios';
 import { isAxiosError } from 'axios';
+import { useAnalyticsScreen } from '../lib/useAnalyticsScreen';
 
 export default function Write() {
+  useAnalyticsScreen('RECORD_CREATE');
   const navigate = useNavigate();
   const location = useLocation();
   const photoState = location.state as WritePhotoState | null;
 
-  // 더미 사진 데이터
-  const DUMMY_PHOTOS = photoState?.photos || [
-    'https://images.unsplash.com/photo-1507371341162-763b5e419408?q=80&w=400&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1476820865390-c52aeebb9891?q=80&w=400&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1507371341162-763b5e419408?q=80&w=400&auto=format&fit=crop',
-  ];
+  // 샘플 사진 대신 실제 선택된 사진만 사용
+  const photos = Array.isArray(photoState?.photos) ? photoState.photos : [];
+  const hasSelectedPhotos = photos.length > 0 && photos.every((photo) => typeof photo === 'string' && photo.length > 0)
+    && (photoState?.source === 'CAMERA' || photoState?.source === 'GALLERY');
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [texts, setTexts] = useState<string[]>(Array(DUMMY_PHOTOS.length).fill(''));
+  const [texts, setTexts] = useState<string[]>(Array(photos.length).fill(''));
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [progress, setProgress] = useState('');
@@ -38,7 +38,7 @@ export default function Write() {
   /** 사진 업로드 후 사진별 기록 저장 */
   async function handleSave() {
     if (saving.current || uncertainSave) return;
-    if (!photoState?.photos.length || !['CAMERA', 'GALLERY'].includes(photoState.source)) {
+    if (!hasSelectedPhotos || !photoState) {
       setSaveError('홈에서 사진을 다시 선택해주세요.');
       return;
     }
@@ -46,6 +46,7 @@ export default function Write() {
     setIsSaving(true);
     setSaveError(null);
     let stage: ImageUploadStage | 'create' = 'image-prepare';
+    
     try {
       for (let index = 0; index < photoState.photos.length; index++) {
         if (savedIndexes.current.has(index)) continue;
@@ -112,7 +113,7 @@ export default function Write() {
 
   const handleNext = async () => {
     if (saving.current) return;
-    if (currentIndex < DUMMY_PHOTOS.length - 1) {
+    if (currentIndex < photos.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
       await handleSave();
@@ -122,7 +123,21 @@ export default function Write() {
   const numberWords = ['첫', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열'];
   const currentWord = numberWords[currentIndex] || `${currentIndex + 1}번째`;
   const currentText = texts[currentIndex]; // 현재 사진에 작성된 글자 수 확인
-  const isLastStep = currentIndex === DUMMY_PHOTOS.length - 1;
+  const isLastStep = currentIndex === photos.length - 1;
+
+  if (!hasSelectedPhotos) {
+    return (
+      <main className="flex flex-col items-center justify-center gap-4 h-dvh px-5 bg-white">
+        <p role="alert" className="text-center text-[17px] text-[#191F28]">홈에서 사진을 다시 선택해주세요.</p>
+        <button
+          className="w-full py-4 text-[17px] font-semibold rounded-2xl! bg-[#ffb331] text-white"
+          onClick={() => navigate('/home', { replace: true })}
+        >
+          홈으로 이동
+        </button>
+      </main>
+    );
+  }
 
   return (
     <div className="flex flex-col h-dvh bg-white overflow-hidden">
@@ -141,7 +156,7 @@ export default function Write() {
         }
         description={
           <ListHeader.DescriptionParagraph fontWeight="regular">
-            {currentIndex + 1}/{DUMMY_PHOTOS.length}
+            {currentIndex + 1}/{photos.length}
           </ListHeader.DescriptionParagraph>
         }
         titleWidthRatio={0.68}
@@ -151,7 +166,7 @@ export default function Write() {
         {/* 사진 & 글쓰기 영역 */}
         <fieldset disabled={isSaving || savedPhotos.includes(currentIndex)} className="flex flex-col gap-y-4 border-0 p-0 m-0 min-w-0">
           <section>
-            <UploadedPhoto imageUrl={DUMMY_PHOTOS[currentIndex]} />
+            <UploadedPhoto imageUrl={photos[currentIndex]} />
           </section>
 
           <section>

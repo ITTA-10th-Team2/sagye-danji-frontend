@@ -4,8 +4,10 @@ import SeasonJarList from '../components/home/SeasonJarList';
 import FloatingRecordCTA from '../components/home/FloatingRecordCTA';
 import type { SummaryState } from '../components/home/FloatingRecordCTA';
 import { getRecordSummary } from '../apis/records';
+import { useAnalyticsScreen } from '../lib/useAnalyticsScreen';
 
 export default function Home() {
+  useAnalyticsScreen('HOME');
   const [summaryState, setSummaryState] = useState<SummaryState>({ status: 'loading' });
   const [summaryAttempt, setSummaryAttempt] = useState(0);
 

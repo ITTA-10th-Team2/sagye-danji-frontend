@@ -21,6 +21,7 @@ export interface RecordImage {
   originalUrl: string;
   thumbnailUrl: string;
 }
+
 export interface RecordListItem {
   id: number;
   recordDate: string;
@@ -28,6 +29,7 @@ export interface RecordListItem {
   memo: string | null;
   image: RecordImage | null;
 }
+
 export interface RecordDetail {
   id: number;
   recordDate: string;
@@ -37,6 +39,7 @@ export interface RecordDetail {
   createdAt: string;
   updatedAt: string;
 }
+
 export interface RecordPage {
   items: RecordListItem[];
   nextCursor: string | null;

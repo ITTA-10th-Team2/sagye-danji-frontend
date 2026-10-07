@@ -7,6 +7,7 @@ import { Lottie } from 'lottie-react';
 
 import jarOpenAnimation from '../../assets/lottie/jar-open.json';
 import type { RecordSeason } from '../../apis/records';
+import { trackEvent } from '../../lib/analytics';
 type SeasonType = '봄' | '여름' | '가을' | '겨울';
 
 interface JarData {
@@ -30,6 +31,9 @@ export default function SeasonJarList({ counts }: { counts?: Record<RecordSeason
   const [isAnimationPlaying, setIsAnimationPlaying] = useState<boolean>(false);
 
   const handleJarClick = (season: SeasonType) => {
+    trackEvent('HOME_ELEMENT_TAP', { target: 'SEASON_OBJECT' });
+    const selectedSeason = JAR_DATA.find((jar) => jar.season === season);
+    if (season !== '가을' && selectedSeason) trackEvent('LOCKED_SEASON_CLICK', { season: selectedSeason.key });
     if (season !== '가을') setIsSeasonModalOpen(true);
     else setIsAnimationPlaying(true);
   };

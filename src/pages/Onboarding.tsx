@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { completeOnboarding } from '../apis/member';
+import { useAnalyticsScreen } from '../lib/useAnalyticsScreen';
 
 const ONBOARDING_DATA = [
   {
@@ -24,6 +25,7 @@ const ONBOARDING_DATA = [
 ];
 
 export default function Onboarding() {
+  useAnalyticsScreen('ONBOARDING');
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import type { InternalAxiosRequestConfig } from 'axios';
 import { getAccessToken } from './authStorage';
+import { getAnalyticsHeaders } from './analytics';
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -43,6 +44,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
+    for (const [name, value] of Object.entries(getAnalyticsHeaders())) config.headers.set(name, value);
     // 저장된 토큰 조회
     const accessToken = getAccessToken();
 
