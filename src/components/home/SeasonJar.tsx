@@ -1,6 +1,6 @@
 interface SeasonJarProps {
   season: '봄' | '여름' | '가을' | '겨울';
-  count: number;
+  count?: number;
   onClick?: () => void;
 }
 
@@ -20,7 +20,7 @@ const getJarImage = (season: string, count: number) => {
 };
 
 export default function SeasonJar({ season, count, onClick }: SeasonJarProps) {
-  const currentImgSrc = getJarImage(season, count);
+  const currentImgSrc = getJarImage(season, count ?? 0);
 
   return (
     <div
@@ -33,7 +33,7 @@ export default function SeasonJar({ season, count, onClick }: SeasonJarProps) {
       {/* 텍스트 영역 */}
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-3">
         <span className="text-[15px] font-semibold text-[#000C1E]/80 leading-tight">{season}</span>
-        <span className="text-[11px] font-medium text-[#00132B]/58 mt-0.5">{count}개</span>
+        <span className="text-[11px] font-medium text-[#00132B]/58 mt-0.5">{count === undefined ? '—' : `${count}개`}</span>
       </div>
     </div>
   );

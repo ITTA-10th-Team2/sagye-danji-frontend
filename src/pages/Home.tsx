@@ -1,9 +1,29 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RecommendationCard from '../components/home/RecommendationCard';
 import SeasonJarList from '../components/home/SeasonJarList';
 import FloatingRecordCTA from '../components/home/FloatingRecordCTA';
+import type { SummaryState } from '../components/home/FloatingRecordCTA';
+import { getRecordSummary } from '../apis/records';
 
 export default function Home() {
+  const [summaryState, setSummaryState] = useState<SummaryState>({ status: 'loading' });
+  const [summaryAttempt, setSummaryAttempt] = useState(0);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    /** 홈 카드의 기록 요약 조회 */
+    async function loadSummary() {
+      try {
+        const summary = await getRecordSummary(controller.signal);
+        if (!controller.signal.aborted) setSummaryState({ status: 'success', summary });
+      } catch {
+        if (!controller.signal.aborted) setSummaryState({ status: 'error' });
+      }
+    }
+    void loadSummary();
+    return () => controller.abort();
+  }, [summaryAttempt]);
+
   // 배경 이미지 상태
   const [bgImage] = useState(() => {
     // 현재 시간에 따라 배경 이미지 변경
@@ -40,7 +60,7 @@ export default function Home() {
           {/* 단지 & 테이블 */}
           <section className="absolute top-[77.24%] w-full flex flex-col items-center">
             <div className="w-[86%] relative z-20">
-              <SeasonJarList />
+              <SeasonJarList counts={summaryState.status === 'success' ? summaryState.summary.seasonRecordCounts : undefined} />
             </div>
 
             <div className="relative w-full flex justify-center -mt-[7%]">
@@ -52,7 +72,13 @@ export default function Home() {
 
         {/* 하단 CTA 카드 */}
         <div className="relative z-30 w-full shrink-0 mt-auto bg-transparent px-5 pt-4 pb-[max(16px,env(safe-area-inset-bottom))]">
-          <FloatingRecordCTA />
+          <FloatingRecordCTA
+            summaryState={summaryState}
+            onSummaryRetry={() => {
+              setSummaryState({ status: 'loading' });
+              setSummaryAttempt((value) => value + 1);
+            }}
+          />
         </div>
       </div>
     </main>

@@ -67,6 +67,7 @@ export async function deleteRecord(id: number): Promise<void> {
 export interface RecordSummary {
   recordCount: number;
   recordingDayCount: number;
+  seasonRecordCounts: Record<RecordSeason, number>;
 }
 
 /** 홈 - 전체 기록 수 / 기록 기간 조회 */

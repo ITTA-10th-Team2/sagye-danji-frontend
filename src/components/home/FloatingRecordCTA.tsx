@@ -1,40 +1,28 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BottomSheet } from '@toss/tds-mobile';
 import { Device, getPermission, openPermissionDialog } from '@apps-in-toss/web-framework';
 import { sdkPhotoToDataUrl } from '../../lib/recordImage';
 import type { WritePhotoState } from '../../lib/recordImage';
-import { getRecordSummary } from '../../apis/records';
 import type { RecordSummary } from '../../apis/records';
 
-type SummaryState = { status: 'loading' } | { status: 'error' } | { status: 'success'; summary: RecordSummary };
+export type SummaryState = { status: 'loading' } | { status: 'error' } | { status: 'success'; summary: RecordSummary };
 
-export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (open: () => void) => ReactNode }) {
+export default function FloatingRecordCTA({
+  renderTrigger,
+  summaryState = { status: 'loading' },
+  onSummaryRetry,
+}: {
+  renderTrigger?: (open: () => void) => ReactNode;
+  summaryState?: SummaryState;
+  onSummaryRetry?: () => void;
+}) {
   const navigate = useNavigate();
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
   const [isPermissionSheetOpen, setIsPermissionSheetOpen] = useState<boolean>(false);
   const [permissionTarget, setPermissionTarget] = useState<'camera' | 'album'>('album');
   const [photoError, setPhotoError] = useState<string | null>(null);
-  const [summaryState, setSummaryState] = useState<SummaryState>({ status: 'loading' });
-  const [summaryAttempt, setSummaryAttempt] = useState(0);
-  const showSummary = !renderTrigger;
-
-  useEffect(() => {
-    if (!showSummary) return;
-    const controller = new AbortController();
-    /** 홈 카드의 기록 요약 조회 */
-    async function loadSummary() {
-      try {
-        const summary = await getRecordSummary(controller.signal);
-        if (!controller.signal.aborted) setSummaryState({ status: 'success', summary });
-      } catch {
-        if (!controller.signal.aborted) setSummaryState({ status: 'error' });
-      }
-    }
-    void loadSummary();
-    return () => controller.abort();
-  }, [showSummary, summaryAttempt]);
 
   const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -179,13 +167,7 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
                     : `기록 ${summaryState.summary.recordCount}개 · ${summaryState.summary.recordingDayCount}일째`}
             </p>
             {summaryState.status === 'error' && (
-              <button
-                className="self-start text-[11px] text-[#00132B]/58 underline"
-                onClick={() => {
-                  setSummaryState({ status: 'loading' });
-                  setSummaryAttempt((value) => value + 1);
-                }}
-              >
+              <button className="self-start text-[11px] text-[#00132B]/58 underline" onClick={onSummaryRetry}>
                 다시 시도
               </button>
             )}
