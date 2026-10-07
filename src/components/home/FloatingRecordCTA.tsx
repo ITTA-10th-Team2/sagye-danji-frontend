@@ -2,18 +2,33 @@ import { useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BottomSheet } from '@toss/tds-mobile';
 import { Device, getPermission, openPermissionDialog } from '@apps-in-toss/web-framework';
+import { sdkPhotoToDataUrl } from '../../lib/recordImage';
+import type { WritePhotoState } from '../../lib/recordImage';
+import type { RecordSummary } from '../../apis/records';
 
-export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (open: () => void) => ReactNode }) {
+export type SummaryState = { status: 'loading' } | { status: 'error' } | { status: 'success'; summary: RecordSummary };
+
+export default function FloatingRecordCTA({
+  renderTrigger,
+  summaryState = { status: 'loading' },
+  onSummaryRetry,
+}: {
+  renderTrigger?: (open: () => void) => ReactNode;
+  summaryState?: SummaryState;
+  onSummaryRetry?: () => void;
+}) {
   const navigate = useNavigate();
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
   const [isPermissionSheetOpen, setIsPermissionSheetOpen] = useState<boolean>(false);
   const [permissionTarget, setPermissionTarget] = useState<'camera' | 'album'>('album');
+  const [photoError, setPhotoError] = useState<string | null>(null);
 
   const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   // 앨범 선택 시
   const handleGalleryClick = () => {
+    setPhotoError(null);
     setPermissionTarget('album');
     setIsBottomSheetOpen(false);
     setTimeout(() => {
@@ -23,6 +38,7 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
 
   // 카메라 선택 시
   const handleCameraClick = () => {
+    setPhotoError(null);
     setPermissionTarget('camera');
     setIsBottomSheetOpen(false);
     setTimeout(() => setIsPermissionSheetOpen(true), 200);
@@ -80,8 +96,8 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
           }
 
           // 기록 페이지로 이동하면서 사진 데이터 같이 보내기
-          const photoArray = items.map((item) => `data:image/jpeg;base64,${item.dataUri}`);
-          navigate('/write', { state: { photos: photoArray } });
+          const photoArray = items.map((item) => sdkPhotoToDataUrl(item.dataUri));
+          navigate('/write', { state: { photos: photoArray, source: 'GALLERY' } satisfies WritePhotoState });
         }
       } else if (permissionTarget === 'camera') {
         // 카메라 권한일 시
@@ -113,20 +129,27 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
             }
 
             // 기록 페이지로 이동하면서 사진 데이터 같이 보내기
-            const imageUri = `data:image/jpeg;base64,${response.dataUri}`;
-            navigate('/write', { state: { photos: [imageUri] }, replace: true });
+            const imageUri = sdkPhotoToDataUrl(response.dataUri);
+            navigate('/write', { state: { photos: [imageUri], source: 'CAMERA' } satisfies WritePhotoState, replace: true });
           } catch (error) {
+            setPhotoError(error instanceof Error ? error.message : '사진을 준비하지 못했어요. 다시 시도해주세요.');
             console.error('카메라 실행 및 촬영 오류:', error);
           }
         }
       }
     } catch (error: unknown) {
+      setPhotoError(error instanceof Error ? error.message : '사진을 준비하지 못했어요. 다시 시도해주세요.');
       console.error('권한 요청 또는 실행 중 오류:', error instanceof Error ? error.message : error);
     }
   };
 
   return (
     <>
+      {photoError && (
+        <p role="alert" className="mb-2 text-center text-[13px] text-[#E42939]">
+          {photoError}
+        </p>
+      )}
       {renderTrigger ? (
         renderTrigger(() => setIsBottomSheetOpen(true))
       ) : (
@@ -134,7 +157,20 @@ export default function FloatingRecordCTA({ renderTrigger }: { renderTrigger?: (
           {/* 텍스트 영역 */}
           <div className="flex flex-col">
             <p className="text-[15px] font-medium text-[#000C1E]/80">가을의 순간을 더 담아보세요</p>
-            <p className="text-[11px] font-medium text-[#00132B]/58">기록 3개 · 12일째</p>
+            <p className="text-[11px] font-medium text-[#00132B]/58" aria-live="polite" aria-busy={summaryState.status === 'loading'}>
+              {summaryState.status === 'loading'
+                ? '기록을 불러오는 중이에요'
+                : summaryState.status === 'error'
+                  ? '기록 정보를 불러오지 못했어요'
+                  : summaryState.summary.recordCount === 0
+                    ? '첫 계절의 순간을 담아보세요'
+                    : `기록 ${summaryState.summary.recordCount}개 · ${summaryState.summary.recordingDayCount}일째`}
+            </p>
+            {summaryState.status === 'error' && (
+              <button className="self-start text-[11px] text-[#00132B]/58 underline" onClick={onSummaryRetry}>
+                다시 시도
+              </button>
+            )}
           </div>
 
           {/* 기록하기 버튼 */}
