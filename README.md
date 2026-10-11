@@ -1,28 +1,53 @@
-## 프로젝트 실행 방법
+# 사계단지 🍂
 
-1. `npm install`
-2. `npm run dev`
+계절에 맞는 활동을 추천받고, 사진과 짧은 글로 일상을 기록하는 토스인앱 서비스입니다.
+기록은 계절별 단지에 모아볼 수 있습니다.
 
-## 개발 안내
+## 기술 스택
 
-- 전체 레이아웃을 모바일 기준(390px~430px)으로 맞춰두었습니다.
-- 토스 SDK 호출 시 PC 에러 방지를 위해 `src/lib/tossBridge.ts`를 사용합니다. (`tossBridge.ts` 주석 참고)
+- React · TypeScript · Vite
+- Tailwind CSS · Toss Design System
+- React Router · Axios
+- Apps in Toss SDK
+
+## 실행 방법
+
+```bash
+npm install
+npm run dev
+```
+
+## 환경변수
+
+프로젝트 루트에 `.env` 파일을 생성합니다.
+
+```dotenv
+VITE_API_BASE_URL=https://api.sagye-danji.site/api
+VITE_ANALYTICS_ENABLED=false # 기본값
+VITE_SERVICE_VERSION=1.0.0
+```
+
+분석 기능은 서버 API와 CORS 설정 확인 후 활성화합니다.
+
+## 빌드
+
+```bash
+npm run build
+```
+
+타입 검사와 웹 빌드 후 토스 인앱 테스트용 `.ait` 파일을 생성합니다.
 
 ## 폴더 구조
 
-```text
-src/
-├── components/
-│   └── common/
-│       └── Layout.tsx    # 공통 레이아웃
-├── lib/
-│   └── tossBridge.ts     # 웹에서 개발 시 오류 방어
-├── pages/                # 각자 맡은 페이지들
-│   └── ...
-├── App.tsx
-├── main.tsx
-└── index.css             # 공통 레이아웃
-```
+- `src/apis` — API 요청 함수와 타입
+- `src/pages` — 화면
+- `src/components` — UI 컴포넌트
+- `src/lib` — 인증·이미지 처리·분석 등 공통 기능
+- `src/assets`, `public/assets` — 이미지와 정적 리소스
+
+## 참고
+
+- [사용자 행동 분석 안내](docs/analytics.md)
 
 ## 커밋 메시지 규칙
 

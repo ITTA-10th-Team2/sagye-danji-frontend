@@ -4,31 +4,36 @@ import { createPortal } from 'react-dom';
 import SeasonJar from './SeasonJar';
 import { Modal } from '@toss/tds-mobile';
 import { Lottie } from 'lottie-react';
-import jarOpenAnimation from '../../../public/assets/lottie/jar-open.json';
 
+import jarOpenAnimation from '../../assets/lottie/jar-open.json';
+import type { RecordSeason } from '../../apis/records';
+import { trackEvent } from '../../lib/analytics';
 type SeasonType = '봄' | '여름' | '가을' | '겨울';
 
 interface JarData {
   id: string;
   season: SeasonType;
-  count: number;
+  key: RecordSeason;
 }
 
 // 더미데이터
 const JAR_DATA: JarData[] = [
-  { id: 'spring', season: '봄', count: 0 },
-  { id: 'summer', season: '여름', count: 0 },
-  { id: 'autumn', season: '가을', count: 3 },
-  { id: 'winter', season: '겨울', count: 0 },
+  { id: 'spring', season: '봄', key: 'SPRING' },
+  { id: 'summer', season: '여름', key: 'SUMMER' },
+  { id: 'autumn', season: '가을', key: 'AUTUMN' },
+  { id: 'winter', season: '겨울', key: 'WINTER' },
 ];
 
-export default function SeasonJarList() {
+export default function SeasonJarList({ counts }: { counts?: Record<RecordSeason, number> }) {
   const navigate = useNavigate();
 
   const [isSeasonModalOpen, setIsSeasonModalOpen] = useState<boolean>(false);
   const [isAnimationPlaying, setIsAnimationPlaying] = useState<boolean>(false);
 
   const handleJarClick = (season: SeasonType) => {
+    trackEvent('HOME_ELEMENT_TAP', { target: 'SEASON_OBJECT' });
+    const selectedSeason = JAR_DATA.find((jar) => jar.season === season);
+    if (season !== '가을' && selectedSeason) trackEvent('LOCKED_SEASON_CLICK', { season: selectedSeason.key });
     if (season !== '가을') setIsSeasonModalOpen(true);
     else setIsAnimationPlaying(true);
   };
@@ -37,7 +42,7 @@ export default function SeasonJarList() {
     <>
       <div className="grid grid-cols-4 items-end gap-[clamp(6px,2%,8px)] w-full max-w-[324px] mx-auto">
         {JAR_DATA.map((jar) => (
-          <SeasonJar key={jar.id} season={jar.season} count={jar.count} onClick={() => handleJarClick(jar.season)} />
+          <SeasonJar key={jar.id} season={jar.season} count={counts?.[jar.key]} onClick={() => handleJarClick(jar.season)} />
         ))}
       </div>
 
