@@ -30,23 +30,17 @@ export default function FloatingRecordCTA({
   const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   // 앨범 선택 시
-  const handleGalleryClick = () => {
+  /** 앨범 권한을 확인하고 사진 선택 시작 */
+  const handleGalleryClick = async () => {
     trackEvent('RECORD_START', { source: 'GALLERY' });
-    setPhotoError(null);
-    setPermissionTarget('album');
-    setIsBottomSheetOpen(false);
-    setTimeout(() => {
-      setIsPermissionSheetOpen(true);
-    }, 200);
+    await startPhotoSelection('album');
   };
 
   // 카메라 선택 시
-  const handleCameraClick = () => {
+  /** 카메라 권한을 확인하고 촬영 시작 */
+  const handleCameraClick = async () => {
     trackEvent('RECORD_START', { source: 'CAMERA' });
-    setPhotoError(null);
-    setPermissionTarget('camera');
-    setIsBottomSheetOpen(false);
-    setTimeout(() => setIsPermissionSheetOpen(true), 200);
+    await startPhotoSelection('camera');
   };
 
   // 권한 허용 시트 내용
@@ -69,13 +63,13 @@ export default function FloatingRecordCTA({
 
   // '계속하기' 버튼 클릭 시
   /** 권한 확인 후 카메라 또는 앨범에서 사진 가져오기 */
-  const handleContinueClick = async () => {
+  const handleContinueClick = async (target = permissionTarget) => {
     if (selectingPhoto.current) return;
     selectingPhoto.current = true;
     setIsSelectingPhoto(true);
     try {
       // 갤러리 권한일 시
-      if (permissionTarget === 'album') {
+      if (target === 'album') {
         let status = await getPermission({ name: 'photos', access: 'read' });
         console.info('[Photo] 권한 상태', { target: 'album', status });
 
@@ -114,7 +108,7 @@ export default function FloatingRecordCTA({
           const photoArray = items.map((item) => sdkPhotoToDataUrl(item.dataUri));
           navigate('/write', { state: { photos: photoArray, source: 'GALLERY' } satisfies WritePhotoState });
         }
-      } else if (permissionTarget === 'camera') {
+      } else if (target === 'camera') {
         // 카메라 권한일 시
         let status = await getPermission({ name: 'camera', access: 'access' });
         console.info('[Photo] 권한 상태', { target: 'camera', status });
@@ -165,6 +159,31 @@ export default function FloatingRecordCTA({
     }
   };
 
+  /** 허용된 권한은 안내를 생략하고, 미허용 권한은 안내 시트 표시 */
+  const startPhotoSelection = async (target: 'camera' | 'album') => {
+    if (selectingPhoto.current) return;
+    selectingPhoto.current = true;
+    setIsSelectingPhoto(true);
+    setPhotoError(null);
+    setPermissionTarget(target);
+    setIsBottomSheetOpen(false);
+    let allowed = false;
+    try {
+      const status = await getPermission(target === 'album' ? { name: 'photos', access: 'read' } : { name: 'camera', access: 'access' });
+      allowed = status === 'allowed';
+      if (!allowed) {
+        await delay(200);
+        setIsPermissionSheetOpen(true);
+      }
+    } catch (error: unknown) {
+      setPhotoError(error instanceof Error ? error.message : '권한을 확인하지 못했어요. 다시 시도해주세요.');
+    } finally {
+      selectingPhoto.current = false;
+      setIsSelectingPhoto(false);
+    }
+    if (allowed) await handleContinueClick(target);
+  };
+
   return (
     <>
       {photoError && (
@@ -179,7 +198,11 @@ export default function FloatingRecordCTA({
           {/* 텍스트 영역 */}
           <div className="flex flex-col">
             <p className="text-[15px] font-medium text-[#000C1E]/80">가을의 순간을 더 담아보세요</p>
-            <p className="text-[11px] font-medium text-[#00132B]/58" aria-live="polite" aria-busy={summaryState.status === 'loading'}>
+            <p
+              className={`text-[11px] font-medium text-[#00132B]/58 ${summaryState.status !== 'success' ? 'text-center' : ''}`}
+              aria-live="polite"
+              aria-busy={summaryState.status === 'loading'}
+            >
               {summaryState.status === 'loading'
                 ? '기록을 불러오는 중이에요'
                 : summaryState.status === 'error'
@@ -189,7 +212,7 @@ export default function FloatingRecordCTA({
                     : `기록 ${summaryState.summary.recordCount}개 · ${summaryState.summary.recordingDayCount}일째`}
             </p>
             {summaryState.status === 'error' && (
-              <button className="self-start text-[11px] text-[#00132B]/58 underline" onClick={onSummaryRetry}>
+              <button className="self-center text-[11px] text-[#00132B]/58 underline" onClick={onSummaryRetry}>
                 다시 시도
               </button>
             )}
@@ -215,12 +238,14 @@ export default function FloatingRecordCTA({
             <button
               className="flex-1 py-4 text-[17px] font-semibold text-[#4E5968] bg-[#F2F4F6] rounded-2xl! active:scale-95 transition-transform"
               onClick={handleCameraClick}
+              disabled={isSelectingPhoto}
             >
               카메라로 촬영
             </button>
             <button
               className="flex-1 py-4 text-[17px] font-semibold text-white bg-[#ffb331] rounded-2xl! active:scale-95 transition-transform"
               onClick={handleGalleryClick}
+              disabled={isSelectingPhoto}
             >
               앨범에서 선택
             </button>
@@ -228,7 +253,10 @@ export default function FloatingRecordCTA({
         }
       >
         <div className="px-6 pb-3">
-          <p className="text-[15px] font-medium text-gray-500">등록일 기준으로 맞는 계절에 자동 저장돼요.</p>
+          <p className="text-[15px] font-medium text-gray-500 whitespace-pre-line">
+            {`등록일 기준으로 맞는 계절에 자동 저장돼요.
+            최대 5장까지 선택할 수 있어요.`}
+          </p>
         </div>
       </BottomSheet>
 
@@ -247,7 +275,7 @@ export default function FloatingRecordCTA({
             </button>
             <button
               className="flex-1 py-4 text-[17px] font-semibold text-white bg-[#ffb331] rounded-2xl! active:scale-95 transition-transform"
-              onClick={handleContinueClick}
+              onClick={() => handleContinueClick()}
               disabled={isSelectingPhoto}
             >
               계속하기

@@ -4,7 +4,8 @@ import { test } from 'node:test';
 import vm from 'node:vm';
 import ts from 'typescript';
 
-async function setup(enabled = true) {
+/** OS 환경별 분석 전송 테스트 준비 */
+async function setup(enabled = true, platform = 'ios', environment = 'toss') {
   const requests = [];
   let handler = async (_url, options) => {
     const count = JSON.parse(options.body).events.length;
@@ -39,9 +40,7 @@ async function setup(enabled = true) {
   });
   await module.link(async (name) => {
     const values =
-      name === './authStorage'
-        ? { getAccessToken: () => 'test-token' }
-        : { Environment: { environment: 'toss' }, getPlatformOS: () => 'ios' };
+      name === './authStorage' ? { getAccessToken: () => 'test-token' } : { Environment: { environment }, getPlatformOS: () => platform };
     return new vm.SyntheticModule(
       Object.keys(values),
       function () {
@@ -67,6 +66,29 @@ test('disabled analytics adds no headers and sends no requests', async () => {
   assert.equal(Object.keys(api.getAnalyticsHeaders()).length, 0);
   assert.equal(requests.length, 0);
 });
+
+for (const [platform, environment, expectedOS] of [
+  ['ios', 'toss', 'IOS'],
+  ['android', 'toss', 'ANDROID'],
+  ['unknown', 'toss', 'OTHER'],
+  ['ios', 'browser', 'WEB'],
+]) {
+  test(`event body and API headers share context with uppercase ${expectedOS}`, async () => {
+    const { api, requests } = await setup(true, platform, environment);
+    const apiHeaders = api.getAnalyticsHeaders();
+    api.trackEvent('RECORD_START', { source: 'GALLERY' });
+    await api.flushAnalytics();
+    const [, options] = requests[0];
+    const event = JSON.parse(options.body).events[0];
+    assert.equal(event.os, expectedOS);
+    assert.equal(apiHeaders['X-Client-OS'], event.os);
+    assert.equal(apiHeaders['X-Client-Version'], event.serviceVersion);
+    assert.equal(apiHeaders['X-Analytics-Session-Id'], event.sessionId);
+    for (const name of ['X-Client-OS', 'X-Client-Version', 'X-Analytics-Session-Id']) {
+      assert.equal(options.headers[name], apiHeaders[name]);
+    }
+  });
+}
 
 test('batch shares session, preserves order, and flushes at ten events', async () => {
   const { api, requests } = await setup();

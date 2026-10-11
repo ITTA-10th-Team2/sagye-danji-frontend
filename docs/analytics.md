@@ -7,7 +7,7 @@ VITE_ANALYTICS_ENABLED=true
 VITE_SERVICE_VERSION=1.0.0
 ```
 
-기본값은 `false`입니다. 배포 전 분석 API로 요청하거나 새 헤더 때문에 기존 API가 실패하지 않도록 합니다.
+기본값은 `false`입니다. 배포 전 분석 API로 요청하거나 새 헤더 때문에 기존 API가 실패하지 않도록 설정해야 합니다.
 
 허용할 헤더: `X-Analytics-Session-Id`, `X-Client-Version`, `X-Client-OS`.
 <br /> 저장소 presigned PUT에는 이 헤더를 붙이지 않습니다.
@@ -38,4 +38,3 @@ useAnalyticsScreen('JAR');
 
 - 10건 또는 첫 대기 이벤트 이후 5초 뒤에 전송됩니다. (최대 50건)
 - 큐는 메모리에 최대 500건 보관하며 초과하면 오래된 이벤트부터 제거합니다. 종료/재시작 시 미전송 데이터 복구는 제공하지 않습니다.
-- 체류시간은 document.visibilityState 기준 근사치이며 강제 종료 시 마지막 구간은 유실될 수 있습니다.

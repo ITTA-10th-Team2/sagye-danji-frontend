@@ -43,7 +43,7 @@ export default function RecommendationCard() {
 
   return (
     <div
-      className="mx-auto flex flex-col items-start w-[80%] p-6 bg-[#F2F2FF]/47 backdrop-blur-[1px] border border-none rounded-[12px] shadow-sm"
+      className={`mx-auto flex flex-col ${recommendation ? 'items-start' : 'items-center text-center'} w-[80%] p-6 bg-[#F2F2FF]/47 backdrop-blur-[1px] border border-none rounded-[12px] shadow-sm`}
       aria-busy={state.status === 'loading'}
       aria-live="polite"
     >

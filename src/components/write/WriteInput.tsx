@@ -55,7 +55,7 @@ export default function WriteInput({ onTextChange, initialValue = '' }: WriteInp
         </span>
       </div>
 
-      <div className="h-5 mt-2 ml-1">
+      <div className="h-5 mt-2 text-center">
         {isOverLimit && <p className="text-[13px] font-medium text-[#E42939]">최대 100자까지 작성할 수 있어요</p>}
       </div>
     </div>

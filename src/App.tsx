@@ -37,6 +37,24 @@ function AnimatedRoutes() {
 }
 
 export default function App() {
+  // 사진 상세 페이지를 제외하고 확대/축소 막기
+  useEffect(() => {
+    const preventPageZoom = (event: Event) => {
+      if (event.target instanceof Element && event.target.closest('.danji-detail-photo')) return;
+      if ('touches' in event && (event as TouchEvent).touches.length < 2) return;
+      if (event.cancelable) event.preventDefault();
+    };
+
+    document.addEventListener('touchmove', preventPageZoom, { passive: false });
+    document.addEventListener('gesturestart', preventPageZoom, { passive: false });
+    document.addEventListener('gesturechange', preventPageZoom, { passive: false });
+    return () => {
+      document.removeEventListener('touchmove', preventPageZoom);
+      document.removeEventListener('gesturestart', preventPageZoom);
+      document.removeEventListener('gesturechange', preventPageZoom);
+    };
+  }, []);
+
   useEffect(startAnalytics, []);
   return (
     <TDSMobileAITProvider>
