@@ -1,3 +1,4 @@
+import { useAnalyticsScreen } from '../lib/useAnalyticsScreen';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { deleteRecord, getRecord, getSeasonRecords, updateRecord } from '../apis/records';
@@ -175,6 +176,10 @@ export default function Danji() {
   }
   const [headerMenu, setHeaderMenu] = useState(false);
   const [view, setView] = useState<View>('jar');
+
+  useAnalyticsScreen(
+  view === 'detail' || view === 'editPreview' ? 'RECORD_DETAIL' : 'JAR',
+  );
   const scope = `${year}-${season}`;
   const [previousScope, setPreviousScope] = useState(scope);
   if (previousScope !== scope) {
