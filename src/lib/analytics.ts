@@ -3,7 +3,7 @@ import { getAccessToken } from './authStorage';
 
 export type AnalyticsScreen = 'ONBOARDING' | 'HOME' | 'RECORD_CREATE' | 'RECORD_DETAIL' | 'JAR';
 type EventProperties = {
-  SESSION_START: { referrer?: string; shareScreen?: AnalyticsScreen };
+  SESSION_START: { referrer?: string; shareScreen?: AnalyticsScreen; utmSource?: string; utmCampaign?: string };
   ONBOARDING_START: Record<string, never>;
   ONBOARDING_SKIP: Record<string, never>;
   HOME_VIEW: { entrySource: 'APP_OPEN' | 'INTERNAL_NAVIGATION' | 'BACK_NAVIGATION' };
@@ -30,10 +30,33 @@ const sessionStartProperties = (() => {
   const fallback = new URLSearchParams(queryIndex < 0 ? '' : initialURL.slice(queryIndex + 1).split('#')[0]);
   const referrer = search.get('referrer') ?? search.get('toss_referrer') ?? fallback.get('referrer') ?? fallback.get('toss_referrer');
   const shareScreen = search.get('shareScreen') ?? fallback.get('shareScreen');
+  const normalizeUTM = (value: string | null) => {
+    if (value === null) return undefined;
+    const normalized = value.toLowerCase();
+    return /^[A-Za-z0-9_.-]{1,64}$/.test(normalized) ? normalized : 'invalid';
+  };
+  const parseQueryParams = (params: URLSearchParams): Record<string, unknown> => {
+    try {
+      const value: unknown = JSON.parse(params.get('queryParams') ?? '{}');
+      return value !== null && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {};
+    } catch {
+      return {};
+    }
+  };
+  const nestedSearch = parseQueryParams(search);
+  const nestedFallback = parseQueryParams(fallback);
+  const readUTM = (key: 'utm_source' | 'utm_campaign') => {
+    const value = search.get(key) ?? nestedSearch[key] ?? fallback.get(key) ?? nestedFallback[key];
+    return value === undefined || value === null ? undefined : typeof value === 'string' ? normalizeUTM(value) : 'invalid';
+  };
+  const utmSource = readUTM('utm_source');
+  const utmCampaign = readUTM('utm_campaign');
   const screens: readonly string[] = ['ONBOARDING', 'HOME', 'RECORD_CREATE', 'RECORD_DETAIL', 'JAR'];
   return {
     ...(referrer === null ? {} : { referrer: /^[A-Za-z0-9_.-]{1,64}$/.test(referrer) ? referrer : 'invalid' }),
     ...(shareScreen !== null && screens.includes(shareScreen) ? { shareScreen: shareScreen as AnalyticsScreen } : {}),
+    ...(utmSource === undefined ? {} : { utmSource }),
+    ...(utmCampaign === undefined ? {} : { utmCampaign }),
   };
 })();
 
