@@ -5,6 +5,10 @@ import { deleteRecord, getRecord, getSeasonRecords, updateRecord } from '../apis
 import type { RecordDetail, RecordListItem, RecordSeason } from '../apis/records';
 import { getJarPage, saveJarStickers } from '../apis/jars';
 import type { JarStickerItem, StickerType } from '../apis/jars';
+import {
+  addSticker, baseStickerSize, clampStickerSize, maxStickerCount, removeSticker, toStickerPayload,
+} from '../lib/stickerValidation';
+import type { Sticker } from '../lib/stickerValidation';
 import { ApiError } from '../lib/axios';
 import { graniteEvent } from '@apps-in-toss/web-framework';
 import FloatingRecordCTA from '../components/home/FloatingRecordCTA';
@@ -44,8 +48,6 @@ import decor6 from '../assets/danji/current/sticker-6.png';
 const stickerOptions = [decor0, decor1, decor2, decor3, decor4, decor5, decor6];
 const stickerNames = ['클로버', '물방울', '별', '꽃', '불꽃', '카메라', '꽃다발'];
 const stickerTypes: StickerType[] = ['CLOVER', 'BUBBLE', 'SHOOTING_STAR', 'FLOWER', 'FIREWORK', 'CAMERA', 'BOUQUET'];
-const baseStickerSize = 24.533;
-type Sticker = { id: number; option: number; x: number; y: number; size: number; page: number; rotation: number; zIndex: number };
 type DisplayRecord = { id: number; image: string; date: string; note: string; season: RecordSeason };
 // Keep a placeholder for missing or expired photo URLs.
 const unavailablePhoto =
@@ -70,7 +72,7 @@ function fromApiStickers(items: JarStickerItem[], page: number): Sticker[] {
     option: stickerTypes.indexOf(item.stickerType),
     x: item.xRatio * 100,
     y: item.yRatio * 100,
-    size: item.scale * baseStickerSize,
+    size: clampStickerSize(item.scale * baseStickerSize),
     page,
     rotation: item.rotation,
     zIndex: item.zIndex,
@@ -235,16 +237,7 @@ export default function Danji() {
     mutationPending.current = true;
     setBusy(true);
     try {
-      const items = draftStickers
-        .filter((item) => item.page === page)
-        .map((item) => ({
-          stickerType: stickerTypes[item.option],
-          xRatio: item.x / 100,
-          yRatio: item.y / 100,
-          scale: item.size / baseStickerSize,
-          rotation: item.rotation,
-          zIndex: item.zIndex,
-        }));
+      const items = toStickerPayload(draftStickers, page, stickerTypes);
       const saved = await saveJarStickers(jarPageId, items);
       setStickers(fromApiStickers(saved.items, page));
       setSaveError(null);
@@ -581,7 +574,7 @@ export default function Danji() {
                         className="danji-sticker-remove"
                         aria-label="스티커 삭제"
                         onClick={() => {
-                          setDraftStickers((items) => items.filter((sticker) => sticker.id !== item.id));
+                          setDraftStickers((items) => removeSticker(items, item.id));
                           setActiveSticker(null);
                         }}
                       >
@@ -600,7 +593,7 @@ export default function Danji() {
                           setDraftStickers((items) =>
                             items.map((sticker) =>
                               sticker.id === item.id
-                                ? { ...sticker, size: Math.max(10, Math.min(40, sticker.size - (event.movementX / width) * 100)) }
+                                ? { ...sticker, size: clampStickerSize(sticker.size - (event.movementX / width) * 100) }
                                 : sticker,
                             ),
                           );
@@ -671,12 +664,11 @@ export default function Danji() {
                     <button
                       key={src}
                       aria-label={`${stickerNames[option]} 스티커 추가`}
-                      disabled={busy || draftStickers.length >= 20}
+                      disabled={busy || draftStickers.length >= maxStickerCount}
                       onClick={() => {
                         const id = Math.max(0, ...draftStickers.map((item) => item.id)) + 1;
-                        setDraftStickers((items) => [
-                          ...items,
-                          {
+                        setDraftStickers((items) =>
+                          addSticker(items, {
                             id,
                             option,
                             x: 38,
@@ -684,9 +676,9 @@ export default function Danji() {
                             size: baseStickerSize,
                             page,
                             rotation: 0,
-                            zIndex: Math.max(0, ...items.map((item) => item.zIndex)) + 1,
-                          },
-                        ]);
+                            zIndex: 0,
+                          }),
+                        );
                         setActiveSticker(id);
                         setStickerPanelExpanded(false);
                       }}
