@@ -72,6 +72,39 @@ test('disabled analytics adds no headers and sends no requests', async () => {
 });
 
 for (const [search, initialURL, expected] of [
+  [
+    '?host=appsInTossHost&queryParams=%7B%22utm_source%22%3A%22test%22%2C%22utm_campaign%22%3A%22check%22%7D',
+    '',
+    { utmSource: 'test', utmCampaign: 'check' },
+  ],
+  [
+    '',
+    `intoss-private://sagye-danji?queryParams=${encodeURIComponent(JSON.stringify({ utm_source: 'INSTAGRAM', utm_campaign: '1020_LAUNCH' }))}`,
+    { utmSource: 'instagram', utmCampaign: '1020_launch' },
+  ],
+  [
+    `?utm_source=x&queryParams=${encodeURIComponent(JSON.stringify({ utm_source: 'threads', utm_campaign: 'CHECK' }))}`,
+    '',
+    { utmSource: 'x', utmCampaign: 'check' },
+  ],
+  [
+    `?queryParams=${encodeURIComponent(JSON.stringify({ utm_source: 'kakaotalk' }))}`,
+    'intoss://sagye-danji?utm_source=x&utm_campaign=check',
+    { utmSource: 'kakaotalk', utmCampaign: 'check' },
+  ],
+  [
+    `?queryParams=${encodeURIComponent(JSON.stringify({ utm_source: 12, utm_campaign: { bad: true }, secret: 'excluded' }))}`,
+    '',
+    { utmSource: 'invalid', utmCampaign: 'invalid' },
+  ],
+  ['?queryParams=%7Bbroken', '', {}],
+  ['?queryParams=null', '', {}],
+  ['?queryParams=%5B%5D', '', {}],
+  ['?utm_source=TEST&utm_campaign=CHECK', '', { utmSource: 'test', utmCampaign: 'check' }],
+  ['', 'intoss://sagye-danji?utm_source=Instagram&utm_campaign=1020_LAUNCH', { utmSource: 'instagram', utmCampaign: '1020_launch' }],
+  ['?utm_source=x', 'intoss://sagye-danji?utm_source=threads&utm_campaign=check', { utmSource: 'x', utmCampaign: 'check' }],
+  ['?utm_source=bad%20value&utm_campaign=', '', { utmSource: 'invalid', utmCampaign: 'invalid' }],
+  [`?utm_source=${'A'.repeat(65)}&utm_campaign=%EA%B0%80`, '', { utmSource: 'invalid', utmCampaign: 'invalid' }],
   ['?host=appsInTossHost&toss_referrer=2170286_push_6897239&contentId=toss%3APUSH-example', '', { referrer: '2170286_push_6897239' }],
   ['', 'intoss-private://sagye-danji?_deploymentId=test&toss_referrer=2170286_push_6897239', { referrer: '2170286_push_6897239' }],
   ['?referrer=explicit&toss_referrer=push', '', { referrer: 'explicit' }],

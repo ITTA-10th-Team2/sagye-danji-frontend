@@ -23,11 +23,12 @@ npm run dev
 
 ```dotenv
 VITE_API_BASE_URL=https://api.sagye-danji.site/api
-VITE_ANALYTICS_ENABLED=false # 기본값
+VITE_ANALYTICS_ENABLED=true
+VITE_ANALYTICS_DEBUG=false
 VITE_SERVICE_VERSION=1.0.0
 ```
 
-분석 기능은 서버 API와 CORS 설정 확인 후 활성화합니다.
+출시 빌드는 위 설정을 사용합니다. 유입 경로를 테스트할 때만 `VITE_ANALYTICS_DEBUG=true`로 바꿉니다. 환경변수 변경 후에는 다시 빌드해야 합니다.
 
 ## 빌드
 
@@ -48,6 +49,7 @@ npm run build
 ## 참고
 
 - [사용자 행동 분석 안내](docs/analytics.md)
+- [UTM 테스트 및 채널별 링크](docs/utm-links.md)
 
 ## 커밋 메시지 규칙
 

@@ -1,16 +1,16 @@
 # MVP 사용자 행동 수집
 
-서버 배포와 아래 헤더의 CORS 허용을 확인한 후 `.env`에 설정하고 다시 빌드합니다.
+분석 API 배포와 CORS 설정은 완료됐습니다. 출시 빌드는 `.env`를 아래와 같이 설정합니다.
 
 ```dotenv
 VITE_ANALYTICS_ENABLED=true
+VITE_ANALYTICS_DEBUG=false
 VITE_SERVICE_VERSION=1.0.0
 ```
 
-기본값은 `false`입니다. 배포 전 분석 API로 요청하거나 새 헤더 때문에 기존 API가 실패하지 않도록 설정해야 합니다.
+분석 플래그가 없거나 `false`이면 이벤트와 분석 헤더를 보내지 않습니다. 환경변수를 변경하면 다시 빌드해야 합니다. `.env`는 Git에 포함되지 않으므로 다른 환경에서도 설정해야 합니다.
 
-허용할 헤더: `X-Analytics-Session-Id`, `X-Client-Version`, `X-Client-OS`.
-<br /> 저장소 presigned PUT에는 이 헤더를 붙이지 않습니다.
+공통 API에는 `X-Analytics-Session-Id`, `X-Client-Version`, `X-Client-OS`를 보냅니다. 이벤트 본문과 같은 값을 사용하고 OS는 `IOS`, `ANDROID`, `WEB`, `OTHER` 중 하나입니다. 저장소 presigned PUT에는 분석 헤더를 붙이지 않습니다.
 
 ## 현재 연결 (프론트엔드 담당)
 
@@ -20,8 +20,7 @@ VITE_SERVICE_VERSION=1.0.0
 - 계절 단지 탭, 잠긴 계절 탭
 - 공통 API의 분석 세션/버전/OS 헤더
 
-건너뛰기/공유 UI가 없는 곳에 해당 이벤트를 임의로 만들지 않습니다.
-<br />사진/메모/토큰/사진 URL은 이벤트에 포함하지 않습니다.
+건너뛰기와 공유는 현재 UI가 없어 이벤트를 보내지 않습니다. 사진·메모·토큰·사진 URL은 이벤트에 포함하지 않습니다.
 
 ## 단지 부분 연결
 
@@ -32,11 +31,19 @@ import { useAnalyticsScreen } from '../lib/useAnalyticsScreen';
 useAnalyticsScreen('JAR');
 ```
 
-훅은 컴포넌트 최상위에서 호출하고, 내부 view에 따라 단지/상세 화면을 구분합니다. <br />
-`trackEvent`로 세부 이벤트도 기록할 수 있습니다. 허용 properties 문자열은 백엔드 담당자와 추가 확인이 필요할 수도 있습니다.
+훅은 컴포넌트 최상위에서 호출합니다. 단지와 사진 상세를 같은 컴포넌트에서 전환한다면 현재 view에 맞는 화면 이름을 넘겨야 합니다. 위 예시는 단지 화면만 기록합니다. 세부 이벤트를 추가할 때는 서버 명세의 이벤트명과 properties를 확인합니다.
+
+## 확인 결과 (2026-10-13)
+
+- 인앱에서 `toss_referrer`를 읽어 SESSION_START의 `referrer`로 보내는 것을 확인했습니다.
+- UTM은 테스트 스킴의 `queryParams` JSON으로 전달됩니다. JSON에서 `utmSource: "test"`, `utmCampaign: "check"`를 추출하고 events 성공 응답을 확인했습니다.
+- 서버 저장과 시트 반영은 백엔드 확인이 남아 있습니다. 정식 출시 링크는 출시 후 확인합니다.
 
 ## 전송 및 주의사항
 
+- UTM은 현재 쿼리의 `utm_source`, `utm_campaign`을 우선하고 없는 필드만 초기 URL에서 읽습니다. 소문자로 변환하고 영문·숫자·밑줄·점·하이픈 1~64자가 아니면 `invalid`로 보냅니다. 서버 키는 `utmSource`, `utmCampaign`입니다.
+- UTM 테스트 링크와 채널별 홍보 링크 생성 방법은 [유입 링크 안내](./utm-links.md)를 참고합니다.
+- 테스트 스킴에서 확인한 `queryParams` JSON 안의 UTM도 읽습니다. 현재 쿼리를 초기 URL보다 우선하고, 같은 주소에서는 일반 UTM을 JSON보다 우선합니다. JSON 전체는 전송하지 않습니다.
 - 앱 시작 시 쿼리를 보관합니다. `referrer`와 `shareScreen`은 현재 쿼리를 우선하고, 없는 필드만 `Environment.initialURL`에서 찾습니다.
 - 테스트 링크에서 확인된 `toss_referrer`도 서버의 `referrer` 속성으로 보냅니다. 같은 주소에 두 키가 있으면 `referrer`를 우선합니다. `contentId`, `host`, `_deploymentId`는 이벤트에 포함하지 않습니다.
 - `referrer`는 영문/숫자/밑줄/점/하이픈 1~64자만 허용하며 잘못된 값은 `invalid`로 보냅니다. `shareScreen`은 정의된 화면 이름만 보냅니다.
