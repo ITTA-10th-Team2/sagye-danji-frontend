@@ -5,6 +5,8 @@ import axios from 'axios';
 import { prepareRecordImage } from '../lib/recordImage';
 import type { ApiResponse } from '../lib/axios';
 
+const IMAGE_UPLOAD_TIMEOUT_MS = 60000;
+
 export type ImageUploadStage = 'image-prepare' | 'upload-url' | 'storage-put';
 
 export interface ImageUploadUrlRequest {
@@ -24,8 +26,8 @@ export async function uploadRecordImage(data: string, onStage?: (stage: ImageUpl
   }
   if (!Object.keys(headers).some((name) => name.toLowerCase() === 'content-type')) headers['Content-Type'] = contentType;
   onStage?.('storage-put');
-  const response = await axios.put(upload.uploadUrl, blob, { headers, withCredentials: false, timeout: 60000 });
-  console.info('[Image] 업로드 완료', { status: response.status });
+  const response = await axios.put(upload.uploadUrl, blob, { headers, withCredentials: false, timeout: IMAGE_UPLOAD_TIMEOUT_MS });
+  if (import.meta.env.DEV) console.info('[Image] 업로드 완료', { status: response.status });
   return upload.objectKey;
 }
 

@@ -7,6 +7,12 @@ import type { WritePhotoState } from '../../lib/recordImage';
 import type { RecordSummary } from '../../apis/records';
 import { trackEvent } from '../../lib/analytics';
 
+const MAX_PHOTO_COUNT = 5;
+const ALBUM_MAX_WIDTH = 1024;
+const CAMERA_MAX_WIDTH = 500;
+const PERMISSION_SHEET_DELAY_MS = 200;
+const PHOTO_PICKER_DELAY_MS = 300;
+
 export type SummaryState = { status: 'loading' } | { status: 'error' } | { status: 'success'; summary: RecordSummary };
 
 export default function FloatingRecordCTA({
@@ -71,7 +77,7 @@ export default function FloatingRecordCTA({
       // 갤러리 권한일 시
       if (target === 'album') {
         let status = await getPermission({ name: 'photos', access: 'read' });
-        console.info('[Photo] 권한 상태', { target: 'album', status });
+        if (import.meta.env.DEV) console.info('[Photo] 권한 상태', { target: 'album', status });
 
         // 권한 팝업 열기
         if (status !== 'allowed') {
@@ -79,7 +85,7 @@ export default function FloatingRecordCTA({
         }
 
         if (status === 'denied') {
-          console.log('갤러리 접근 권한을 거부했어요.');
+          if (import.meta.env.DEV) console.log('갤러리 접근 권한을 거부했어요.');
           setIsPermissionSheetOpen(false);
           setPhotoError('사진 접근 권한이 꺼져 있어요. 토스의 미니앱 권한 설정을 확인해주세요.');
           return;
@@ -89,18 +95,18 @@ export default function FloatingRecordCTA({
           setIsPermissionSheetOpen(false);
 
           // 사진 선택
-          await delay(300);
-          console.info('[Photo] 앨범 실행');
+          await delay(PHOTO_PICKER_DELAY_MS);
+          if (import.meta.env.DEV) console.info('[Photo] 앨범 실행');
           const items = await Device.getAlbumItems({
             types: ['PHOTO'],
-            maxCount: 5,
-            maxWidth: 1024,
+            maxCount: MAX_PHOTO_COUNT,
+            maxWidth: ALBUM_MAX_WIDTH,
             base64: true,
           });
-          console.info('[Photo] 앨범 반환', { count: items.length });
+          if (import.meta.env.DEV) console.info('[Photo] 앨범 반환', { count: items.length });
 
           if (items.length === 0) {
-            console.log('사진 선택이 취소되었어요.');
+            if (import.meta.env.DEV) console.log('사진 선택이 취소되었어요.');
             return;
           }
 
@@ -111,7 +117,7 @@ export default function FloatingRecordCTA({
       } else if (target === 'camera') {
         // 카메라 권한일 시
         let status = await getPermission({ name: 'camera', access: 'access' });
-        console.info('[Photo] 권한 상태', { target: 'camera', status });
+        if (import.meta.env.DEV) console.info('[Photo] 권한 상태', { target: 'camera', status });
 
         // 권한 팝업 열기
         if (status !== 'allowed') {
@@ -119,7 +125,7 @@ export default function FloatingRecordCTA({
         }
 
         if (status === 'denied') {
-          console.log('카메라 접근 권한을 거부했어요.');
+          if (import.meta.env.DEV) console.log('카메라 접근 권한을 거부했어요.');
           setIsPermissionSheetOpen(false);
           setPhotoError('카메라 접근 권한이 꺼져 있어요. 토스의 미니앱 권한 설정을 확인해주세요.');
           return;
@@ -128,16 +134,16 @@ export default function FloatingRecordCTA({
         if (status === 'allowed') {
           setIsPermissionSheetOpen(false);
 
-          await delay(300);
+          await delay(PHOTO_PICKER_DELAY_MS);
 
           // 촬영하기
           try {
-            console.info('[Photo] 카메라 실행');
-            const response = await Device.openCamera({ base64: true, maxWidth: 500 });
-            console.info('[Photo] 카메라 반환', { hasPhoto: Boolean(response?.dataUri) });
+            if (import.meta.env.DEV) console.info('[Photo] 카메라 실행');
+            const response = await Device.openCamera({ base64: true, maxWidth: CAMERA_MAX_WIDTH });
+            if (import.meta.env.DEV) console.info('[Photo] 카메라 반환', { hasPhoto: Boolean(response?.dataUri) });
 
             if (!response || !response.dataUri) {
-              console.log('사진 촬영이 취소되었어요.');
+              if (import.meta.env.DEV) console.log('사진 촬영이 취소되었어요.');
               return;
             }
 
@@ -172,7 +178,7 @@ export default function FloatingRecordCTA({
       const status = await getPermission(target === 'album' ? { name: 'photos', access: 'read' } : { name: 'camera', access: 'access' });
       allowed = status === 'allowed';
       if (!allowed) {
-        await delay(200);
+        await delay(PERMISSION_SHEET_DELAY_MS);
         setIsPermissionSheetOpen(true);
       }
     } catch (error: unknown) {
