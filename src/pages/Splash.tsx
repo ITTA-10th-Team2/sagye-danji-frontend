@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@toss/tds-mobile';
 import { LoginError, loginWithoutPassword } from '../apis/auth';
+import { getSessionStartProperties, trackEvent } from '../lib/analytics';
 
 export default function Splash() {
   const navigate = useNavigate();
@@ -10,11 +11,14 @@ export default function Splash() {
 
   useEffect(() => {
     let active = true;
+    /** 로그인 후 세션 시작 이벤트를 남기고 온보딩 상태에 따라 이동 */
     async function initialize() {
       try {
         // 서버에서 받은 온보딩 상태로 분기
         const minimumDisplay = new Promise<void>((resolve) => setTimeout(resolve, 1800));
-        const [auth] = await Promise.all([loginWithoutPassword(), minimumDisplay]);
+        const auth = await loginWithoutPassword();
+        trackEvent('SESSION_START', getSessionStartProperties(), true);
+        await minimumDisplay;
         if (!active) return;
         navigate(auth.member.onboardingStatus === 'COMPLETED' ? '/home' : '/onboarding', { replace: true });
       } catch (cause: unknown) {

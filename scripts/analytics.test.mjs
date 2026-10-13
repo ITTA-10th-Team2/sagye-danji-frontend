@@ -5,7 +5,7 @@ import vm from 'node:vm';
 import ts from 'typescript';
 
 /** OS 환경별 분석 전송 테스트 준비 */
-async function setup(enabled = true, platform = 'ios', environment = 'toss') {
+async function setup(enabled = true, platform = 'ios', environment = 'toss', search = '', initialURL = '') {
   const requests = [];
   let handler = async (_url, options) => {
     const count = JSON.parse(options.body).events.length;
@@ -20,6 +20,8 @@ async function setup(enabled = true, platform = 'ios', environment = 'toss') {
     TextEncoder,
     Response,
     AbortSignal,
+    URLSearchParams,
+    window: { location: { search } },
     console,
     setTimeout: () => 1,
     clearTimeout: () => {},
@@ -40,7 +42,9 @@ async function setup(enabled = true, platform = 'ios', environment = 'toss') {
   });
   await module.link(async (name) => {
     const values =
-      name === './authStorage' ? { getAccessToken: () => 'test-token' } : { Environment: { environment }, getPlatformOS: () => platform };
+      name === './authStorage'
+        ? { getAccessToken: () => 'test-token' }
+        : { Environment: { environment, initialURL }, getPlatformOS: () => platform };
     return new vm.SyntheticModule(
       Object.keys(values),
       function () {
@@ -66,6 +70,35 @@ test('disabled analytics adds no headers and sends no requests', async () => {
   assert.equal(Object.keys(api.getAnalyticsHeaders()).length, 0);
   assert.equal(requests.length, 0);
 });
+
+for (const [search, initialURL, expected] of [
+  ['?host=appsInTossHost&toss_referrer=2170286_push_6897239&contentId=toss%3APUSH-example', '', { referrer: '2170286_push_6897239' }],
+  ['', 'intoss-private://sagye-danji?_deploymentId=test&toss_referrer=2170286_push_6897239', { referrer: '2170286_push_6897239' }],
+  ['?referrer=explicit&toss_referrer=push', '', { referrer: 'explicit' }],
+  ['?toss_referrer=push', 'intoss://sagye-danji?referrer=fallback', { referrer: 'push' }],
+  ['?toss_referrer=bad%20value', '', { referrer: 'invalid' }],
+  ['?referrer=test-link&shareScreen=JAR', '', { referrer: 'test-link', shareScreen: 'JAR' }],
+  ['', 'intoss://sagye-danji?referrer=share_1&shareScreen=HOME#section', { referrer: 'share_1', shareScreen: 'HOME' }],
+  ['?referrer=direct', 'intoss://sagye-danji?referrer=fallback&shareScreen=JAR', { referrer: 'direct', shareScreen: 'JAR' }],
+  ['?referrer=%EA%B0%80&shareScreen=bad', '', { referrer: 'invalid' }],
+  ['?referrer=&shareScreen=jar', '', { referrer: 'invalid' }],
+  [`?referrer=${'a'.repeat(65)}`, '', { referrer: 'invalid' }],
+  ['', '', {}],
+]) {
+  test(`SESSION_START validates entry properties ${JSON.stringify(expected)} from ${search || 'initialURL'}`, async () => {
+    const { api, requests } = await setup(true, 'ios', 'toss', search, initialURL);
+    assert.equal(JSON.stringify(api.getSessionStartProperties()), JSON.stringify(expected));
+    api.trackEvent('SESSION_START', api.getSessionStartProperties(), true);
+    api.trackEvent('SESSION_START', api.getSessionStartProperties(), true);
+    await api.flushAnalytics();
+    const events = JSON.parse(requests[0][1].body).events;
+    assert.equal(events.length, 1);
+    assert.equal(events[0].eventName, 'SESSION_START');
+    assert.deepEqual(events[0].properties, expected);
+    assert.equal('initialURL' in events[0].properties, false);
+    assert.equal('search' in events[0].properties, false);
+  });
+}
 
 for (const [platform, environment, expectedOS] of [
   ['ios', 'toss', 'IOS'],

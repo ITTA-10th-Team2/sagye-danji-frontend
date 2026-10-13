@@ -3,6 +3,7 @@ import { getAccessToken } from './authStorage';
 
 export type AnalyticsScreen = 'ONBOARDING' | 'HOME' | 'RECORD_CREATE' | 'RECORD_DETAIL' | 'JAR';
 type EventProperties = {
+  SESSION_START: { referrer?: string; shareScreen?: AnalyticsScreen };
   ONBOARDING_START: Record<string, never>;
   ONBOARDING_SKIP: Record<string, never>;
   HOME_VIEW: { entrySource: 'APP_OPEN' | 'INTERNAL_NAVIGATION' | 'BACK_NAVIGATION' };
@@ -14,6 +15,36 @@ type EventProperties = {
   SHARE_CLICK: { sourceScreen: AnalyticsScreen; method?: 'SYSTEM_SHARE' | 'COPY_LINK' };
   SCREEN_ENGAGEMENT: { screenName: AnalyticsScreen; durationMs: number };
 };
+
+const initialSearch = typeof window === 'undefined' ? '' : window.location.search;
+const initialURL = (() => {
+  try {
+    return Environment.initialURL || '';
+  } catch {
+    return '';
+  }
+})();
+const sessionStartProperties = (() => {
+  const search = new URLSearchParams(initialSearch);
+  const queryIndex = initialURL.indexOf('?');
+  const fallback = new URLSearchParams(queryIndex < 0 ? '' : initialURL.slice(queryIndex + 1).split('#')[0]);
+  const referrer = search.get('referrer') ?? search.get('toss_referrer') ?? fallback.get('referrer') ?? fallback.get('toss_referrer');
+  const shareScreen = search.get('shareScreen') ?? fallback.get('shareScreen');
+  const screens: readonly string[] = ['ONBOARDING', 'HOME', 'RECORD_CREATE', 'RECORD_DETAIL', 'JAR'];
+  return {
+    ...(referrer === null ? {} : { referrer: /^[A-Za-z0-9_.-]{1,64}$/.test(referrer) ? referrer : 'invalid' }),
+    ...(shareScreen !== null && screens.includes(shareScreen) ? { shareScreen: shareScreen as AnalyticsScreen } : {}),
+  };
+})();
+
+export function getSessionStartProperties(): EventProperties['SESSION_START'] {
+  return { ...sessionStartProperties };
+}
+
+// 테스트 링크 유입 확인용이며 주소 전체는 이벤트나 API 헤더에 포함하지 않음
+if (import.meta.env.VITE_ANALYTICS_DEBUG === 'true') {
+  console.info('[Analytics] 시작 URL 확인', { search: initialSearch, initialURL, properties: sessionStartProperties });
+}
 type EventName = keyof EventProperties;
 interface AnalyticsEvent {
   eventId: string;
